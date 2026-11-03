@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/icucrops-banner.svg" alt="ICuCrops — An IoT Web-Based System for Crops Cultivation and Monitoring for Sarate Agriculture Farm in San Pablo, Laguna" width="100%">
+  <img src="assets/icucrops-banner-live.svg" alt="ICuCrops — An IoT Web-Based System for Crops Cultivation and Monitoring for Sarate Agriculture Farm in San Pablo, Laguna" width="100%">
 </p>
 
 <p align="center">
@@ -16,7 +16,8 @@
 
 <p align="center">
   <b>ICuCrops</b> watches every planted row in the greenhouse — soil moisture, soil pH,
-  temperature, humidity and light — and waters, ventilates and lights the crops on its own.
+  EC, temperature, humidity, light and tank level — and waters, mists, ventilates and
+  lights the crops on its own.
   <br>
   Growers and administrators follow the farm live from a web dashboard backed by
   <b>Supabase</b>.
@@ -85,6 +86,30 @@ internet drops.
 | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" width="20"> **HTML5** | Every page of the Administrator, User, sign-in and mobile portals |
 | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" width="20"> **CSS3** | Styling, emerald theme, dark mode, mobile and kiosk layouts |
 | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" width="20"> **SQL** | Supabase (PostgreSQL) schema migrations and SQLite queries |
+
+---
+
+## 📡 What ICuCrops monitors
+
+| | Reading | Sensor | What it is used for |
+| :---: | --- | --- | --- |
+| 💧 | **Soil Moisture** | Capacitive soil-moisture probes (per row) | Decides when each row needs water |
+| 🧪 | **Soil pH** | RS485 soil sensor | Shows soil acidity; tells when lime solution is needed |
+| ⚡ | **EC (Electrical Conductivity)** | RS485 soil sensor | Shows the nutrient / salt level of the soil |
+| 🌡️ | **Temperature** | DHT22 | Greenhouse air temperature; drives the fan and grow light |
+| 💦 | **Humidity** | DHT22 | Greenhouse air humidity; turns the fan on when it is too humid |
+| ☀️ | **Light** | HW-072 light sensor | Detects dark or bright; runs the grow light in the dark |
+| 🛢️ | **Tank Level** | JSN-SR04T ultrasonic sensor | Water and lime solution left in the tanks |
+
+## 🎛️ What ICuCrops controls
+
+| | Equipment | How it runs |
+| :---: | --- | --- |
+| 🚿 | **Irrigation pump** | Automatic, Manual or Scheduled, per row, with moisture safety limits |
+| 🌫️ | **Misting** | Follows the irrigation, or on a timer |
+| 🌀 | **Fan** | Turns on when the humidity is high |
+| 💡 | **Grow light** | Turns on in the dark, with a daily limit |
+| 🧴 | **Lime solution** | Applied when the soil pH is too low |
 
 ---
 
