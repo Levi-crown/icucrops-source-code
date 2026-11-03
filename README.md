@@ -241,5 +241,5 @@ python main.py
 <p align="center">
   <img src="assets/icucrops-logo-transparent.png" width="120" alt="ICuCrops logo">
   <br>
-  <sub>🌿 ICuCrops · An IoT Web-Based System for Crops Cultivation and Monitoring for Sarate Agriculture Farm in San Pablo, Laguna · Powered by Supabase &amp; SQLite</sub>
+  <sub>🌿 ICuCrops · An IoT Web-Based System for Crops Cultivation and Monitoring for Sarate Agriculture Farm in San Pablo, Laguna</sub>
 </p>
