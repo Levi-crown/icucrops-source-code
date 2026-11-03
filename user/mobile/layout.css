@@ -1,0 +1,2213 @@
+@media (max-width: 1024px) {
+  :root {
+    --mobile-sidebar-width: clamp(3.65rem, 15vw, 4.6rem);
+    --mobile-shell-gap: 0.62rem;
+    --mobile-card-padding: 0.82rem;
+  }
+
+  html {
+    font-size: 16px;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  body {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .app-shell {
+    height: 100dvh;
+    min-height: 100dvh;
+    display: grid;
+    grid-template-columns: var(--mobile-sidebar-width) minmax(0, 1fr);
+    align-items: start;
+    width: 100%;
+    max-width: 100vw;
+    overflow: hidden;
+  }
+
+  .sidebar {
+    width: var(--mobile-sidebar-width);
+    min-width: var(--mobile-sidebar-width);
+    height: 100dvh;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    gap: 0.46rem;
+    padding: 0.58rem 0.32rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 8;
+  }
+
+  .app-main,
+  .page-content,
+  .page-scene {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  .app-main {
+    margin-left: 0;
+    justify-self: stretch;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-width: calc(100vw - var(--mobile-sidebar-width));
+    overflow: hidden;
+  }
+
+  .sidebar__brand {
+    padding: 0.42rem 0.34rem;
+    margin-bottom: 0.06rem;
+  }
+
+  .brand-lockup {
+    justify-content: center;
+  }
+
+  .brand-lockup > div {
+    display: none;
+  }
+
+  .brand-lockup__logo {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .sidebar__nav {
+    gap: 0.34rem;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+
+  .sidebar__actions {
+    gap: 0.34rem;
+    padding-top: 0.54rem;
+  }
+
+  .sidebar .nav-button {
+    justify-content: center;
+    gap: 0;
+    min-height: 2.82rem;
+    padding: 0.72rem 0;
+  }
+
+  .sidebar .nav-button > span:not(.nav-button__icon) {
+    display: none;
+  }
+
+  .sidebar .nav-button__icon {
+    width: 1.34rem;
+    height: 1.34rem;
+    flex-basis: 1.34rem;
+  }
+
+  .app-main::before {
+    left: var(--mobile-sidebar-width);
+  }
+
+  .topbar {
+    margin: var(--mobile-shell-gap) var(--mobile-shell-gap) 0;
+    padding: 0.72rem 0.82rem;
+    flex-direction: column;
+    align-items: start;
+    gap: 0.54rem;
+  }
+
+  .topbar__title {
+    font-size: 1.08rem;
+  }
+
+  .topbar__subtitle {
+    font-size: 0.78rem;
+  }
+
+  .topbar__actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.54rem;
+  }
+
+  .profile-pill {
+    width: 100%;
+    align-self: stretch;
+    justify-content: space-between;
+    gap: 0.58rem;
+  }
+
+  .profile-pill--button {
+    width: 100%;
+    padding: 0.38rem 0.48rem;
+    border-radius: 1rem;
+  }
+
+  .profile-pill__name {
+    font-size: 0.9rem;
+  }
+
+  .profile-pill__role {
+    font-size: 0.72rem;
+  }
+
+  .profile-pill__avatar {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .notification-button.icon-button {
+    width: 2.66rem;
+    height: 2.66rem;
+  }
+
+  .notification-button.icon-button .nav-button__icon {
+    width: 1.96rem;
+    height: 1.96rem;
+    flex-basis: 1.96rem;
+  }
+
+  .notification-button.icon-button .nav-button__icon .icon {
+    width: 1.42rem;
+    height: 1.42rem;
+  }
+
+  .page-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable;
+    padding: var(--mobile-shell-gap);
+  }
+
+  .sidebar,
+  .topbar,
+  .glass-card,
+  .nav-button,
+  .profile-pill--button,
+  .card,
+  .dashboard-panel,
+  .iot-row-card,
+  .metric-card,
+  .sensor-row-card,
+  .sensor-management-card,
+  .cultivation-panel {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .glass-card:not(.glass-card--dark),
+  .card,
+  .dashboard-panel,
+  .sensor-card,
+  .health-item,
+  .list-tile,
+  .cultivation-item,
+  .user-row,
+  .stat-card,
+  .tank-card,
+  .tank-card--compact,
+  .mode-card,
+  .timeline-card,
+  .metric-card,
+  .notification-item,
+  .iot-row-card,
+  .iot-monitor-card,
+  .iot-monitor-card__group-item,
+  .cultivation-chart-row,
+  .cultivation-summary-card,
+  .dashboard-graph-card,
+  .dashboard-empty-state,
+  .mobile-line-chart-card,
+  .tank-trend-card,
+  .tank-trend-row,
+  .mobile-chart-row,
+  .mobile-tank-trend,
+  .sensor-row-card,
+  .sensor-row-control,
+  .sensor-management-card,
+  .developer-card,
+  .about-panel,
+  .about-brand-card,
+  .contact-card,
+  .settings-section-card,
+  .password-otp-card,
+  .cultivation-crop-option,
+  .cultivation-setup-summary,
+  .cultivation-mode-panel,
+  .cultivation-parameter-selection,
+  .cultivation-parameter-card,
+  .cultivation-parameter-static,
+  .modal--settings .settings-section-card,
+  .modal--settings .about-panel,
+  .modal--settings .about-brand-card,
+  .modal--settings .developer-card,
+  .modal--settings .contact-card {
+    background: var(--card-solid-fill-strong) !important;
+    border-color: var(--glass-panel-border-soft) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .modal,
+  .drawer,
+  .modal--cultivation,
+  .cultivation-preview-modal,
+  .password-otp-modal {
+    background: var(--card-solid-fill-strong) !important;
+    border-color: var(--glass-panel-border) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .page-scene {
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+    padding-bottom: 0.9rem;
+  }
+
+  .page-stack {
+    gap: 0.82rem;
+  }
+
+  .page-heading {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.48rem;
+  }
+
+  .page-heading .button,
+  .card-head .button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .page-heading h1 {
+    font-size: 1.18rem;
+  }
+
+  .page-heading p,
+  .section-copy,
+  .muted {
+    font-size: 0.84rem;
+    line-height: 1.4;
+  }
+
+  .card,
+  .dashboard-panel,
+  .iot-row-card,
+  .metric-card,
+  .sensor-row-card,
+  .sensor-management-card,
+  .cultivation-panel {
+    padding: var(--mobile-card-padding);
+    width: 100%;
+    min-width: 0;
+  }
+
+  .page-stack--dashboard {
+    gap: 0.64rem;
+  }
+
+  .page-stack--dashboard .iot-row-card {
+    gap: 0.72rem;
+    padding: 0.82rem;
+  }
+
+  .page-stack--dashboard .iot-row-card__head {
+    align-items: start;
+    gap: 0.54rem;
+  }
+
+  .page-stack--dashboard .iot-row-card__eyebrow {
+    font-size: 0.62rem;
+  }
+
+  .page-stack--dashboard .iot-row-card__subcopy {
+    font-size: 0.76rem;
+    line-height: 1.35;
+  }
+
+  .page-stack--dashboard .iot-row-card__metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.48rem;
+  }
+
+  .page-stack--dashboard .iot-row-card__metrics > .iot-monitor-card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .page-stack--dashboard .iot-monitor-card {
+    gap: 0.42rem;
+    padding: 0.68rem 0.72rem;
+  }
+
+  .page-stack--dashboard .iot-monitor-card--group {
+    grid-column: 1 / -1;
+  }
+
+  .page-stack--dashboard .iot-monitor-card__group-values {
+    gap: 0.42rem;
+  }
+
+  .page-stack--dashboard .iot-monitor-card__group-item {
+    padding: 0.44rem 0.48rem;
+  }
+
+  .page-stack--dashboard .iot-monitor-card__group-item strong {
+    font-size: 0.9rem;
+  }
+
+  .page-stack--dashboard .sensor-card__icon,
+  .page-stack--dashboard .spot-icon {
+    width: 2.05rem;
+    height: 2.05rem;
+  }
+
+  .page-stack--dashboard .sensor-card__icon .icon,
+  .page-stack--dashboard .spot-icon .icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .page-stack--dashboard .sensor-card__name,
+  .page-stack--dashboard .metric-label {
+    font-size: 0.78rem;
+  }
+
+  .page-stack--dashboard .sensor-card__value,
+  .page-stack--dashboard .metric-value {
+    font-size: 1.28rem;
+    gap: 0.22rem;
+  }
+
+  .page-stack--dashboard .sensor-card__value span,
+  .page-stack--dashboard .metric-value span {
+    font-size: 0.78rem;
+  }
+
+  .page-stack--dashboard .iot-monitor-card__value {
+    font-size: 1.16rem;
+  }
+
+  .page-stack--dashboard > .dashboard-panel--tanks .tank-grid--triple {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem;
+  }
+
+  .page-stack--dashboard > .dashboard-panel--tanks .tank-card--compact {
+    grid-template-columns: 1fr;
+    place-items: center;
+    text-align: center;
+    padding: 0.52rem 0.28rem 0.58rem;
+  }
+
+  .page-stack--dashboard > .dashboard-panel--tanks .tank {
+    width: 3.45rem;
+    height: 5.5rem;
+  }
+
+  .page-stack--dashboard > .dashboard-panel--tanks .tank-card__meta strong {
+    font-size: 0.72rem;
+  }
+
+  .page-stack--dashboard > .dashboard-panel--tanks .tank-card__meta .section-copy {
+    font-size: 0.64rem;
+  }
+
+  .dashboard-card-head,
+  .dashboard-panel__head-actions,
+  .cultivation-chart-row__head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .dashboard-panel__head-actions,
+  .dashboard-row-summary,
+  .dashboard-panel__action,
+  .mobile-dashboard__row-toggle {
+    width: 100%;
+  }
+
+  .dashboard-row-summary span {
+    flex: 1 1 7.4rem;
+    justify-content: center;
+  }
+
+  .cultivation-chart-list,
+  .cultivation-chart-row__body,
+  .tank-dashboard-layout,
+  .tank-trend-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cultivation-chart-row,
+  .tank-trend-card {
+    padding: 0.64rem;
+  }
+
+  .tank-trend-row__delta {
+    justify-content: flex-start;
+  }
+
+  .mobile-chart-list,
+  .mobile-tank-trend-list {
+    display: grid;
+    gap: 0.42rem;
+  }
+
+  .mobile-chart-row,
+  .mobile-tank-trend {
+    min-width: 0;
+    background: var(--card-solid-fill-strong);
+    border-color: var(--glass-panel-border-soft);
+  }
+
+  .settings-menu {
+    left: calc(var(--mobile-sidebar-width) + 0.55rem) !important;
+    right: auto;
+    width: min(12rem, calc(100vw - var(--mobile-sidebar-width) - 1rem));
+    max-height: min(72vh, 24rem);
+    overflow: auto;
+  }
+
+  .toast-stack {
+    top: calc(var(--mobile-shell-gap) + 3.2rem);
+    bottom: auto;
+    left: calc(var(--mobile-sidebar-width) + var(--mobile-shell-gap));
+    right: var(--mobile-shell-gap);
+    width: auto;
+    max-width: min(17.5rem, calc(100vw - var(--mobile-sidebar-width) - (var(--mobile-shell-gap) * 2)));
+    gap: 0.38rem;
+  }
+
+  .toast {
+    gap: 0.52rem;
+    padding: 0.62rem 0.66rem;
+    border-radius: 0.86rem;
+    box-shadow: 0 14px 26px rgba(20, 65, 40, 0.16);
+  }
+
+  .toast__icon {
+    width: 1.52rem;
+    height: 1.52rem;
+    flex-basis: 1.52rem;
+  }
+
+  .toast__icon .icon {
+    width: 1.18rem;
+    height: 1.18rem;
+  }
+
+  .toast__title {
+    font-size: 0.86rem;
+    line-height: 1.24;
+  }
+
+  .toast .icon-button {
+    width: 2.25rem;
+    height: 2.25rem;
+    flex: 0 0 2.25rem;
+  }
+
+  .health-item,
+  .cultivation-item,
+  .notification-item,
+  .metric-card,
+  .iot-monitor-card {
+    min-width: 0;
+  }
+
+  .health-item__meta,
+  .cultivation-item__meta,
+  .section-copy {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --mobile-sidebar-width: clamp(3.45rem, 18vw, 3.85rem);
+    --mobile-shell-gap: 0.5rem;
+    --mobile-card-padding: 0.72rem;
+  }
+
+  .sidebar {
+    padding: 0.5rem 0.26rem;
+    gap: 0.32rem;
+  }
+
+  .brand-lockup__logo {
+    width: 1.72rem;
+    height: 1.72rem;
+  }
+
+  .sidebar .nav-button {
+    min-height: 2.42rem;
+    border-radius: 0.82rem;
+    padding: 0.58rem 0;
+  }
+
+  .sidebar .nav-button__icon {
+    width: 1.14rem;
+    height: 1.14rem;
+    flex-basis: 1.14rem;
+  }
+
+  .topbar {
+    margin: var(--mobile-shell-gap) var(--mobile-shell-gap) 0;
+    padding: 0.62rem;
+  }
+
+  .topbar__title,
+  .section-title,
+  .page-heading h1 {
+    font-size: 1rem;
+    line-height: 1.18;
+  }
+
+  .topbar__subtitle,
+  .page-heading p,
+  .section-copy,
+  .muted {
+    font-size: 0.76rem;
+  }
+
+  .page-stack--dashboard .iot-row-card__metrics {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .page-stack--dashboard .iot-row-card__head,
+  .card-head,
+  .sensor-card__top {
+    gap: 0.48rem;
+  }
+
+  .iot-row-card__summary,
+  .pill {
+    justify-self: start;
+  }
+
+  .page-stack--dashboard > .dashboard-panel--tanks .tank-grid--triple {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .page-stack--dashboard > .dashboard-panel--tanks .tank-card--compact {
+    padding: 0.48rem 0.24rem;
+  }
+
+  .page-stack--dashboard > .dashboard-panel--tanks .tank {
+    width: 2.55rem;
+    height: 4.15rem;
+  }
+
+  .health-item,
+  .cultivation-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .notification-button.icon-button {
+    width: 2.35rem;
+    height: 2.35rem;
+  }
+
+  .profile-pill__avatar {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .settings-menu {
+    left: calc(var(--mobile-sidebar-width) + 0.45rem) !important;
+    width: min(11.2rem, calc(100vw - var(--mobile-sidebar-width) - 0.85rem));
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --mobile-sidebar-width: 3.35rem;
+    --mobile-shell-gap: 0.44rem;
+    --mobile-card-padding: 0.64rem;
+  }
+
+  .page-stack--dashboard > .dashboard-panel--tanks .tank-grid--triple {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .page-heading .button,
+  .button {
+    min-height: 2.8rem;
+  }
+
+  .toast {
+    padding: 0.56rem 0.58rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --mobile-sidebar-width: clamp(3rem, 12vw, 3.7rem);
+    --mobile-shell-gap: 0.48rem;
+    --mobile-card-padding: 0.62rem;
+  }
+
+  .sidebar {
+    padding: 0.45rem 0.24rem;
+    gap: 0.28rem;
+  }
+
+  .sidebar__brand {
+    padding: 0.36rem 0.24rem;
+  }
+
+  .brand-lockup__logo {
+    width: 1.55rem;
+    height: 1.55rem;
+  }
+
+  .sidebar__nav,
+  .sidebar__actions {
+    gap: 0.28rem;
+  }
+
+  .sidebar__actions {
+    padding-top: 0.38rem;
+  }
+
+  .sidebar .nav-button {
+    min-height: 2.28rem;
+    padding: 0.5rem 0;
+    border-radius: 0.74rem;
+  }
+
+  .sidebar .nav-button__icon {
+    width: 1.08rem;
+    height: 1.08rem;
+    flex-basis: 1.08rem;
+  }
+
+  .page-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable;
+    padding: var(--mobile-shell-gap);
+  }
+
+  .page-scene {
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+    padding-bottom: 0.85rem;
+  }
+
+  .app-main {
+    width: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
+    margin-left: 0;
+    max-width: calc(100vw - var(--mobile-sidebar-width));
+    overflow: hidden;
+  }
+
+  .topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.42rem;
+    margin: var(--mobile-shell-gap) var(--mobile-shell-gap) 0;
+    padding: 0.5rem 0.56rem;
+    border-radius: 0.84rem;
+    box-shadow: 0 10px 22px rgba(18, 76, 50, 0.08);
+  }
+
+  .topbar__title {
+    font-size: 0.92rem;
+    line-height: 1.14;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .topbar__subtitle {
+    margin-top: 0.08rem;
+    font-size: 0.66rem;
+    line-height: 1.15;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .topbar__actions {
+    width: auto;
+    align-items: center;
+    justify-content: end;
+    gap: 0.34rem;
+  }
+
+  .profile-pill {
+    width: auto;
+    align-self: center;
+  }
+
+  .profile-pill--button {
+    width: auto;
+    padding: 0.2rem;
+    border-radius: 999px;
+  }
+
+  .profile-pill__copy {
+    display: none;
+  }
+
+  .profile-pill__avatar {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .notification-button.icon-button {
+    width: 2.02rem;
+    height: 2.02rem;
+  }
+
+  .notification-button.icon-button .nav-button__icon {
+    width: 1.52rem;
+    height: 1.52rem;
+    flex-basis: 1.52rem;
+  }
+
+  .notification-button.icon-button .nav-button__icon .icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .page-stack {
+    gap: 0.44rem;
+  }
+
+  .page-stack--dashboard {
+    gap: 0.48rem;
+  }
+
+  .card,
+  .dashboard-panel,
+  .iot-row-card,
+  .metric-card,
+  .sensor-row-card,
+  .sensor-management-card,
+  .cultivation-panel {
+    padding: var(--mobile-card-padding);
+    border-radius: 0.86rem;
+    box-shadow:
+      0 10px 20px rgba(18, 76, 50, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  .toast-stack {
+    top: calc(var(--mobile-shell-gap) + 2.95rem);
+    bottom: auto;
+    left: calc(var(--mobile-sidebar-width) + var(--mobile-shell-gap));
+    right: var(--mobile-shell-gap);
+    width: auto;
+    max-width: min(16.75rem, calc(100vw - var(--mobile-sidebar-width) - (var(--mobile-shell-gap) * 2)));
+    gap: 0.34rem;
+  }
+
+  .toast {
+    padding: 0.56rem 0.6rem;
+    border-radius: 0.8rem;
+  }
+
+  .toast__title {
+    font-size: 0.78rem;
+    line-height: 1.18;
+  }
+
+  .overlay--dialog {
+    z-index: 40;
+    padding: var(--mobile-shell-gap);
+    padding-left: calc(var(--mobile-sidebar-width) + var(--mobile-shell-gap));
+  }
+
+  .logout-confirm-modal {
+    width: min(100%, calc(100vw - var(--mobile-sidebar-width) - (var(--mobile-shell-gap) * 2)));
+    max-width: 19rem;
+    border-radius: 0.92rem;
+  }
+
+  .logout-confirm-modal__body {
+    gap: 0.72rem;
+    padding: 0.82rem 0.78rem 0.78rem;
+  }
+
+  .logout-confirm-modal__icon {
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 0.86rem;
+  }
+
+  .logout-confirm-modal__icon .icon {
+    width: 1.14rem;
+    height: 1.14rem;
+  }
+
+  .logout-confirm-modal__eyebrow {
+    font-size: 0.62rem;
+  }
+
+  .logout-confirm-modal__title {
+    font-size: 0.96rem;
+  }
+
+  .logout-confirm-modal__text {
+    font-size: 0.72rem;
+    line-height: 1.3;
+  }
+
+  .logout-confirm-modal__actions {
+    grid-template-columns: 1fr;
+    gap: 0.42rem;
+  }
+
+  .logout-confirm-modal .button {
+    min-height: 2.5rem;
+    padding: 0.56rem 0.74rem;
+    border-radius: 0.84rem;
+    font-size: 0.8rem;
+  }
+
+  .card-head,
+  .page-stack--dashboard .iot-row-card__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 0.34rem;
+  }
+
+  .section-title,
+  .page-heading h1 {
+    font-size: 0.94rem;
+    line-height: 1.14;
+  }
+
+  .section-copy,
+  .page-heading p,
+  .muted {
+    font-size: 0.68rem;
+    line-height: 1.24;
+  }
+
+  .page-heading {
+    gap: 0.32rem;
+  }
+
+  .mode-grid,
+  .irrigation-type-grid,
+  .grid--two.sensor-actuator-grid,
+  .input-grid,
+  .input-grid--two,
+  .input-grid--three {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .mode-card,
+  .irrigation-type-card,
+  .irrigation-schedule-card,
+  .sensor-management-card,
+  .sensor-row-card,
+  .sensor-row-control,
+  .cultivation-panel,
+  .metric-card {
+    padding: 0.52rem;
+    border-radius: 0.74rem;
+  }
+
+  .mode-card,
+  .irrigation-type-card,
+  .irrigation-schedule-card {
+    gap: 0.42rem;
+  }
+
+  .mode-card__icon {
+    width: 1.3rem;
+    height: 1.3rem;
+    margin-bottom: 0.22rem;
+  }
+
+  .irrigation-type-card__head,
+  .sensor-management-card__head,
+  .sensor-row-control__head {
+    gap: 0.44rem;
+  }
+
+  .irrigation-type-card__icon,
+  .sensor-management-card__icon {
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 0.68rem;
+  }
+
+  .irrigation-type-card__icon .icon,
+  .sensor-management-card__icon .icon {
+    width: 0.92rem;
+    height: 0.92rem;
+  }
+
+  .irrigation-type-card__title,
+  .sensor-management-card__title,
+  .sensor-row-card .section-title,
+  .mode-card .section-title {
+    font-size: 0.82rem;
+    line-height: 1.14;
+  }
+
+  .irrigation-type-card__copy,
+  .sensor-management-card__reading,
+  .sensor-row-control__reading,
+  .field__hint {
+    font-size: 0.62rem;
+    line-height: 1.2;
+  }
+
+  .input,
+  .select,
+  input,
+  select,
+  textarea {
+    min-height: 2.3rem;
+    padding: 0.56rem 0.66rem;
+    font-size: 0.76rem;
+    border-radius: 0.72rem;
+  }
+
+  .field,
+  .sensor-management-card__field,
+  .sensor-row-control__field {
+    gap: 0.24rem;
+  }
+
+  .field__label,
+  .sensor-management-card__state .section-copy {
+    font-size: 0.62rem;
+    line-height: 1.16;
+  }
+
+  .sensor-management-card__state-value,
+  .irrigation-status {
+    font-size: 0.68rem;
+  }
+
+  .pill {
+    padding: 0.16rem 0.32rem;
+    font-size: 0.54rem;
+  }
+
+  .sensor-row-grid,
+  .sensor-management-grid,
+  .sensor-actuator-grid,
+  /* .grid--three is a single class in styles.css and sits later in the
+     cascade, so it beat this rule on source order and left three 105px cards
+     on a phone. Naming it here is what makes the single column win. */
+  .sensor-actuator-grid.grid--three {
+    grid-template-columns: 1fr;
+    gap: 0.46rem;
+  }
+
+  .sensor-row-card__controls,
+  .sensor-row-card__controls--shared {
+    grid-template-columns: 1fr;
+    gap: 0.42rem;
+  }
+
+  .page-stack--dashboard .dashboard-panel--iot-rows > .card-head .section-copy {
+    display: none;
+  }
+
+  .iot-row-dashboard-grid {
+    gap: 0.46rem;
+  }
+
+  .page-stack--dashboard .iot-row-card {
+    gap: 0.46rem;
+    padding: 0.58rem;
+  }
+
+  .page-stack--dashboard .iot-row-card__eyebrow {
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
+  }
+
+  .page-stack--dashboard .iot-row-card__subcopy {
+    display: none;
+  }
+
+  .page-stack--dashboard .iot-row-card__metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.36rem;
+  }
+
+  .page-stack--dashboard .iot-row-card__metrics > .iot-monitor-card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .page-stack--dashboard .iot-monitor-card {
+    gap: 0.32rem;
+    min-height: 7rem;
+    padding: 0.5rem;
+    border-radius: 0.76rem;
+  }
+
+  .page-stack--dashboard .iot-monitor-card--group {
+    grid-column: auto;
+  }
+
+  .page-stack--dashboard .sensor-card__icon,
+  .page-stack--dashboard .spot-icon {
+    width: 1.46rem;
+    height: 1.46rem;
+  }
+
+  .page-stack--dashboard .sensor-card__icon .icon,
+  .page-stack--dashboard .spot-icon .icon {
+    width: 0.82rem;
+    height: 0.82rem;
+  }
+
+  .page-stack--dashboard .sensor-card__name,
+  .page-stack--dashboard .metric-label {
+    font-size: 0.66rem;
+    line-height: 1.18;
+  }
+
+  .page-stack--dashboard .sensor-card__value,
+  .page-stack--dashboard .metric-value,
+  .page-stack--dashboard .iot-monitor-card__value {
+    font-size: 1rem;
+    line-height: 1.12;
+  }
+
+  .page-stack--dashboard .sensor-card__value span,
+  .page-stack--dashboard .metric-value span {
+    font-size: 0.62rem;
+  }
+
+  .page-stack--dashboard .iot-monitor-card__source {
+    font-size: 0.58rem;
+    line-height: 1.18;
+  }
+
+  .page-stack--dashboard .iot-monitor-card__group-values {
+    grid-template-columns: 1fr;
+    gap: 0.28rem;
+  }
+
+  .page-stack--dashboard .iot-monitor-card__group-item {
+    padding: 0.32rem 0.36rem;
+  }
+
+  .page-stack--dashboard .iot-monitor-card__group-item span {
+    font-size: 0.54rem;
+  }
+
+  .page-stack--dashboard .iot-monitor-card__group-item strong {
+    font-size: 0.74rem;
+  }
+
+  .page-stack--dashboard .progress-track {
+    height: 0.38rem;
+  }
+
+  .pill {
+    padding: 0.18rem 0.36rem;
+    font-size: 0.58rem;
+  }
+
+  .page-stack--dashboard > .dashboard-panel--tanks .tank-grid--triple {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.34rem;
+  }
+
+  .page-stack--dashboard > .dashboard-panel--tanks .tank-card--compact {
+    padding: 0.42rem 0.24rem;
+  }
+
+  .page-stack--dashboard > .dashboard-panel--tanks .tank {
+    width: 2.35rem;
+    height: 3.8rem;
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --mobile-sidebar-width: 2.86rem;
+    --mobile-shell-gap: 0.38rem;
+    --mobile-card-padding: 0.54rem;
+  }
+
+  .sidebar .nav-button {
+    min-height: 2.12rem;
+    border-radius: 0.68rem;
+  }
+
+  .brand-lockup__logo {
+    width: 1.38rem;
+    height: 1.38rem;
+  }
+
+  .topbar {
+    padding: 0.44rem 0.48rem;
+  }
+
+  .topbar__subtitle {
+    display: none;
+  }
+
+  .page-stack--dashboard .iot-monitor-card {
+    min-height: 6.7rem;
+    padding: 0.46rem;
+  }
+
+  .page-stack--dashboard > .dashboard-panel--tanks .tank-grid--triple {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1024px) {
+  .mobile-dashboard {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .mobile-dashboard__overview,
+  .mobile-row-card,
+  .mobile-mini-panel {
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 0.9rem;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.38), rgba(234, 244, 226, 0.18));
+    box-shadow:
+      0 10px 24px rgba(18, 76, 50, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    contain: paint;
+  }
+
+  /* No content-visibility on these cards. `contain-intrinsic-size: auto 9rem`
+     only has a remembered size for an element the browser has already laid
+     out, and the live updates replace cards with brand new nodes -- so every
+     off-screen card came back as a 9rem placeholder instead of its real
+     ~32rem height. Four row cards collapsing at once shortened the page by
+     more than a thousand pixels, the browser clamped the scroll position to
+     the shorter page, and the reader was walked back toward the top on every
+     sensor tick or actuator toggle. Skipping off-screen paint is not worth
+     losing the reader's place. */
+
+  .mobile-dashboard__overview {
+    display: grid;
+    gap: 0.42rem;
+    padding: 0.52rem 0.56rem;
+  }
+
+  .mobile-dashboard__overview-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.42rem;
+    flex-wrap: wrap;
+  }
+
+  .mobile-dashboard__overview-top .mobile-dashboard__headline {
+    flex: 1 1 9rem;
+    min-width: 0;
+  }
+
+  .mobile-dashboard__overview-top .mobile-dashboard__row-toggle {
+    width: auto;
+    min-height: 2.28rem;
+    padding-inline: 0.72rem;
+    justify-self: start;
+  }
+
+  .mobile-dashboard__headline {
+    display: grid;
+    gap: 0.08rem;
+  }
+
+  .mobile-dashboard__headline strong {
+    color: var(--text-strong);
+    font-size: 0.96rem;
+    line-height: 1.1;
+  }
+
+  .mobile-dashboard__kicker {
+    color: var(--green-700);
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .mobile-dashboard__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.28rem;
+  }
+
+  .mobile-dashboard__stat {
+    display: grid;
+    gap: 0.08rem;
+    min-height: 3rem;
+    padding: 0.38rem;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 0.68rem;
+    background: rgba(255, 255, 255, 0.22);
+  }
+
+  .mobile-dashboard__stat span,
+  .mobile-row-card__head span,
+  .mobile-reading__label,
+  .mobile-mini-panel__head span,
+  .mobile-tank-row span {
+    color: var(--text-soft);
+    font-size: 0.62rem;
+    line-height: 1.15;
+  }
+
+  .mobile-dashboard__stat strong {
+    color: var(--text-strong);
+    font-size: 0.82rem;
+    line-height: 1;
+  }
+
+  .mobile-row-list {
+    display: grid;
+    gap: 0.42rem;
+  }
+
+  .mobile-dashboard__graphs {
+    display: grid;
+    gap: 0.42rem;
+  }
+
+  .mobile-row-card {
+    display: grid;
+    gap: 0.42rem;
+    padding: 0.52rem;
+  }
+
+  .mobile-row-card__head,
+  .mobile-reading__top,
+  .mobile-mini-panel__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+  }
+
+  .mobile-row-card__head > div {
+    display: grid;
+    gap: 0.08rem;
+    min-width: 0;
+  }
+
+  .mobile-row-card__head strong,
+  .mobile-mini-panel__head strong {
+    color: var(--text-strong);
+    font-size: 0.92rem;
+    line-height: 1.1;
+  }
+
+  .mobile-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: max-content;
+    padding: 0.18rem 0.38rem;
+    border-radius: 999px;
+    color: var(--green-800);
+    font-size: 0.56rem;
+    font-weight: 800;
+    line-height: 1;
+    background: rgba(109, 211, 143, 0.2);
+  }
+
+  .mobile-status--warning {
+    color: #7a6427;
+    background: rgba(244, 180, 0, 0.2);
+  }
+
+  .mobile-status--critical {
+    color: #8b3f37;
+    background: rgba(217, 86, 77, 0.16);
+  }
+
+  .mobile-reading-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.34rem;
+  }
+
+  .mobile-reading-grid > .mobile-reading:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .mobile-reading {
+    appearance: none;
+    display: grid;
+    gap: 0.28rem;
+    min-width: 0;
+    min-height: 4.9rem;
+    padding: 0.44rem;
+    color: var(--text-strong);
+    text-align: left;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 0.78rem;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.3), rgba(240, 246, 235, 0.16));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    font: inherit;
+  }
+
+  .mobile-reading__icon {
+    display: grid;
+    place-items: center;
+    width: 1.28rem;
+    height: 1.28rem;
+    color: var(--green-500);
+    border-radius: 0.46rem;
+    background: rgba(109, 211, 143, 0.14);
+  }
+
+  .mobile-reading__icon .icon {
+    width: 0.78rem;
+    height: 0.78rem;
+  }
+
+  .mobile-reading strong {
+    color: var(--text-strong);
+    font-size: 0.94rem;
+    line-height: 1.05;
+  }
+
+  .mobile-reading small {
+    font-size: 0.62rem;
+    font-weight: 800;
+  }
+
+  .mobile-reading__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.24rem;
+  }
+
+  .mobile-reading__chips span {
+    padding: 0.16rem 0.28rem;
+    border-radius: 999px;
+    color: var(--text-soft);
+    font-size: 0.54rem;
+    font-weight: 800;
+    line-height: 1;
+    background: rgba(255, 255, 255, 0.24);
+  }
+
+  .mobile-reading__bar,
+  .mobile-tank-row__bar {
+    overflow: hidden;
+    width: 100%;
+    height: 0.34rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.32);
+  }
+
+  .mobile-reading__bar span,
+  .mobile-tank-row__bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--green-300), var(--green-600));
+  }
+
+  .mobile-mini-panel {
+    display: grid;
+    gap: 0.46rem;
+    padding: 0.52rem;
+  }
+
+  .mobile-mini-panel--chart {
+    gap: 0.46rem;
+    padding: 0.44rem;
+  }
+
+  .mobile-mini-panel__head--chart {
+    align-items: flex-start;
+    gap: 0.46rem;
+    flex-wrap: wrap;
+  }
+
+  .mobile-mini-panel__head--chart > div {
+    display: grid;
+    gap: 0.08rem;
+    min-width: 0;
+  }
+
+  .mobile-mini-panel__head--chart .dashboard-graph-range {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .mobile-mini-panel__head--chart .dashboard-graph-range__label {
+    font-size: 0.56rem;
+  }
+
+  .mobile-mini-panel__head--chart .dashboard-graph-range__select {
+    width: 100%;
+    min-width: 0;
+    min-height: 2.28rem;
+    padding-block: 0.5rem;
+    font-size: 0.74rem;
+  }
+
+  .mobile-mini-panel--chart .mobile-line-chart-card {
+    padding: 0.48rem;
+  }
+
+  .mobile-mini-panel--chart .dashboard-line-chart {
+    min-height: 8.4rem;
+  }
+
+  .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+    min-height: 8.5rem;
+  }
+
+  .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart__grid text,
+  .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart__axis text {
+    font-size: 0.62rem;
+  }
+
+  .mobile-chart-empty-state {
+    min-height: 8rem;
+    padding: 0.72rem;
+  }
+
+  .mobile-line-chart-card .dashboard-line-chart__grid text,
+  .mobile-line-chart-card .dashboard-line-chart__axis text {
+    font-size: 0.62rem;
+  }
+
+  .mobile-tank-list {
+    display: grid;
+    gap: 0.34rem;
+  }
+
+  .mobile-tank-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.24rem 0.45rem;
+    padding: 0.42rem;
+    border-radius: 0.64rem;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .mobile-tank-row strong {
+    color: var(--text-strong);
+    font-size: 0.76rem;
+  }
+
+  .mobile-tank-row__bar {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 360px) {
+  .mobile-dashboard {
+    gap: 0.42rem;
+  }
+
+  .mobile-dashboard__overview,
+  .mobile-row-card,
+  .mobile-mini-panel {
+    padding: 0.5rem;
+    border-radius: 0.78rem;
+  }
+
+  .mobile-dashboard__overview-top .mobile-dashboard__row-toggle {
+    width: 100%;
+  }
+
+  .mobile-reading-grid {
+    gap: 0.32rem;
+  }
+
+  .mobile-reading {
+    min-height: 4.7rem;
+    padding: 0.42rem;
+    border-radius: 0.68rem;
+  }
+
+  .mobile-reading strong {
+    font-size: 0.94rem;
+  }
+
+  .mobile-status {
+    padding-inline: 0.3rem;
+    font-size: 0.52rem;
+  }
+
+  .mobile-mini-panel--chart .dashboard-line-chart {
+    min-height: 7.4rem;
+  }
+
+  .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart,
+  .mobile-chart-empty-state {
+    min-height: 7rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .glass-card:not(.glass-card--dark),
+  .card,
+  .dashboard-panel,
+  .sensor-card,
+  .health-item,
+  .list-tile,
+  .cultivation-item,
+  .user-row,
+  .stat-card,
+  .tank-card,
+  .tank-card--compact,
+  .mode-card,
+  .timeline-card,
+  .metric-card,
+  .notification-item,
+  .iot-row-card,
+  .iot-monitor-card,
+  .iot-monitor-card__group-item,
+  .cultivation-chart-row,
+  .cultivation-summary-card,
+  .dashboard-graph-card,
+  .dashboard-empty-state,
+  .mobile-line-chart-card,
+  .tank-trend-card,
+  .tank-trend-row,
+  .mobile-chart-row,
+  .mobile-tank-trend,
+  .sensor-row-card,
+  .sensor-row-control,
+  .sensor-management-card,
+  .developer-card,
+  .about-panel,
+  .about-brand-card,
+  .contact-card,
+  .settings-section-card,
+  .password-otp-card,
+  .cultivation-crop-option,
+  .cultivation-setup-summary,
+  .cultivation-mode-panel,
+  .cultivation-parameter-selection,
+  .cultivation-parameter-card,
+  .cultivation-parameter-static,
+  .modal--settings .settings-section-card,
+  .modal--settings .about-panel,
+  .modal--settings .about-brand-card,
+  .modal--settings .developer-card,
+  .modal--settings .contact-card {
+    background: var(--card-solid-fill) !important;
+    border: 1px solid var(--glass-panel-border-soft) !important;
+    box-shadow:
+      0 12px 24px rgba(18, 76, 50, 0.13),
+      0 3px 10px rgba(18, 76, 50, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.44) !important;
+  }
+
+  .dashboard-panel,
+  .iot-row-card,
+  .metric-card,
+  .dashboard-graph-card,
+  .mobile-dashboard__overview,
+  .mobile-row-card,
+  .mobile-mini-panel,
+  .mobile-reading,
+  .mobile-tank-row {
+    border-color: var(--glass-panel-border) !important;
+  }
+
+  .mobile-dashboard__overview,
+  .mobile-row-card,
+  .mobile-mini-panel,
+  .mobile-reading,
+  .mobile-dashboard__stat,
+  .mobile-tank-row {
+    background:
+      linear-gradient(145deg, rgba(249, 252, 244, 0.8), rgba(222, 238, 214, 0.66)),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(88, 129, 87, 0.1)) !important;
+    box-shadow:
+      0 10px 22px rgba(18, 76, 50, 0.13),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .dashboard-panel--health .health-item__meta,
+  .health-item__meta {
+    min-width: 0 !important;
+  }
+
+  .dashboard-panel--health .health-item__meta strong,
+  .dashboard-panel--health .health-item .section-copy,
+  .health-item__meta strong {
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+}
+
+/* Keep graph cards compact after desktop stat chips are removed. */
+.page-stack--dashboard .dashboard-panel--cultivation-graph .dashboard-graph-card--sensors,
+.page-stack--dashboard .dashboard-panel--cultivation-building .dashboard-graph-card--cultivation-batch {
+  grid-template-rows: auto auto !important;
+  align-content: start !important;
+  min-height: 0 !important;
+  height: auto !important;
+  gap: 0.5rem !important;
+}
+
+.page-stack--dashboard .dashboard-panel--cultivation-graph .dashboard-line-chart--wide,
+.page-stack--dashboard .cultivation-batch-chart {
+  height: 11rem !important;
+  min-height: 11rem !important;
+  max-height: 11rem !important;
+}
+
+.mobile-line-chart-card .dashboard-line-chart,
+.mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+  height: 8.8rem !important;
+  min-height: 8.8rem !important;
+  max-height: 8.8rem !important;
+}
+
+/* Final mobile graph and theme override. */
+@media (max-width: 1024px) {
+  :root {
+    --glass-panel-border: rgba(50, 92, 55, 0.5);
+    --glass-panel-border-soft: rgba(70, 115, 72, 0.42);
+    --card-solid-fill:
+      linear-gradient(145deg, rgba(244, 250, 238, 0.88), rgba(211, 233, 201, 0.76)),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(80, 128, 79, 0.14));
+    --card-solid-fill-strong:
+      linear-gradient(145deg, rgba(246, 251, 240, 0.94), rgba(214, 235, 204, 0.84)),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(80, 128, 79, 0.16));
+  }
+
+  .modal--settings .input,
+  .modal--settings .select,
+  .settings-section-card .input,
+  .settings-section-card .select {
+    color: #101828 !important;
+    background: linear-gradient(145deg, rgba(246, 251, 241, 0.92), rgba(217, 237, 208, 0.76)) !important;
+    border: 1px solid rgba(65, 111, 68, 0.46) !important;
+  }
+
+  .dashboard-graph-card,
+  .mobile-line-chart-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .dashboard-line-chart,
+  .cultivation-batch-chart {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .page-stack--dashboard .dashboard-panel--cultivation-graph .dashboard-line-chart--wide,
+  .page-stack--dashboard .cultivation-batch-chart,
+  .page-stack--dashboard > .dashboard-panel--tanks .dashboard-line-chart,
+  .mobile-line-chart-card .dashboard-line-chart,
+  .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+    height: clamp(11.5rem, 38vw, 14rem) !important;
+    min-height: clamp(11.5rem, 38vw, 14rem) !important;
+    max-height: clamp(11.5rem, 38vw, 14rem) !important;
+  }
+}
+
+/* Final fallback for desktop shell inside phone-sized webviews. */
+@media (max-width: 1024px) {
+  html,
+  body {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    overflow: hidden !important;
+  }
+
+  body:not(.mobile-web):not(.is-auth-screen) .app-shell {
+    display: block !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    overflow: hidden !important;
+  }
+
+  body:not(.mobile-web):not(.is-auth-screen) .app-main {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    margin-left: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body:not(.mobile-web):not(.is-auth-screen) .app-main::before,
+  body:not(.mobile-web):not(.is-auth-screen) .app-main::after,
+  body:not(.mobile-web):not(.is-auth-screen) .sidebar::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  body:not(.mobile-web):not(.is-auth-screen) .topbar {
+    display: none !important;
+  }
+
+  body:not(.mobile-web):not(.is-auth-screen) .page-content {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    min-height: 0 !important;
+    padding: 0.64rem 0.64rem calc(4.75rem + env(safe-area-inset-bottom, 0px)) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    scrollbar-gutter: auto !important;
+  }
+
+  body:not(.mobile-web):not(.is-auth-screen) .page-scene,
+  body:not(.mobile-web):not(.is-auth-screen) .page-stack,
+  body:not(.mobile-web):not(.is-auth-screen) .mobile-dashboard,
+  body:not(.mobile-web):not(.is-auth-screen) .mobile-row-list,
+  body:not(.mobile-web):not(.is-auth-screen) .mobile-dashboard__graphs {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  body:not(.mobile-web):not(.is-auth-screen) .sidebar {
+    position: fixed !important;
+    inset: auto 0 0 0 !important;
+    width: 100vw !important;
+    min-width: 0 !important;
+    max-width: 100vw !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: calc(4.35rem + env(safe-area-inset-bottom, 0px)) !important;
+    display: block !important;
+    padding: 0.2rem 0.32rem calc(0.24rem + env(safe-area-inset-bottom, 0px)) !important;
+    overflow: hidden !important;
+    border-right: 0 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.42) !important;
+    border-radius: 1rem 1rem 0 0 !important;
+    z-index: 80 !important;
+  }
+
+  body:not(.mobile-web):not(.is-auth-screen) .sidebar__brand,
+  body:not(.mobile-web):not(.is-auth-screen) .sidebar__actions,
+  body:not(.mobile-web):not(.is-auth-screen) .sidebar .nav-divider {
+    display: none !important;
+  }
+
+  body:not(.mobile-web):not(.is-auth-screen) .sidebar__nav {
+    display: grid !important;
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    gap: 0.16rem !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body:not(.mobile-web):not(.is-auth-screen) .sidebar .nav-button {
+    min-width: 0 !important;
+    min-height: 3.52rem !important;
+    height: 3.52rem !important;
+    display: grid !important;
+    place-items: center !important;
+    gap: 0.12rem !important;
+    padding: 0.25rem 0.1rem !important;
+    border-radius: 0.78rem !important;
+  }
+
+  body:not(.mobile-web):not(.is-auth-screen) .sidebar .nav-button__icon {
+    width: 1.32rem !important;
+    height: 1.32rem !important;
+    flex-basis: 1.32rem !important;
+  }
+
+  body:not(.mobile-web):not(.is-auth-screen) .sidebar .nav-button > span:not(.nav-button__icon) {
+    display: block !important;
+    max-width: 100% !important;
+    font-size: 0.54rem !important;
+    line-height: 1.05 !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .page-stack--dashboard .dashboard-panel--cultivation-graph .dashboard-line-chart--wide,
+  .page-stack--dashboard .cultivation-batch-chart,
+  .page-stack--dashboard > .dashboard-panel--tanks .dashboard-line-chart,
+  .mobile-line-chart-card .dashboard-line-chart,
+  .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+    height: 10.75rem !important;
+    min-height: 10.75rem !important;
+    max-height: 10.75rem !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --glass-panel-border: rgba(39, 89, 48, 0.58);
+    --glass-panel-border-soft: rgba(58, 105, 61, 0.5);
+    --card-solid-fill:
+      linear-gradient(145deg, rgba(231, 246, 224, 0.92), rgba(192, 224, 183, 0.82)),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(54, 112, 58, 0.18));
+    --card-solid-fill-strong:
+      linear-gradient(145deg, rgba(236, 248, 229, 0.96), rgba(200, 229, 191, 0.9)),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(54, 112, 58, 0.2));
+  }
+
+  .input,
+  .select,
+  input,
+  select,
+  textarea {
+    color: #101828 !important;
+    background: linear-gradient(145deg, rgba(235, 247, 228, 0.94), rgba(197, 226, 188, 0.84)) !important;
+    border-color: rgba(48, 96, 53, 0.5) !important;
+  }
+
+  .mobile-dashboard__overview,
+  .mobile-row-card,
+  .mobile-mini-panel,
+  .mobile-reading,
+  .mobile-dashboard__stat,
+  .mobile-health-chip,
+  .mobile-tank-row,
+  .mobile-chart-row,
+  .mobile-tank-trend {
+    background: var(--card-solid-fill) !important;
+    border-color: var(--glass-panel-border-soft) !important;
+    box-shadow:
+      0 12px 24px rgba(18, 76, 50, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.34) !important;
+  }
+
+  .page-stack--dashboard .dashboard-panel--cultivation-graph .dashboard-line-chart--wide,
+  .page-stack--dashboard .cultivation-batch-chart,
+  .page-stack--dashboard > .dashboard-panel--tanks .dashboard-line-chart,
+  .mobile-line-chart-card .dashboard-line-chart,
+  .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+    height: clamp(12.5rem, 48vw, 16rem) !important;
+    min-height: clamp(12.5rem, 48vw, 16rem) !important;
+    max-height: clamp(12.5rem, 48vw, 16rem) !important;
+  }
+}
+
+/* Final responsive graph containment for the user shell. */
+@media (max-width: 1024px) {
+  .dashboard-graph-card,
+  .mobile-line-chart-card {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    contain: paint;
+  }
+
+  .dashboard-line-chart,
+  .cultivation-batch-chart {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .page-stack--dashboard .dashboard-panel--cultivation-graph .dashboard-line-chart--wide,
+  .page-stack--dashboard .cultivation-batch-chart,
+  .page-stack--dashboard > .dashboard-panel--tanks .dashboard-line-chart,
+  .mobile-line-chart-card .dashboard-line-chart,
+  .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+    height: clamp(10.75rem, 42vw, 13rem) !important;
+    min-height: clamp(10.75rem, 42vw, 13rem) !important;
+    max-height: clamp(10.75rem, 42vw, 13rem) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .page-stack--dashboard .dashboard-panel--cultivation-graph .dashboard-line-chart--wide,
+  .page-stack--dashboard .cultivation-batch-chart,
+  .page-stack--dashboard > .dashboard-panel--tanks .dashboard-line-chart,
+  .mobile-line-chart-card .dashboard-line-chart,
+  .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+    height: 10rem !important;
+    min-height: 10rem !important;
+    max-height: 10rem !important;
+  }
+}
+
+/* Final responsive tank polish: two compact columns, lighter graph depth, smooth motion. */
+@media (max-width: 1024px) {
+  .page-stack--dashboard .dashboard-panel--tanks .tank-dashboard-layout,
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--tanks .tank-dashboard-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0.68rem !important;
+  }
+
+  .page-stack--dashboard .dashboard-panel--tanks .tank-grid--triple,
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--tanks .tank-grid--triple {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.48rem !important;
+  }
+
+  .page-stack--dashboard .dashboard-panel--tanks .tank-card--compact,
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--tanks .tank-card--compact {
+    grid-template-columns: auto minmax(0, 1fr) !important;
+    place-items: center start !important;
+    min-height: 6.3rem !important;
+    padding: 0.46rem 0.48rem !important;
+    gap: 0.44rem !important;
+    text-align: left !important;
+  }
+
+  .page-stack--dashboard .dashboard-panel--tanks .tank-card--compact:nth-child(3),
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--tanks .tank-card--compact:nth-child(3) {
+    grid-column: 1 / -1 !important;
+  }
+
+  .page-stack--dashboard .dashboard-panel--tanks .tank,
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--tanks .tank {
+    width: 2.65rem !important;
+    height: 4.18rem !important;
+    border-width: 2px !important;
+  }
+
+  .page-stack--dashboard .dashboard-panel--tanks .tank-trend-card,
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--tanks .tank-trend-card {
+    overflow: hidden !important;
+    padding: 0.58rem !important;
+  }
+
+  .page-stack--dashboard .dashboard-panel--tanks .tank-trend-card .dashboard-graph-card--tank,
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--tanks .tank-trend-card .dashboard-graph-card--tank {
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0.32rem 0 0 !important;
+    border-radius: 0 !important;
+    min-height: 0 !important;
+  }
+
+  .page-stack--dashboard .dashboard-panel--tanks .dashboard-graph-card--tank .dashboard-line-chart,
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--tanks .dashboard-graph-card--tank .dashboard-line-chart {
+    height: clamp(10.75rem, 42vw, 13rem) !important;
+    min-height: clamp(10.75rem, 42vw, 13rem) !important;
+    max-height: clamp(10.75rem, 42vw, 13rem) !important;
+  }
+
+  .glass-card,
+  .card,
+  .dashboard-panel,
+  .dashboard-graph-card,
+  .mobile-line-chart-card,
+  .tank-trend-card,
+  .sensor-card,
+  .health-item,
+  .tank-card,
+  .metric-card,
+  .mobile-row-card,
+  .mobile-mini-panel,
+  .mobile-reading,
+  .button,
+  .icon-button,
+  .nav-button,
+  .profile-pill--button {
+    backface-visibility: hidden !important;
+    transform: translateZ(0);
+    transition:
+      transform 620ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 420ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      border-color 420ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      background-color 420ms cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  }
+
+  .tank {
+    animation-duration: 7.4s !important;
+  }
+
+  .tank__fill {
+    animation-duration: 4.8s !important;
+  }
+
+  .tank__fill::after {
+    animation-duration: 5.4s !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .page-stack--dashboard .dashboard-panel--tanks .tank-card--compact,
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--tanks .tank-card--compact {
+    min-height: 5.95rem !important;
+    padding: 0.42rem 0.42rem !important;
+  }
+
+  .page-stack--dashboard .dashboard-panel--tanks .tank,
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--tanks .tank {
+    width: 2.36rem !important;
+    height: 3.82rem !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Desktop-matched mobile palette: keep responsive layout, remove green card fills. */
+@media (max-width: 1024px) {
+  :root {
+    --glass-panel-border: rgba(255, 255, 255, 0.74);
+    --glass-panel-border-soft: rgba(210, 225, 207, 0.76);
+    --card-solid-fill: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(240, 246, 236, 0.92));
+    --card-solid-fill-soft: linear-gradient(145deg, rgba(255, 255, 255, 0.93), rgba(239, 245, 235, 0.88));
+    --card-solid-fill-strong: linear-gradient(145deg, rgba(255, 255, 255, 0.99), rgba(242, 247, 238, 0.95));
+  }
+
+  body {
+    background:
+      radial-gradient(circle at 14% 18%, rgba(143, 201, 154, 0.14), transparent 22%),
+      radial-gradient(circle at 82% 18%, rgba(224, 212, 187, 0.2), transparent 25%),
+      linear-gradient(145deg, rgba(241, 238, 229, 0.98), rgba(232, 242, 232, 0.96) 42%, rgba(238, 235, 225, 0.98) 100%) !important;
+  }
+
+  .glass-card:not(.glass-card--dark),
+  .card,
+  .dashboard-panel,
+  .sensor-card,
+  .health-item,
+  .list-tile,
+  .cultivation-item,
+  .user-row,
+  .stat-card,
+  .tank-card,
+  .tank-card--compact,
+  .mode-card,
+  .timeline-card,
+  .metric-card,
+  .notification-item,
+  .iot-row-card,
+  .iot-monitor-card,
+  .iot-monitor-card__group-item,
+  .cultivation-chart-row,
+  .cultivation-summary-card,
+  .dashboard-graph-card,
+  .dashboard-empty-state,
+  .mobile-dashboard__overview,
+  .mobile-row-card,
+  .mobile-mini-panel,
+  .mobile-line-chart-card,
+  .mobile-dashboard__stat,
+  .mobile-reading,
+  .mobile-health-chip,
+  .mobile-tank-row,
+  .mobile-chart-row,
+  .mobile-tank-trend,
+  .tank-trend-card,
+  .tank-trend-row,
+  .sensor-row-card,
+  .sensor-row-control,
+  .sensor-management-card,
+  .developer-card,
+  .about-panel,
+  .about-brand-card,
+  .contact-card,
+  .settings-section-card,
+  .password-otp-card,
+  .cultivation-crop-option,
+  .cultivation-setup-summary,
+  .cultivation-mode-panel,
+  .cultivation-parameter-selection,
+  .cultivation-parameter-card,
+  .cultivation-parameter-static,
+  .modal--settings .settings-section-card,
+  .modal--settings .about-panel,
+  .modal--settings .about-brand-card,
+  .modal--settings .developer-card,
+  .modal--settings .contact-card {
+    color: var(--text, #101828) !important;
+    background: var(--card-solid-fill) !important;
+    border-color: var(--glass-panel-border-soft) !important;
+    box-shadow:
+      0 12px 28px rgba(12, 56, 35, 0.09),
+      0 8px 18px rgba(12, 56, 35, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.52) !important;
+  }
+
+  .mobile-reading,
+  .mobile-health-chip,
+  .mobile-tank-row,
+  .mobile-dashboard__stat,
+  .sensor-row-control {
+    background: var(--card-solid-fill-soft) !important;
+    box-shadow:
+      0 8px 18px rgba(12, 56, 35, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.48) !important;
+  }
+
+  .input,
+  .select,
+  input,
+  select,
+  textarea,
+  .dashboard-graph-range__select {
+    color: #101828 !important;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(246, 249, 244, 0.94)) !important;
+    border-color: rgba(210, 225, 207, 0.95) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.58) !important;
+  }
+
+  .dashboard-line-chart__plot {
+    fill: rgba(255, 255, 255, 0.84) !important;
+    stroke: rgba(210, 225, 207, 0.92) !important;
+  }
+
+  .mobile-reading__chips span,
+  .dashboard-row-summary span {
+    background: rgba(255, 255, 255, 0.76) !important;
+  }
+}

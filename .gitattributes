@@ -1,0 +1,54 @@
+# Shell scripts must stay LF, whatever the checkout platform does.
+#
+# This repository is edited on Windows and deployed to a Raspberry Pi. Git's
+# autocrlf turns LF into CRLF in the Windows working tree, and a shell script
+# that reaches the Pi with CRLF line endings does not fail loudly: bash exits 2
+# on the first line with a stray carriage return, which has previously taken
+# out LightDM's session start and dropped the kiosk silently to the greeter.
+#
+# Marking them explicitly means the bytes on the Pi are the bytes that were
+# written, regardless of any local core.autocrlf setting.
+*.sh text eol=lf
+*.bash text eol=lf
+
+# systemd units, their templates, and the Caddyfile are parsed line by line by
+# software with the same intolerance for carriage returns.
+*.service text eol=lf
+*.service.in text eol=lf
+*.conf.in text eol=lf
+*.timer text eol=lf
+Caddyfile text eol=lf
+
+# Python on the Pi tolerates CRLF inside a file, but a shebang line ending in
+# \r makes the kernel look for an interpreter named "python3\r" and fail with
+# a bare "no such file or directory" that names a binary which plainly exists.
+*.py text eol=lf
+
+# Firmware and web assets are read by compilers and browsers that do not care,
+# but keeping them consistent avoids whole-file diffs when someone commits from
+# the other platform.
+*.c text eol=lf
+*.h text eol=lf
+*.cpp text eol=lf
+*.ino text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Binary files Git must never translate.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.sqlite binary
+*.bin binary
+*.elf binary

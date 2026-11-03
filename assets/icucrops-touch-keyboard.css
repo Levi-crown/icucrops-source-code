@@ -1,0 +1,179 @@
+/* The kiosk touchscreen has no mouse ever attached; a stray pointer arrow
+   left sitting on-screen just looks like a rendering glitch. Lives here
+   rather than the emerald theme file because this stylesheet is the one
+   thing every Pi-kiosk page (including the login screen) already loads. */
+html.pi-kiosk body,
+html.pi-kiosk body *,
+html.pi-kiosk body *::before,
+html.pi-kiosk body *::after {
+  cursor: none !important;
+}
+
+/* A horizontal drag anywhere on the panel was being taken as Chromium's
+   swipe-to-go-back gesture, so brushing sideways across a page walked the
+   kiosk backwards out of it -- off a settings screen mid-edit, or out of the
+   app entirely to the login page. There is no back button on this kiosk and
+   nothing that should ever want that gesture, so the whole page refuses
+   horizontal overscroll. Vertical is deliberately left alone: that is what
+   scrolls the dashboard. Lives here for the same reason as the rule above --
+   pi-kiosk.css is not loaded on the login screen, and this file is. */
+html.pi-kiosk,
+html.pi-kiosk body {
+  overscroll-behavior-x: none;
+}
+
+/* A shared kiosk has no legitimate use for copy/paste on its own fields, but
+   the field's text has to stay selectable: on a touch panel, moving the caret
+   by tapping into the middle of the text is part of the same selection
+   machinery, so declaring the field unselectable also took away the only way
+   to type anywhere other than the end. The copy/paste bubble is instead kept
+   away by blocking the copy, cut, paste and contextmenu events outright in
+   icucrops-touch-keyboard.js, which needs no help from here. */
+html.pi-kiosk body input,
+html.pi-kiosk body textarea {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: none;
+}
+
+:root {
+  --icucrops-tk-height: 0px;
+}
+
+/* The panel is a fixed overlay, so on the kiosk's 800x480 screen a field in
+   the lower half ends up completely underneath it -- measured on the panel,
+   the login e-mail field sat at 206.6-254.7 with the keyboard starting at
+   206.3, so every tap meant to place the caret landed on the keyboard's own
+   header instead and the caret could never be moved off wherever it started.
+   The page had no room left to scroll it clear either (scrollHeight 545 on a
+   480 viewport, already scrolled to its 65px limit), so reserve exactly the
+   panel's height at the bottom while it is open; icucrops-touch-keyboard.js
+   then scrolls the field above it. --icucrops-tk-height is kept in sync with
+   the panel's real rendered height by that same script.
+
+   No transition on it: html.pi-kiosk * gives every element a 150ms one, so
+   this padding grew over 150ms and the script's lift attempts, all inside
+   that window, found no room yet -- the first Forgot Password OTP box stayed
+   under the keys until a digit had been typed. This selector outranks that
+   wildcard, so its !important wins. */
+html.pi-kiosk body.icucrops-tk-open {
+  padding-bottom: var(--icucrops-tk-height, 0px);
+  transition: none !important;
+}
+
+html.pi-kiosk body.icucrops-tk-open input,
+html.pi-kiosk body.icucrops-tk-open textarea {
+  scroll-margin-bottom: calc(var(--icucrops-tk-height, 0px) + 16px);
+}
+
+.icucrops-tk {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2147483000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.45rem 0.5rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
+  background: rgba(238, 247, 235, 0.98);
+  border-top: 1px solid rgba(41, 106, 62, 0.22);
+  box-shadow: 0 -10px 26px rgba(20, 70, 42, 0.18);
+  font-family: "Segoe UI", "DejaVu Sans", Arial, sans-serif;
+}
+
+.icucrops-tk[hidden] {
+  display: none;
+}
+
+.icucrops-tk__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.15rem;
+}
+
+.icucrops-tk__title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #5f7365;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.icucrops-tk__close {
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  padding: 0;
+  color: #2e7a49;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(41, 106, 62, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.icucrops-tk__keys {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.icucrops-tk__row {
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.icucrops-tk__key {
+  flex: 1;
+  min-width: 0;
+  max-width: 4.6rem;
+  height: 3.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #24462f;
+  font: inherit;
+  font-size: 1.12rem;
+  font-weight: 600;
+  background: #fff;
+  border: 1px solid rgba(41, 106, 62, 0.16);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(20, 70, 42, 0.08);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  /* No pan, no pinch, no double-tap zoom on a key: any of those gestures
+     would let the browser take the press over and cancel it part-way,
+     which is exactly how a real finger on ⌫ ended up doing nothing. */
+  touch-action: none;
+}
+
+.icucrops-tk__key:active {
+  background: rgba(59, 162, 83, 0.22);
+  transform: translateY(1px);
+}
+
+.icucrops-tk__key--shift,
+.icucrops-tk__key--wide {
+  max-width: 6rem;
+  font-size: 0.95rem;
+  color: #326642;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.icucrops-tk__key--space {
+  max-width: none;
+  flex: 4;
+}
+
+.icucrops-tk__key--enter {
+  max-width: 7.2rem;
+  color: #fff;
+  background: linear-gradient(135deg, #3d994c, #277a3d);
+  border-color: transparent;
+}

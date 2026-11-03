@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-label="ICuCrops — Smart greenhouse and crop monitoring">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0e3d2b"/>
+      <stop offset="0.55" stop-color="#145f3e"/>
+      <stop offset="1" stop-color="#277348"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7ee2a8"/>
+      <stop offset="1" stop-color="#2fa866"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="320" rx="24" fill="url(#bg)"/>
+  <rect width="1200" height="320" rx="24" fill="url(#grid)"/>
+
+  <!-- soil rows -->
+  <g opacity="0.18" fill="#0a2a1e">
+    <rect x="0" y="268" width="1200" height="52"/>
+  </g>
+  <g fill="#ffffff" fill-opacity="0.08">
+    <circle cx="1040" cy="70" r="160"/>
+    <circle cx="1100" cy="250" r="90"/>
+  </g>
+
+  <!-- sprouting leaf mark -->
+  <g transform="translate(110 92)">
+    <rect x="0" y="0" width="136" height="136" rx="34" fill="#ffffff" fill-opacity="0.1" stroke="#ffffff" stroke-opacity="0.22"/>
+    <path d="M68 112 V64" stroke="#d8f5e3" stroke-width="6" stroke-linecap="round"/>
+    <path d="M68 70 C 68 40, 92 26, 112 26 C 112 52, 96 72, 68 70 Z" fill="url(#leaf)"/>
+    <path d="M68 82 C 68 58, 46 46, 26 46 C 26 70, 42 86, 68 82 Z" fill="url(#leaf)" opacity="0.85"/>
+    <!-- water drop -->
+    <path d="M104 96 C 104 96, 94 108, 94 114 a10 10 0 0 0 20 0 C 114 108, 104 96, 104 96 Z" fill="#9bd7ff"/>
+  </g>
+
+  <text x="282" y="160" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif" font-size="76" font-weight="800" fill="#ffffff" letter-spacing="-1">ICuCrops</text>
+  <text x="286" y="204" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif" font-size="26" font-weight="500" fill="#d8f5e3">Smart greenhouse &amp; crop monitoring system</text>
+
+  <!-- pills -->
+  <g font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif" font-size="16" font-weight="600" fill="#ffffff">
+    <rect x="286" y="226" width="150" height="32" rx="16" fill="#ffffff" fill-opacity="0.14"/>
+    <text x="361" y="247" text-anchor="middle">Soil moisture</text>
+    <rect x="448" y="226" width="118" height="32" rx="16" fill="#ffffff" fill-opacity="0.14"/>
+    <text x="507" y="247" text-anchor="middle">Irrigation</text>
+    <rect x="578" y="226" width="134" height="32" rx="16" fill="#ffffff" fill-opacity="0.14"/>
+    <text x="645" y="247" text-anchor="middle">Greenhouse</text>
+    <rect x="724" y="226" width="122" height="32" rx="16" fill="#3ecf8e" fill-opacity="0.9"/>
+    <text x="785" y="247" text-anchor="middle" fill="#0e3d2b">Supabase</text>
+  </g>
+</svg>

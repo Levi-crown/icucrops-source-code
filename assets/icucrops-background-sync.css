@@ -1,0 +1,79 @@
+/*
+ * Shared application background treatment.
+ *
+ * Keep the farm artwork visibly consistent across desktop, mobile, and the
+ * Raspberry Pi kiosk. Theme-specific opacity compensates for the pale source
+ * image in dark mode without changing cards, typography, or controls.
+ */
+
+html[data-theme="light"]
+  body:not(.mobile-web):not(.is-auth-screen)
+  .app-main::before {
+  display: block !important;
+  content: "" !important;
+  inset: 0 !important;
+  background: center center / cover no-repeat url("/assets/background-wide.png") !important;
+  /* Match the Raspberry Pi light shell so the farm artwork stays prominent. */
+  opacity: 0.70 !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+html
+  body:not(.mobile-web):not(.is-auth-screen)
+  .app-main::after {
+  display: none !important;
+  content: none !important;
+}
+
+html[data-theme="light"] body.mobile-web {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(255, 255, 255, 0.72), transparent 28%),
+    radial-gradient(circle at 86% 12%, rgba(143, 226, 174, 0.34), transparent 30%),
+    radial-gradient(circle at 16% 88%, rgba(198, 241, 203, 0.38), transparent 34%),
+    linear-gradient(135deg, #f6ffec 0%, #d9f4df 52%, #c8ecd7 100%) !important;
+}
+
+html[data-theme="light"] body.mobile-web::before {
+  display: block !important;
+  content: "" !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  background: center center / cover no-repeat url("/assets/background-wide.png") !important;
+  opacity: 0.52 !important;
+  filter: none !important;
+  transform: none !important;
+  pointer-events: none !important;
+}
+
+html body.mobile-web::after {
+  display: none !important;
+  content: none !important;
+}
+
+html[data-theme="dark"]
+  body:not(.mobile-web):not(.is-auth-screen)
+  .app-main::before {
+  display: block !important;
+  content: "" !important;
+  inset: 0 !important;
+  background: center center / cover no-repeat url("/assets/background-wide.png") !important;
+  opacity: 0.42 !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+html[data-theme="dark"] body.mobile-web::before {
+  display: block !important;
+  content: "" !important;
+  /* Match the light mobile artwork footprint when switching themes. */
+  background: center center / cover no-repeat url("/assets/background-wide.png") !important;
+  opacity: 0.42 !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+html[data-theme="dark"] body.mobile-web {
+  background: #06100b !important;
+}

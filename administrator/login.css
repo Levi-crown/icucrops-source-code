@@ -1,0 +1,685 @@
+:root {
+  --green-900: #124c32;
+  --green-800: #1d6443;
+  --green-600: #2c8d5b;
+  --green-500: #42a86b;
+  --green-200: rgba(185, 227, 179, 0.24);
+  --text: #111111;
+  --text-soft: rgba(17, 24, 39, 0.72);
+  --line: rgba(255, 255, 255, 0.22);
+  --surface: linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.035));
+  --surface-soft: linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+  /* Same correction as the shells: Aptos Display is Office-only and Candara is
+     not on the Pi or on Android, so the login lockup fell through to whatever
+     generic sans the device had. These faces actually exist. */
+  --font-brand: "Segoe UI Variable Display", "Nunito Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text);
+  overflow-x: hidden;
+  overflow-y: auto;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(143, 201, 154, 0.16), transparent 22%),
+    radial-gradient(circle at 82% 18%, rgba(224, 212, 187, 0.24), transparent 25%),
+    linear-gradient(145deg, rgba(241, 238, 229, 0.98), rgba(232, 242, 232, 0.96) 42%, rgba(238, 235, 225, 0.98) 100%);
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+body::before {
+  background: center center / cover no-repeat url("../assets/background-wide.png");
+  opacity: 0.5;
+  filter: none;
+}
+
+body::after {
+  background:
+    linear-gradient(180deg, rgba(243, 238, 228, 0.22), rgba(243, 238, 228, 0.09) 24%, rgba(243, 238, 228, 0.04) 58%, rgba(69, 148, 90, 0.04) 100%),
+    radial-gradient(circle at center, rgba(246, 240, 232, 0.04) 0%, transparent 28%, rgba(234, 243, 232, 0.08) 100%);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  border: 0;
+}
+
+.login-page {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  justify-items: center;
+  padding: clamp(1rem, 4vw, 1.5rem);
+}
+
+.login-shell {
+  width: min(100%, 29rem);
+  margin-inline: auto;
+  display: grid;
+  justify-items: center;
+}
+
+.login-panel {
+  width: 100%;
+  display: grid;
+  gap: clamp(0.95rem, 2.4vw, 1.15rem);
+  padding: clamp(1rem, 4vw, 1.5rem) clamp(0.95rem, 4vw, 1.4rem) clamp(1rem, 3.6vw, 1.35rem);
+  border-radius: clamp(1.2rem, 4vw, 1.6rem);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  backdrop-filter: blur(14px) saturate(118%);
+  -webkit-backdrop-filter: blur(14px) saturate(118%);
+  box-shadow:
+    0 22px 46px rgba(16, 24, 40, 0.08),
+    0 6px 14px rgba(16, 24, 40, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.login-panel__brand {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: clamp(0.35rem, 1.5vw, 0.45rem);
+}
+
+.login-panel__visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(4.5rem, 18vw, 5.35rem);
+  height: clamp(4.5rem, 18vw, 5.35rem);
+  contain: layout paint;
+  isolation: isolate;
+  overflow: hidden;
+  background: transparent;
+}
+
+.login-panel__logo {
+  grid-area: 1 / 1;
+  width: clamp(3.8rem, 16vw, 4.6rem);
+  height: clamp(3.8rem, 16vw, 4.6rem);
+  object-fit: contain;
+  filter: none;
+  transition: opacity 180ms ease;
+  will-change: opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  background: transparent;
+  box-shadow: none;
+}
+
+.login-panel__mascot {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  pointer-events: none;
+  filter: none;
+  transition: opacity 140ms linear;
+  will-change: opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.login-panel__brand.is-password-active .login-panel__logo {
+  opacity: 0;
+}
+
+.login-panel__brand.is-password-active .login-panel__mascot {
+  opacity: 1;
+}
+
+.login-panel__eyebrow {
+  margin: 0;
+  color: var(--green-800);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.login-panel__title {
+  margin: 0;
+  font-family: var(--font-brand);
+  font-size: clamp(1.55rem, 6vw, 2.1rem);
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.login-panel__copy {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: clamp(0.9rem, 3.2vw, 0.94rem);
+  line-height: 1.5;
+}
+
+.login-form {
+  display: grid;
+  gap: clamp(0.82rem, 2.5vw, 0.92rem);
+}
+
+.login-form--otp {
+  gap: 1rem;
+}
+
+.login-password-requirements {
+  margin: -0.18rem 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: #b42318 !important;
+  background: transparent;
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.32;
+}
+
+.login-stage {
+  display: grid;
+  gap: 1rem;
+}
+
+.login-field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.login-field span {
+  font-size: clamp(0.88rem, 3vw, 0.92rem);
+  font-weight: 700;
+}
+
+.login-field input {
+  width: 100%;
+  border-radius: 0.95rem;
+  padding: clamp(0.82rem, 3vw, 0.88rem) clamp(0.9rem, 3.5vw, 1rem);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px) saturate(112%);
+  -webkit-backdrop-filter: blur(10px) saturate(112%);
+}
+
+.login-field input::placeholder {
+  color: rgba(17, 17, 17, 0.42);
+}
+
+.login-field input:focus {
+  border-color: rgba(44, 141, 91, 0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 0 0 3px rgba(66, 168, 107, 0.1);
+}
+
+.login-field__control {
+  position: relative;
+}
+
+.login-field__control input {
+  padding-right: 3.2rem;
+}
+
+.login-password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.72rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #5b6676;
+  background: transparent;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.login-password-toggle:hover {
+  color: var(--green-800);
+  background: rgba(44, 141, 91, 0.08);
+}
+
+.login-password-toggle:focus-visible {
+  outline: 2px solid rgba(44, 141, 91, 0.18);
+  outline-offset: 2px;
+}
+
+.login-password-toggle__icon {
+  display: grid;
+  place-items: center;
+}
+
+.auth-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.login-feedback,
+.login-step-card,
+.login-success-card {
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(247, 242, 233, 0.025)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 10px 22px rgba(16, 24, 40, 0.05);
+  backdrop-filter: blur(10px) saturate(112%);
+  -webkit-backdrop-filter: blur(10px) saturate(112%);
+}
+
+.login-feedback {
+  display: grid;
+  gap: 0.22rem;
+  overflow: hidden;
+  padding: clamp(0.82rem, 3vw, 0.9rem) clamp(0.9rem, 3.5vw, 1rem);
+  color: #234735;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.45;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(247, 242, 233, 0.03)),
+    linear-gradient(180deg, rgba(31, 165, 94, 0.06), rgba(31, 165, 94, 0.015));
+}
+
+.login-feedback--danger {
+  color: #6f1d1b;
+  border-color: rgba(200, 71, 71, 0.18);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 240, 239, 0.04)),
+    linear-gradient(180deg, rgba(188, 63, 63, 0.08), rgba(188, 63, 63, 0.02));
+}
+
+.login-feedback__badge,
+.login-feedback__title,
+.login-feedback__message,
+.login-feedback__meta {
+  margin: 0;
+}
+
+.login-feedback__badge {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(111, 29, 27, 0.82);
+}
+
+.login-feedback__title {
+  font-size: 0.98rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.login-feedback__message,
+.login-feedback__meta {
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.login-feedback__meta {
+  color: rgba(111, 29, 27, 0.76);
+}
+
+.login-step-card,
+.login-success-card {
+  padding: clamp(0.88rem, 3vw, 1rem);
+}
+
+.login-step-card__label,
+.login-success-card__badge {
+  margin: 0;
+  color: var(--green-800);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.login-step-card__value,
+.login-success-card__copy {
+  margin: 0.38rem 0 0;
+}
+
+.login-success-card__copy {
+  color: var(--text-soft);
+  line-height: 1.55;
+}
+
+.login-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.login-actions--split {
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.login-link {
+  padding: 0;
+  background: transparent;
+  color: var(--green-800);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+}
+
+.login-button {
+  width: 100%;
+  border-radius: 1rem;
+  padding: clamp(0.85rem, 3vw, 0.9rem) 1rem;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--green-500), var(--green-600));
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 16px 28px rgba(58, 90, 64, 0.18);
+}
+
+.login-button:disabled,
+.login-link:disabled,
+.login-password-toggle:disabled,
+.login-field input:disabled,
+.otp-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.login-button--inline {
+  width: auto;
+  min-width: 8rem;
+  flex: 0 0 auto;
+}
+
+.otp-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(2.3rem, 1fr));
+  gap: 0.55rem;
+}
+
+.otp-input {
+  width: 100%;
+  border-radius: 0.95rem;
+  padding: clamp(0.74rem, 3vw, 0.88rem) 0;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.035));
+  color: var(--text);
+  outline: none;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.otp-input:focus {
+  border-color: rgba(44, 141, 91, 0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 0 0 3px rgba(66, 168, 107, 0.1);
+}
+
+@media (max-height: 760px) {
+  .login-page {
+    place-items: start center;
+    padding-block: 1rem 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .login-panel {
+    padding: 1.25rem 1.05rem 1.15rem;
+    border-radius: 1.3rem;
+  }
+
+  .login-actions--split {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .login-button--inline {
+    width: 100%;
+  }
+
+  .otp-row {
+    gap: 0.4rem;
+  }
+
+  .otp-input {
+    font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-panel {
+    gap: 0.9rem;
+  }
+
+  .login-actions--split {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .login-link {
+    width: 100%;
+  }
+
+  .login-button--inline {
+    width: 100%;
+  }
+
+  .otp-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .otp-input {
+    min-height: 3rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .login-page {
+    padding-inline: 0.8rem;
+  }
+
+  .login-panel {
+    padding-inline: 0.85rem;
+  }
+
+  .login-panel__title {
+    font-size: 1.45rem;
+  }
+
+  .otp-input {
+    font-size: 0.98rem;
+  }
+
+  .login-panel__visual {
+    width: 4.7rem;
+    height: 4.7rem;
+  }
+}
+
+/* Dashboard-aligned auth polish shared with the main login shell. */
+:root {
+  --line: rgba(27, 97, 64, 0.16);
+  --surface: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(241, 251, 239, 0.94));
+  --surface-soft: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(243, 251, 240, 0.94));
+}
+
+body {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(255, 255, 255, 0.72), transparent 28%),
+    radial-gradient(circle at 86% 12%, rgba(143, 226, 174, 0.34), transparent 30%),
+    radial-gradient(circle at 16% 88%, rgba(198, 241, 203, 0.38), transparent 34%),
+    linear-gradient(135deg, #f6ffec 0%, #d9f4df 52%, #c8ecd7 100%) !important;
+}
+
+body::before {
+  opacity: 0.26 !important;
+}
+
+.login-shell {
+  width: min(100%, 28.5rem) !important;
+}
+
+.login-panel,
+.login-field input,
+.otp-input,
+.login-feedback,
+.login-step-card,
+.login-success-card {
+  border-color: rgba(27, 97, 64, 0.18) !important;
+  background: var(--surface) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.login-panel {
+  box-shadow:
+    0 14px 34px rgba(14, 61, 43, 0.12),
+    0 4px 12px rgba(14, 61, 43, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.62) !important;
+}
+
+.login-field input,
+.otp-input {
+  background: var(--surface-soft) !important;
+  box-shadow:
+    0 1px 2px rgba(14, 61, 43, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.62) !important;
+}
+
+.login-form > .login-actions:not(.login-actions--split) {
+  justify-content: flex-end !important;
+  margin-top: -0.24rem;
+  padding-inline: 0.08rem;
+}
+
+.login-form > .login-actions:not(.login-actions--split) .login-link {
+  width: auto !important;
+  margin-left: auto;
+  text-align: right !important;
+}
+
+.login-actions--split .login-link {
+  text-align: center !important;
+}
+
+.login-button {
+  background: linear-gradient(135deg, #1c8050, #0e3d2b) !important;
+  box-shadow:
+    0 14px 26px rgba(14, 61, 43, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+}
+
+.login-field__control input {
+  padding-right: 3.35rem !important;
+}
+
+.login-password-toggle,
+.login-password-toggle:hover,
+.login-password-toggle:focus,
+.login-password-toggle:focus-visible,
+.login-password-toggle:active {
+  top: 50% !important;
+  right: 0.62rem !important;
+  width: 2.28rem !important;
+  height: 2.28rem !important;
+  display: grid !important;
+  place-items: center !important;
+  color: rgba(14, 61, 43, 0.78) !important;
+  transform: translateY(-50%) !important;
+  line-height: 1 !important;
+}
+
+.login-password-toggle__icon,
+.login-password-toggle__icon .auth-icon,
+.login-password-toggle .auth-icon,
+.login-password-toggle svg {
+  width: 1.16rem !important;
+  height: 1.16rem !important;
+  display: block !important;
+  color: currentColor !important;
+  stroke: currentColor !important;
+  transform: none !important;
+}
+
+
+/* ---------------------------------------------------- OTP resend action ---
+   The OTP notice tells people to request a new code when one expires, and
+   until now nothing on the step could do it -- Back returns to the email
+   entry and loses the address already confirmed.
+
+   Centred on its own row rather than inheriting the flex-end rule that
+   .login-actions:not(.login-actions--split) applies with !important, which
+   would pin it to the right edge above the Back/Next pair and read as part
+   of them.
+
+   min-height 44px is the touch target the Raspberry Pi kiosk needs: the panel
+   is driven by a finger on an 800x480 screen, where a text-sized link is
+   difficult to hit accurately. */
+.login-form > .login-actions.login-actions--resend {
+  width: 100%;
+  justify-content: center !important;
+  margin-top: 0.15rem;
+  margin-bottom: -0.1rem;
+}
+
+.login-form > .login-actions.login-actions--resend .login-link {
+  width: auto !important;
+  margin-left: 0;
+  min-height: 44px;
+  padding: 0.35rem 0.9rem;
+  border-radius: 0.75rem;
+  text-align: center !important;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .login-form > .login-actions.login-actions--resend .login-link:hover {
+    text-decoration-thickness: 2px;
+  }
+}

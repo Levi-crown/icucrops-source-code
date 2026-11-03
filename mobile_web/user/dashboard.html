@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="0; url=../auth/index.html" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Redirecting to Mobile User Login</title>
+    <script>
+      (function redirectToSharedMobileUserLogin() {
+        const targetUrl = new URL("../auth/index.html", window.location.href);
+        targetUrl.search = window.location.search;
+        targetUrl.hash = window.location.hash || "";
+        window.location.replace(targetUrl.toString());
+      })();
+    </script>
+  </head>
+  <body>
+    Redirecting to the shared mobile user login...
+  </body>
+</html>

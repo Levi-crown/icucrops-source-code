@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ICuCrops Dashboard</title>
+    <script>
+      (function applySavedTheme() {
+        try {
+          document.documentElement.dataset.theme =
+            window.localStorage.getItem("icucrops.theme.v1") === "dark" ? "dark" : "light";
+        } catch (error) {
+          document.documentElement.dataset.theme = "light";
+        }
+        document.documentElement.style.colorScheme = document.documentElement.dataset.theme;
+      })();
+    </script>
+    <link rel="stylesheet" href="./styles.css?v=20261007b" />
+    <link rel="stylesheet" href="./mobile/layout.css?v=20260924a" media="screen and (max-width: 1024px)" />
+    <link rel="stylesheet" href="/assets/icucrops-emerald-theme.css?v=20260924a" />
+    <link rel="stylesheet" href="/assets/icucrops-live-graph-fix.css?v=20261007b" />
+    <link rel="stylesheet" href="/assets/icucrops-background-sync.css?v=20260917d" />
+    <link rel="stylesheet" href="/assets/icucrops-ios-interactions.css?v=20260917d" />
+    <link rel="stylesheet" href="../raspberry_pi/pi-kiosk.css?v=20261007c" />
+    <link rel="stylesheet" href="../raspberry_pi/pi-performance.css?v=20260917d" />
+    <script src="/raspberry_pi/pi-runtime.js?v=20260917d"></script>
+    <script>
+      (function configureRuntime() {
+        const hostname = window.location.hostname || "";
+        const isLocalHost = hostname === "127.0.0.1" || hostname === "localhost";
+        window.ICuCropsRuntimeConfig = {
+          apiBase: isLocalHost ? "http://127.0.0.1:8080" : window.location.origin,
+          fallbackApiPort: "8080",
+        };
+      })();
+    </script>
+    <script src="/assets/auth-session.js?v=20260930d"></script>
+    <script>
+      (function routeAdministratorShell() {
+        const auth = window.ICuCropsAuth;
+        const currentUrl = new URL(window.location.href);
+        const query = window.location.search || "";
+        const hash = window.location.hash || "";
+        const piMode = window.ICuCropsPiRuntime?.isPiMode?.() || window.ICuCropsPiMode === true;
+        const desktopLocked = currentUrl.searchParams.get("desktop") === "1" || piMode;
+        const mobileForced = currentUrl.searchParams.get("mobile") === "1";
+        const shouldUseMobileShell = shouldRouteToMobileShell();
+        const session = auth?.readSession?.();
+
+        if (shouldUseMobileShell) {
+          redirectToMobileShell(session);
+          return;
+        }
+
+        if (session?.role === "user") {
+          const userUrl = new URL("../user/index.html", window.location.href);
+          userUrl.search = query;
+          userUrl.hash = hash;
+          window.location.replace(userUrl.toString());
+          return;
+        }
+
+        if (session?.role !== "admin") {
+          auth?.rememberPostLoginHash?.("admin", hash || "#/");
+          const loginUrl = new URL("./dashboard.html", window.location.href);
+          loginUrl.search = query;
+          window.location.replace(loginUrl.toString());
+          return;
+        }
+
+        auth?.protectSessionHistory?.({ role: "admin", loginPath: "./dashboard.html" });
+
+        watchMobileViewportRedirect(session);
+
+        function shouldRouteToMobileShell() {
+          if (desktopLocked) {
+            return false;
+          }
+
+          const runtimeDecision = window.ICuCropsPiRuntime?.shouldUseMobileShell?.({ mobileForced, desktopLocked });
+          return Boolean(runtimeDecision || mobileForced || isMobileBrowserRequest());
+        }
+
+        function redirectToMobileShell(currentSession) {
+          const mobileUrl = new URL(
+            currentSession?.role === "user"
+              ? "../mobile_web/user/index.html"
+              : "../mobile_web/administrator/index.html",
+            window.location.href,
+          );
+          mobileUrl.search = query;
+          mobileUrl.hash = window.location.hash || hash || "#/";
+          window.location.replace(mobileUrl.toString());
+        }
+
+        function watchMobileViewportRedirect(currentSession) {
+          if (desktopLocked || window.ICuCropsPiMode === true) {
+            return;
+          }
+
+          let redirectTimer = 0;
+          const check = () => {
+            window.clearTimeout(redirectTimer);
+            redirectTimer = window.setTimeout(() => {
+              if (shouldRouteToMobileShell()) {
+                redirectToMobileShell(auth?.readSession?.() || currentSession);
+              }
+            }, 90);
+          };
+
+          window.addEventListener("resize", check, { passive: true });
+          window.visualViewport?.addEventListener("resize", check, { passive: true });
+          window.addEventListener("orientationchange", check, { passive: true });
+          window.setTimeout(check, 120);
+        }
+
+        function isMobileBrowserRequest() {
+          const ua = navigator.userAgent || "";
+          const platform = navigator.userAgentData?.platform || navigator.platform || "";
+          const mobileHint = navigator.userAgentData?.mobile;
+          const maxTouchPoints = navigator.maxTouchPoints || 0;
+
+          if (mobileHint === true) {
+            return true;
+          }
+
+          if (/Android|iPhone|iPad|iPod|Windows Phone|Mobile/i.test(ua)) {
+            return true;
+          }
+
+          return /Macintosh/i.test(ua) && maxTouchPoints > 1
+            || /iPad|iPhone|iPod/i.test(platform);
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="/assets/icucrops-touch-keyboard.css?v=20260924a" />
+    <link rel="stylesheet" href="/assets/icucrops-refinement.css?v=20260924q" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="glass-card glass-card--dark sidebar__brand">
+          <div class="brand-lockup">
+            <img
+              class="brand-lockup__logo"
+              src="../assets/icucrops-logo-mark.png"
+              alt="ICuCrops Logo"
+            />
+            <div>
+              <p class="brand-lockup__title">ICuCrops</p>
+            </div>
+          </div>
+        </div>
+
+        <nav class="sidebar__nav" id="sidebar-nav" aria-label="Primary"></nav>
+
+        <div class="sidebar__actions">
+          <button class="nav-button" type="button" data-action="open-settings">
+            <span class="nav-button__icon" aria-hidden="true"></span>
+            <span>Settings</span>
+          </button>
+          <button
+            class="nav-button nav-button--danger"
+            type="button"
+            data-action="logout"
+          >
+            <span class="nav-button__icon" aria-hidden="true"></span>
+            <span>Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <section class="app-main">
+        <header class="glass-card topbar">
+          <div>
+            <h1 class="topbar__title">Welcome to ICuCrops</h1>
+            <p class="topbar__subtitle">Monitor and control your farm</p>
+          </div>
+
+          <div class="topbar__actions">
+            <!-- Whether this Pi is currently syncing to the cloud. The site
+                 runs from local SQLite either way, so "Offline" here means
+                 "changes are queued", not "nothing works" -- which is the
+                 distinction an operator standing in the greenhouse needs.
+                 Starts hidden; app.js shows it once /api/health has answered
+                 once, so a brief blank is never mistaken for a verdict. -->
+            <span
+              class="connection-pill"
+              id="connection-indicator"
+              role="status"
+              hidden
+            >
+              <span class="connection-pill__dot" aria-hidden="true"></span>
+              <span class="connection-pill__label" id="connection-indicator-label">Online</span>
+            </span>
+
+            <button
+              class="icon-button theme-toggle-button"
+              type="button"
+              data-action="toggle-theme"
+              id="header-theme-toggle-button"
+              aria-label="Turn on dark mode"
+              aria-pressed="false"
+              title="Dark Mode"
+            >
+              <span
+                class="nav-button__icon"
+                id="header-theme-toggle-icon"
+                aria-hidden="true"
+              ></span>
+            </button>
+
+            <button
+              class="icon-button notification-button"
+              type="button"
+              data-action="open-notifications"
+              id="header-notification-button"
+              aria-label="Open notifications"
+            >
+              <span
+                class="nav-button__icon"
+                id="header-notification-icon"
+                aria-hidden="true"
+              ></span>
+              <span
+                class="notification-button__badge"
+                id="header-notification-count"
+                hidden
+                >0</span
+              >
+            </button>
+
+            <div
+              class="profile-pill profile-pill--button"
+              role="button"
+              tabindex="0"
+              data-action="open-profile-settings"
+              aria-label="Open edit profile"
+            >
+              <div class="profile-pill__copy">
+                <span class="profile-pill__name" id="header-profile-name"
+                  >John Farmer</span
+                >
+                <span class="profile-pill__role" id="header-profile-role"
+                  >Administrator</span
+                >
+              </div>
+              <div
+                class="profile-pill__avatar"
+                id="header-profile-avatar"
+                aria-hidden="true"
+              ></div>
+            </div>
+          </div>
+        </header>
+
+        <main class="page-content" id="page-content" aria-live="polite"></main>
+      </section>
+    </div>
+
+    <div id="overlay-root"></div>
+    <div class="toast-stack" id="toast-root" aria-live="polite"></div>
+
+    <script src="/assets/icucrops-slow-activation.js?v=20260917d" defer></script>
+    <script src="/assets/icucrops-touch-keyboard.js?v=20260928a" defer></script>
+    <script src="./settings-profile.js?v=20260924q" defer></script>
+    <script src="./settings-about.js?v=20260917d" defer></script>
+    <script src="./settings-contact.js?v=20260917d" defer></script>
+    <script src="./settings-developers.js?v=20260917d" defer></script>
+    <script src="./notifications.js?v=20260917d" defer></script>
+    <script src="./sensor-detail.js?v=20261007b" defer></script>
+    <script src="./manage-users.js?v=20261007b" defer></script>
+    <script src="../raspberry_pi/pi-fps-overlay.js?v=20260917d" defer></script>
+    <script src="/assets/icucrops-kiosk-photo-picker.js?v=20260917d" defer></script>
+    <script src="/assets/icucrops-climate-response.js?v=20260924q" defer></script>
+    <script src="./app.js?v=20261007b" defer></script>
+    <script src="/assets/realtime-sync.js?v=20260917d" defer></script>
+  </body>
+</html>
+  

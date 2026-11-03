@@ -1,0 +1,401 @@
+/*
+ * ICuCrops default slow-motion interaction layer.
+ *
+ * Keep motion inexpensive: page and surface transitions use opacity, while
+ * direct controls use compositor-only transforms. The shared activation
+ * controller still waits before every non-native action runs.
+ */
+
+:root {
+  --icucrops-default-exit: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --icucrops-default-enter: 440ms cubic-bezier(0.22, 1, 0.36, 1);
+  --icucrops-default-control: 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Simple default page fade: no direction, blur, clipping, or layout motion. */
+html:not(.pi-kiosk) body .page-content--transition-out .page-scene {
+  opacity: 0.62 !important;
+  filter: none !important;
+  clip-path: none !important;
+  transform: none !important;
+  will-change: opacity !important;
+  transition: opacity var(--icucrops-default-exit) !important;
+}
+
+html:not(.pi-kiosk) body .page-scene--incoming {
+  opacity: 0.62 !important;
+  filter: none !important;
+  clip-path: none !important;
+  transform: none !important;
+  will-change: opacity !important;
+}
+
+html:not(.pi-kiosk) body .page-scene--incoming.page-scene--ready {
+  opacity: 1 !important;
+  filter: none !important;
+  clip-path: none !important;
+  transform: none !important;
+  transition: opacity var(--icucrops-default-enter) !important;
+}
+
+/* Pi uses the same fade with a smaller compositor budget. */
+html.pi-kiosk:not(#icucrops-default-motion):not(#icucrops-default-motion-strong) body .page-content--transition-out .page-scene,
+html.pi-kiosk:not(#icucrops-default-motion):not(#icucrops-default-motion-strong) body .page-scene--incoming {
+  opacity: 0.72 !important;
+  filter: none !important;
+  clip-path: none !important;
+  transform: none !important;
+  transition: opacity 300ms ease !important;
+}
+
+html.pi-kiosk:not(#icucrops-default-motion):not(#icucrops-default-motion-strong) body .page-scene--incoming.page-scene--ready {
+  opacity: 1 !important;
+  transition: opacity 380ms ease !important;
+}
+
+/* Every intentional click/tap target gets one lightweight press response. */
+html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final) body :where(
+  button,
+  a[href],
+  select,
+  summary,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  [role="button"],
+  [data-action],
+  [data-view],
+  [data-tab],
+  [data-mode]
+):not(:disabled):not([disabled]):not([aria-disabled="true"]) {
+  transform-origin: center !important;
+  -webkit-tap-highlight-color: transparent;
+  backface-visibility: hidden;
+  transition:
+    transform var(--icucrops-default-control),
+    opacity 200ms ease,
+    background-color var(--transition-fast, 150ms ease),
+    color var(--transition-fast, 150ms ease),
+    border-color var(--transition-fast, 150ms ease) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final):not(.pi-kiosk) body :where(
+    button,
+    a[href],
+    select,
+    summary,
+    input[type="button"],
+    input[type="submit"],
+    input[type="reset"],
+    [role="button"],
+    [data-action],
+    [data-view],
+    [data-tab],
+    [data-mode]
+  ):not(:disabled):not([disabled]):not([aria-disabled="true"]):not(.login-password-toggle):not(.login-input__toggle):hover {
+    opacity: 0.96 !important;
+    transform: translate3d(0, -2px, 0) scale(1.006) !important;
+    z-index: 4;
+  }
+
+  /* Both password eyes stay put. They sit inside their field rather than
+     beside it, so the lift every other control gets reads as the icon
+     escaping its own textbox -- and on a touch panel the finger covers the
+     icon while it moves, which is worse still. Opacity alone is the feedback;
+     the app-shell one keeps translateY(-50%) only because that is what
+     centres it. */
+  html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final):not(.pi-kiosk) body .login-input__toggle:not(:disabled):not([disabled]):hover {
+    opacity: 0.96 !important;
+    transform: translateY(-50%) !important;
+    z-index: 4;
+  }
+
+  html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final):not(.pi-kiosk) body:not(.mobile-web) .sidebar .nav-button:hover {
+    opacity: 1 !important;
+    transform: translate3d(0, -5px, 0) scale(1.016) !important;
+    z-index: 10 !important;
+  }
+}
+
+html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final) body :where(
+  button,
+  a[href],
+  select,
+  summary,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  [role="button"],
+  [data-action],
+  [data-view],
+  [data-tab],
+  [data-mode]
+):not(:disabled):not([disabled]):not([aria-disabled="true"]):not(.login-password-toggle):not(.login-input__toggle):is(:active, .is-button-pressing) {
+  opacity: 0.88 !important;
+  transform: translate3d(0, 1px, 0) scale(0.97) !important;
+  transition-duration: 90ms !important;
+}
+
+/* Held down, the app-shell eye keeps exactly the transform that centres it and
+   nothing else -- same rule as the shared login eye, which has never moved. */
+html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final) body .login-input__toggle:not(:disabled):not([disabled]):is(:active, .is-button-pressing) {
+  opacity: 0.88 !important;
+  transform: translateY(-50%) !important;
+  transition-duration: 90ms !important;
+}
+
+/* Default surface fades run only after the universal activation hold. */
+html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final) body .overlay {
+  animation: icucrops-default-fade-in 260ms ease backwards !important;
+}
+
+html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final) body :is(
+  .overlay > .modal,
+  .overlay--drawer > .drawer,
+  .settings-menu,
+  #auth-panel-body > *,
+  .toast
+) {
+  animation: icucrops-default-fade-in 380ms ease backwards !important;
+}
+
+html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final) body .is-default-surface-exiting {
+  opacity: 0.28 !important;
+  pointer-events: none !important;
+  transition: opacity 220ms ease !important;
+}
+
+/* Keep the native mobile drawer movement, but slow it without extra effects.
+   The backdrop's own transition below is matched to the same duration/easing
+   so the dim scrim never lags behind or outruns the slide. */
+html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final):not(.pi-kiosk) body.mobile-web .sidebar {
+  transition:
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 260ms ease !important;
+}
+
+html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final):not(.pi-kiosk) body.mobile-web .mobile-drawer-backdrop {
+  transition: opacity 360ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final):not(.pi-kiosk) body.mobile-web .topbar .mobile-menu-button__bars {
+  transition: transform 220ms ease !important;
+}
+
+html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final):not(.pi-kiosk) body.mobile-web .topbar .mobile-menu-button.is-button-pressing .mobile-menu-button__bars {
+  transform: scale(0.86) !important;
+}
+
+@keyframes icucrops-default-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Native smooth scrolling with costly interaction motion paused while moving. */
+html,
+html body,
+html body :is(
+  .page-content,
+  .sidebar,
+  .modal__body,
+  .drawer,
+  .dashboard-all-rows-modal__body,
+  .settings-guide-scroll
+) {
+  scroll-behavior: smooth !important;
+}
+
+html body :is(
+  .page-content,
+  .sidebar,
+  .modal__body,
+  .drawer,
+  .dashboard-all-rows-modal__body,
+  .settings-guide-scroll
+) {
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final) body:is(.is-dashboard-scrolling, .is-interface-scrolling) :where(
+  button,
+  a[href],
+  [role="button"],
+  [data-action],
+  [data-view],
+  [data-tab]
+):not(:disabled):not([disabled]):not([aria-disabled="true"]) {
+  transition-duration: 1ms !important;
+}
+
+html:not(#icucrops-default-motion):not(#icucrops-default-motion-strong):not(#icucrops-default-motion-final) body.is-interface-scrolling :is(
+  .toast,
+  .notification-item,
+  .mobile-bottom-nav,
+  .settings-menu
+) {
+  animation-play-state: paused !important;
+  transition-duration: 1ms !important;
+}
+
+/* Keep the mobile header on its own stable viewport layer in both orientations. */
+html body.mobile-web:not(.is-auth-screen) {
+  --mobile-fixed-topbar-height: calc(var(--mobile-safe-top, 0px) + 4.1rem);
+}
+
+html body.mobile-web:not(.is-auth-screen) .app-main {
+  padding-top: var(--mobile-fixed-topbar-height) !important;
+}
+
+html body.mobile-web:not(.is-auth-screen) .topbar {
+  position: fixed !important;
+  inset: 0 0 auto 0 !important;
+  z-index: 20 !important;
+  min-height: var(--mobile-fixed-topbar-height) !important;
+  margin: 0 !important;
+  transform: translate3d(0, 0, 0) !important;
+  backface-visibility: hidden !important;
+  contain: layout style;
+  animation: none !important;
+}
+
+html body.mobile-web:not(.is-auth-screen)::after {
+  display: none !important;
+}
+
+html body.mobile-web:not(.is-auth-screen)::before {
+  transform: translate3d(0, 0, 0) !important;
+  backface-visibility: hidden !important;
+  contain: paint;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  html body.mobile-web:not(.is-auth-screen) {
+    --mobile-fixed-topbar-height: calc(var(--mobile-safe-top, 0px) + 3.6rem);
+  }
+
+  html body.mobile-web:not(.is-auth-screen) .topbar {
+    padding-top: calc(var(--mobile-safe-top, 0px) + 0.48rem) !important;
+    padding-bottom: 0.5rem !important;
+  }
+}
+
+/* Long pages keep their borders and fills but drop repeated paint-heavy layers. */
+html body .page-content :is(
+  .dashboard-panel,
+  .dashboard-graph-card,
+  .mobile-line-chart-card,
+  .mobile-mini-panel,
+  .mobile-row-card,
+  .mobile-reading,
+  .iot-row-card,
+  .metric-card,
+  .sensor-card,
+  .health-item,
+  .tank-card,
+  .timeline-card,
+  .cultivation-item,
+  .list-tile,
+  .user-row,
+  .notification-item
+) {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+
+html body .page-content :is(
+  .dashboard-panel,
+  .dashboard-graph-card,
+  .mobile-line-chart-card,
+  .mobile-mini-panel,
+  .mobile-row-card,
+  .sensor-card,
+  .tank-card,
+  .metric-card
+)::before {
+  display: none !important;
+}
+
+/* Draw realtime lines once; continuous SVG stroke-width repainting is unnecessary. */
+html body:not(#icucrops-continuous-graph-motion) .page-content :is(.dashboard-graph-card--realtime, .mobile-line-chart-card--realtime) .dashboard-chart-line--live {
+  animation: dashboard-chart-smartduck-stroke-draw 700ms cubic-bezier(0.16, 1, 0.3, 1) var(--chart-delay, 0ms) both !important;
+}
+
+html body :is(
+  .tank__wave,
+  .tank__glow,
+  .tank__bubble,
+  .progress-fill::after
+) {
+  animation: none !important;
+}
+
+/* This matches the older graph rule's specificity, so scrolling really pauses it. */
+html body:not(#icucrops-continuous-graph-motion):is(.is-dashboard-scrolling, .is-interface-scrolling, .is-motion-paused) .page-content :is(
+  .dashboard-graph-card--realtime,
+  .mobile-line-chart-card--realtime
+) :is(
+  .dashboard-chart-line--live,
+  .dashboard-chart-intro-dot,
+  .dashboard-chart-area
+) {
+  animation-play-state: paused !important;
+}
+
+html body:is(.is-dashboard-scrolling, .is-interface-scrolling) .page-content :is(
+  .dashboard-panel,
+  .dashboard-graph-card,
+  .mobile-line-chart-card,
+  .mobile-mini-panel,
+  .mobile-row-card,
+  .mobile-reading,
+  .iot-row-card,
+  .metric-card,
+  .sensor-card,
+  .health-item,
+  .tank-card,
+  .timeline-card,
+  .cultivation-item,
+  .list-tile,
+  .user-row,
+  .notification-item
+) {
+  transition-duration: 1ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body,
+  body :is(.page-content, .sidebar, .modal__body, .drawer) {
+    scroll-behavior: auto !important;
+  }
+
+  html body :is(
+    .page-content--transition-out .page-scene,
+    .page-scene--incoming,
+    button,
+    a[href],
+    [role="button"],
+    [data-action],
+    [data-view],
+    [data-tab]
+  ) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  html body :is(
+    .overlay,
+    .overlay > .modal,
+    .overlay--drawer > .drawer,
+    .settings-menu,
+    #auth-panel-body > *,
+    .toast
+  ) {
+    animation: none !important;
+  }
+}

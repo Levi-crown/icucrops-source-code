@@ -1,0 +1,107 @@
+@import "../../administrator/styles.css?v=20261007b";
+@import "../shared.css?v=20260924a";
+
+/* Mobile web administrator cards fill the available mobile content area responsively. */
+body.mobile-web {
+	--mobile-web-card-padding-x: clamp(0.62rem, 2.9vw, 0.94rem);
+	--mobile-web-card-padding-y: clamp(0.72rem, 3vw, 1rem);
+}
+
+body.mobile-web .page-content,
+body.mobile-web .page-scene,
+body.mobile-web .page-stack,
+body.mobile-web .page-stack--dashboard,
+body.mobile-web .mobile-dashboard,
+body.mobile-web .mobile-row-list,
+body.mobile-web .mobile-dashboard__lower {
+	width: 100%;
+	max-width: none;
+	margin-inline: 0;
+}
+
+body.mobile-web .card,
+body.mobile-web .dashboard-panel,
+body.mobile-web .iot-row-card,
+body.mobile-web .metric-card {
+	width: 100%;
+	max-width: none;
+	margin: 0 0 0.72rem;
+	box-sizing: border-box;
+	padding: var(--mobile-web-card-padding-y) var(--mobile-web-card-padding-x);
+	border-radius: clamp(0.92rem, 3vw, 1.16rem);
+	box-shadow: 0 6px 18px rgba(17, 71, 41, 0.10);
+}
+
+@media (max-width: 430px) {
+	body.mobile-web .card,
+	body.mobile-web .dashboard-panel,
+	body.mobile-web .iot-row-card,
+	body.mobile-web .metric-card {
+		margin-bottom: 0.62rem;
+	}
+}
+
+body.mobile-web .page-content {
+	padding-inline: var(--mobile-page-gutter);
+}
+
+/* Keep the cultivation actions together at the card's right edge. */
+body.mobile-web .cultivation-item__right {
+	justify-content: flex-start;
+}
+
+body.mobile-web .cultivation-item__summary {
+	margin-right: auto;
+}
+
+body.mobile-web .cultivation-item__view,
+body.mobile-web .cultivation-item__delete {
+	width: 2.6rem;
+	height: 2.6rem;
+	flex: 0 0 2.6rem;
+}
+
+/* Match the Pi's compact History controls on phones: two touch-sized icon
+   buttons stay on one line while aria-label/title keep their full meaning. */
+html body.mobile-web .notification-history__actions {
+	display: flex !important;
+	grid-template-columns: none !important;
+	align-items: center !important;
+	justify-content: flex-end !important;
+	justify-items: initial !important;
+	gap: 0.42rem !important;
+	width: auto !important;
+	min-width: 0 !important;
+	flex: 0 0 auto !important;
+}
+
+html body.mobile-web .notification-history__actions button.button.notification-history__action {
+	display: inline-grid !important;
+	place-items: center !important;
+	box-sizing: border-box !important;
+	width: 2.6rem !important;
+	min-width: 2.6rem !important;
+	height: 2.6rem !important;
+	min-height: 2.6rem !important;
+	flex: 0 0 2.6rem !important;
+	padding: 0 !important;
+	border-radius: 0.82rem !important;
+}
+
+html body.mobile-web .notification-history__action-label {
+	display: none !important;
+}
+
+html body.mobile-web .notification-history__action .icon {
+	width: 1.08rem !important;
+	height: 1.08rem !important;
+}
+
+body.mobile-web .card,
+body.mobile-web .dashboard-panel,
+body.mobile-web .iot-row-card,
+body.mobile-web .metric-card {
+	border-color: var(--mobile-glass-border) !important;
+	background: var(--mobile-glass-fill) !important;
+	box-shadow: var(--mobile-glass-shadow) !important;
+}

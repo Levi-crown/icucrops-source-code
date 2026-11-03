@@ -1,0 +1,21 @@
+# Secrets and machine-specific configuration never go in this repository.
+.env
+.env.*
+*.pem
+*.key
+*credentials*.json
+*service-account*.json
+
+# Databases and runtime data.
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+Storage/
+
+# Python and editor output.
+__pycache__/
+*.pyc
+.venv/
+*.log
+.vscode/

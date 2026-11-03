@@ -1,0 +1,108 @@
+<section class="page-stack settings-profile-layout settings-profile-layout--cards">
+  <article class="glass-card card settings-section-card settings-section-card--profile">
+    <div class="settings-profile-header">
+      <div class="settings-profile-copy">
+        <div>
+          <h3 class="section-title">Edit Profile</h3>
+          <p class="section-copy">Update your account details below.</p>
+        </div>
+        <div class="chip-row settings-profile-chips">
+          {{PROFILE_ROLE_BADGE}}
+          <span class="chip">Secure Account</span>
+        </div>
+      </div>
+
+      <div class="settings-profile-identity">
+        <div
+          class="avatar-circle settings-profile-avatar"
+          id="settings-avatar-preview"
+        >
+          {{PROFILE_INITIAL}}
+        </div>
+        <input id="profile-photo-input" type="file" accept="image/*" hidden />
+        <button class="button button--secondary settings-profile-photo-button" type="button" data-action="change-profile-photo">
+          {{CAMERA_ICON}}
+          <span>{{PHOTO_BUTTON_LABEL}}</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="field-grid input-grid--two settings-profile-fields">
+      <div class="field">
+        <div class="field__label-row">
+          <label class="field__label" for="profile-name-input">Name:</label>
+          <span class="field__error" id="profile-name-error" role="alert" aria-live="polite" hidden></span>
+        </div>
+        <input
+          class="input"
+          id="profile-name-input"
+          type="text"
+          value="{{PROFILE_NAME}}"
+          placeholder="Enter your name"
+          aria-describedby="profile-name-error"
+        />
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="profile-role-input">Role</label>
+        <input class="input" id="profile-role-input" type="text" value="{{PROFILE_ROLE}}" readonly />
+      </div>
+    </div>
+
+    <div class="settings-profile-actions">
+      <button class="button button--primary settings-profile-save" type="button" data-action="save-profile">
+        Save Profile
+      </button>
+    </div>
+  </article>
+
+  <article class="glass-card card settings-section-card settings-section-card--password">
+    <div class="inline-copy settings-section-card__title">
+      <span class="nav-button__icon">{{LOCK_ICON}}</span>
+      <div>
+        <h4 class="section-title">Change Password</h4>
+      </div>
+    </div>
+    <div class="field-grid input-grid--two settings-profile-fields">
+      <div class="field">
+        <label class="field__label" for="current-password-input">Current Password</label>
+        <div class="login-input login-input--password">
+          <input class="input login-input__control--password" id="current-password-input" type="password" value="{{CURRENT_PASSWORD}}" />
+          <button
+            class="login-input__toggle"
+            type="button"
+            data-action="toggle-password-visibility"
+            data-target="current-password-input"
+            aria-label="Show password"
+          >
+            <span class="login-input__toggle-icon" data-password-icon aria-hidden="true">{{PASSWORD_EYE_ICON}}</span>
+          </button>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label" for="new-password-input">New Password</label>
+        <div class="login-input login-input--password">
+          <input class="input login-input__control--password" id="new-password-input" type="password" maxlength="64" autocomplete="new-password" value="{{NEW_PASSWORD}}" aria-describedby="profile-password-error" />
+          <button
+            class="login-input__toggle"
+            type="button"
+            data-action="toggle-password-visibility"
+            data-target="new-password-input"
+            aria-label="Show password"
+          >
+            <span class="login-input__toggle-icon" data-password-icon aria-hidden="true">{{PASSWORD_EYE_ICON}}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <p class="password-policy-alert" id="profile-password-error" role="alert" aria-live="polite" hidden></p>
+    <button
+      class="button button--dark button--full settings-password-change-button"
+      type="button"
+      data-action="change-password"
+      {{CHANGE_PASSWORD_DISABLED}}
+    >
+      Change Password
+    </button>
+  </article>
+</section>

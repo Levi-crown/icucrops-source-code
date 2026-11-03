@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta
+      charset="UTF-8"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>ICuCrops Mobile Login</title>
+    <link rel="stylesheet" href="./login.css?v=20260922c" />
+    <link rel="stylesheet" href="/assets/icucrops-ios-interactions.css?v=20260917d" />
+    <script src="/raspberry_pi/pi-runtime.js?v=20260917d"></script>
+    <script>
+      (function configureRuntime() {
+        const hostname = window.location.hostname || "";
+        const isLocalHost = hostname === "127.0.0.1" || hostname === "localhost";
+        window.ICuCropsRuntimeConfig = {
+          apiBase: isLocalHost ? "http://127.0.0.1:8080" : window.location.origin,
+          fallbackApiPort: "8080",
+        };
+      })();
+    </script>
+    <script src="/assets/auth-session.js?v=20260930d"></script>
+    <script>
+      (function routeSharedMobileLogin() {
+        const auth = window.ICuCropsAuth;
+        const currentUrl = new URL(window.location.href);
+        const piMode = window.ICuCropsPiRuntime?.isPiMode?.() || window.ICuCropsPiMode === true;
+        const desktopLocked = currentUrl.searchParams.get("desktop") === "1" || piMode;
+        const allowMobileShell = window.ICuCropsPiRuntime?.shouldUseMobileShell?.({
+          mobileForced: currentUrl.searchParams.get("mobile") === "1",
+          desktopLocked,
+        }) ?? (isMobileBrowserRequest()
+          || currentUrl.searchParams.get("mobile") === "1"
+          || (window.matchMedia?.("(max-width: 820px)")?.matches ?? window.innerWidth <= 820));
+        const session = auth?.readSession?.();
+
+        window.ICuCropsLoginConfig = {
+          showForgotPassword: true,
+          forgotPasswordTemplateBasePath: "../../auth/",
+          postLoginPaths: {
+            admin: piMode ? "../../raspberry_pi/index.html" : "../administrator/index.html",
+            user: piMode ? "../../raspberry_pi/index.html" : "../user/index.html",
+          },
+        };
+
+        if (session) {
+          const savedHash = auth.takePostLoginHash(session.role);
+          if (piMode) {
+            const piUrl = window.ICuCropsPiRuntime?.piShellUrl?.(savedHash)
+              || new URL("../../raspberry_pi/index.html", window.location.href);
+            if (piUrl instanceof URL) {
+              piUrl.search = currentUrl.search;
+              piUrl.hash = savedHash || "#/";
+              window.location.replace(piUrl.toString());
+            } else {
+              window.location.replace(String(piUrl));
+            }
+            return;
+          }
+          const appUrl = new URL(
+            allowMobileShell && !desktopLocked
+              ? (session.role === "admin" ? "../administrator/index.html" : "../user/index.html")
+              : (session.role === "admin" ? "../../administrator/index.html" : "../../user/index.html"),
+            window.location.href,
+          );
+          appUrl.search = currentUrl.search;
+          appUrl.hash = savedHash;
+          window.location.replace(appUrl.toString());
+          return;
+        }
+
+        if (!allowMobileShell || desktopLocked) {
+          const desktopUrl = new URL("../../auth/index.html", window.location.href);
+          desktopUrl.search = currentUrl.search;
+          desktopUrl.hash = window.location.hash || "";
+          window.location.replace(desktopUrl.toString());
+          return;
+        }
+
+        function isMobileBrowserRequest() {
+          const ua = navigator.userAgent || "";
+          const platform = navigator.userAgentData?.platform || navigator.platform || "";
+          const mobileHint = navigator.userAgentData?.mobile;
+          const maxTouchPoints = navigator.maxTouchPoints || 0;
+
+          if (mobileHint === true) {
+            return true;
+          }
+
+          if (/Android|iPhone|iPad|iPod|Windows Phone|Mobile/i.test(ua)) {
+            return true;
+          }
+
+          return /Macintosh/i.test(ua) && maxTouchPoints > 1
+            || /iPad|iPhone|iPod/i.test(platform);
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="/assets/icucrops-touch-keyboard.css?v=20260923g" />
+  </head>
+  <body class="mobile-web-login">
+    <main class="login-page">
+      <section class="login-shell">
+        <article class="login-panel">
+          <div class="login-panel__brand">
+            <div class="login-panel__visual" aria-hidden="true">
+              <img
+                class="login-panel__logo"
+                src="../../assets/icucrops-logo-transparent.png"
+                alt="ICuCrops Logo"
+              />
+              <img
+                class="login-panel__mascot"
+                src="../../assets/funny-monkey-omg-transparent.gif"
+                decoding="async"
+                alt=""
+              />
+            </div>
+            <h1 class="login-panel__title" id="auth-title">Login to ICuCrops</h1>
+            <p class="login-panel__copy" id="auth-copy">
+              Access your farm dashboard and monitoring controls.
+            </p>
+          </div>
+
+          <div id="auth-panel-body"></div>
+        </article>
+      </section>
+    </main>
+
+    <script src="/assets/icucrops-slow-activation.js?v=20260917d" defer></script>
+    <script src="/assets/icucrops-touch-keyboard.js?v=20260928a" defer></script>
+    <script src="../../auth/forgot-password.js?v=20260923h" defer></script>
+    <script src="../../auth/login-init.js?v=20260922c" defer></script>
+  </body>
+</html>

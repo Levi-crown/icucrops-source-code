@@ -1,0 +1,1159 @@
+/* ICuCrops interface refinement layer.
+ *
+ * Loaded last on the desktop, mobile and Pi shells so it settles the cascade
+ * without editing the 10k-line shell stylesheets. Everything here is either a
+ * readability fix for the live sensor numbers or a paint-cost reduction; no
+ * rule changes layout, so no view can reflow into a different shape.
+ *
+ * Ordering note: this file must stay the LAST stylesheet in every shell that
+ * loads it, and it deliberately mirrors the !important weight the emerald and
+ * live-graph layers already use. Those two sheets carry ~5,000 !important
+ * declarations between them, so an unweighted rule here would silently lose.
+ */
+
+/* ---------------------------------------------------------------------------
+ * 1. Numeric legibility.
+ *
+ * Every live readout (soil moisture, pH, tank percentage, temperature, the
+ * graph axes and the countdown timers) is a number that repaints on a poll.
+ * In a proportional font the glyph widths differ, so a value ticking 11 -> 18
+ * -> 8 visibly shifts its neighbours around. Tabular figures pin every digit
+ * to the same advance width, which stops the row from jittering on each
+ * refresh and makes columns of readings line up down the card.
+ * ------------------------------------------------------------------------ */
+:is(
+  .sensor-card__value,
+  .iot-monitor-card__value,
+  .iot-row-metric__value,
+  .cultivation-health-chart__value,
+  .metric-value,
+  .tank__reading,
+  .sensor-row-control__reading,
+  .sensor-management-card__reading,
+  .sensor-management-card__state-value,
+  .mobile-reading__value
+) {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Chart axis labels and legends benefit from the same treatment: the SVG text
+   is regenerated on every history refresh, and proportional digits make the
+   y-axis ticks drift horizontally between renders. */
+:is(.dashboard-graph-card, .mobile-line-chart-card, .tank-trend-card) :is(text, .chart-axis__label, .chart-legend__value) {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Headline typography.
+ *
+ * The shell headings sit at default tracking, which looks loose at display
+ * sizes. Tightening the large text and balancing the wrap stops the card
+ * titles from dropping a single orphaned word onto a second line - which on
+ * the 800x480 kiosk panel costs a whole row of vertical space.
+ * ------------------------------------------------------------------------ */
+:is(.topbar__title, .section-title, .tank-trend-card__title, .irrigation-type-card__title, .irrigation-row-controller__title) {
+  letter-spacing: -0.011em;
+}
+
+/* text-wrap: balance is applied only where a heading has room to rebalance.
+   On the 800x480 kiosk the "Cultivation Graph Health" title shares its row
+   with a select, and balancing there squeezed it into a 68px, three-line
+   column that collided with the control. Letting it use the full row and
+   simply not hyphenating keeps it on one or two lines instead. */
+@media (min-width: 1025px) {
+  :is(.topbar__title, .section-title) {
+    text-wrap: balance;
+  }
+}
+
+.section-copy {
+  text-wrap: pretty;
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. Background artwork legibility.
+ *
+ * The farm photograph on .app-main::before is deliberate brand treatment
+ * (icucrops-background-sync.css paints it at 0.70 light / 0.42 dark), so it
+ * stays. What it lacked was separation from the data on top of it: the
+ * photograph is high-contrast, and in the gaps between cards its foliage
+ * competes with the readings for attention.
+ *
+ * A single scrim between the artwork and the content settles it - the picture
+ * still reads as a photograph, the cards gain a calm ground to sit on, and
+ * because the scrim is one static full-bleed gradient on an element that
+ * already exists it costs no extra compositor layer.
+ *
+ * Deliberately NOT touching .app-main::before itself: that element carries the
+ * artwork for every shell including the kiosk, and overriding its opacity here
+ * would fight icucrops-background-sync.css across four themes at once.
+ * ------------------------------------------------------------------------ */
+html[data-theme="dark"] body:not(.mobile-web):not(.is-auth-screen) .app-main::before {
+  /* Compose the scrim into the existing layer rather than adding a new one. */
+  background-color: rgba(6, 18, 12, 0.58) !important;
+  background-blend-mode: darken !important;
+}
+
+html[data-theme="light"] body:not(.mobile-web):not(.is-auth-screen) .app-main::before {
+  background-color: rgba(247, 250, 245, 0.46) !important;
+  background-blend-mode: lighten !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. Press feedback.
+ *
+ * The activation hold now matches the 90ms press animation, so the pressed
+ * state has to be readable within that window. A slightly firmer scale reads
+ * as a deliberate physical press rather than a dropped frame, and keeping it
+ * on transform/opacity means it never triggers layout.
+ * ------------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  :is(button, [role="button"], .nav-button, .icon-button, [data-action]):not(:disabled):not([disabled]):not([aria-disabled="true"]):active {
+    transition-duration: 80ms;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * 5. Keyboard focus.
+ *
+ * The shells style :focus-visible in only a handful of places, so tabbing
+ * through the sidebar and the irrigation controls loses the caret. A single
+ * ring on the interactive roles restores it without touching mouse styling.
+ * ------------------------------------------------------------------------ */
+:is(button, [role="button"], a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 2px solid var(--green-500, #5aab61);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+/* ---------------------------------------------------------------------------
+ * 6. Kiosk paint budget.
+ *
+ * On the Pi the compositor is the scarce resource, not the CPU. Blur is the
+ * most expensive property the shell uses: each backdrop-filter forces its own
+ * backdrop snapshot every frame it is on screen. The kiosk already runs a
+ * flat, opaque surface treatment, so the blur buys nothing there while still
+ * being sampled. Zeroing the tokens switches every glass surface to its solid
+ * fill in one place rather than chasing 84 individual rules.
+ * ------------------------------------------------------------------------ */
+html.pi-kiosk {
+  --fx-blur-background: 0px;
+  --fx-blur-glass: 0px;
+  --fx-blur-soft: 0px;
+  --fx-blur-input: 0px;
+  --fx-blur-overlay: 0px;
+  --fx-blur-modal: 0px;
+  --fx-saturate-glass: 100%;
+  --fx-saturate-soft: 100%;
+}
+
+/* ---------------------------------------------------------------------------
+ * 7. Background artwork payload.
+ *
+ * background-wide.png is 988 KB - by itself more than a third of the shell's
+ * total transfer, and it is fetched on every shell in both themes. Re-encoded
+ * to WebP the same picture is 56 KB (PSNR 40 dB against the original, i.e.
+ * visually identical, and it is composited at 0.42-0.70 opacity behind a
+ * scrim, so even that difference never reaches the eye).
+ *
+ * image-set() carries the PNG as the fallback in the same declaration, so a
+ * browser without WebP support silently loads the original instead of losing
+ * the artwork. Chromium on the Pi, Chrome, Edge, Firefox and iOS Safari all
+ * take the WebP branch.
+ *
+ * These selectors mirror icucrops-background-sync.css exactly so that each
+ * rule replaces its counterpart's background image rather than adding a
+ * second layer; the opacity and blend settings there still apply.
+ * ------------------------------------------------------------------------ */
+html[data-theme="light"] body:not(.mobile-web):not(.is-auth-screen) .app-main::before,
+html[data-theme="dark"] body:not(.mobile-web):not(.is-auth-screen) .app-main::before,
+html[data-theme="light"] body.mobile-web::before,
+html[data-theme="dark"] body.mobile-web::before,
+/* icucrops-live-graph-fix.css paints the same photograph a second time on
+   body::before in dark mode, at 0.12 opacity under brightness(0.45) - far too
+   faint to read as a picture, but enough to pull the whole file down again.
+   Pointed at the WebP it stops being a second megabyte. */
+html[data-theme="dark"] body::before {
+  background-image: image-set(
+    url("/assets/background-wide.webp") type("image/webp"),
+    url("/assets/background-wide.png") type("image/png")
+  ) !important;
+  background-position: center center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * 8. Card header crush on narrow panels.
+ *
+ * .card-head is a flex row holding the title on one side and the range select
+ * plus status pill on the other. The title sits in a plain <div> with no
+ * min-width, and a flex item's default min-width:auto gives way once the
+ * actions side asks for room - so on the 800x480 kiosk "Cultivation Graph
+ * Health" was compressed into a 68px column three lines tall, overlapping its
+ * own dropdown. This is pre-existing on main, not introduced by this layer.
+ *
+ * Letting the title keep a sensible floor and allowing the actions to wrap
+ * beneath it resolves the collision without changing either side's markup or
+ * the card's height on wider screens, where the row never runs out of space.
+ * ------------------------------------------------------------------------ */
+.card-head {
+  flex-wrap: wrap;
+  row-gap: 0.5rem;
+}
+
+.card-head > div:first-child {
+  min-width: min(100%, 11rem);
+  flex: 1 1 auto;
+}
+
+.dashboard-panel__head-actions {
+  flex-shrink: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * 9. Cultivation health tower bands.
+ *
+ * The towers used to draw one rect per day, each outlined with a 1.5px white
+ * stroke. Over a 30-day cultivation that stroke was most of what you saw: the
+ * bar read as fine stripes instead of as health bands. app.js now merges
+ * consecutive same-tone days into one rect, so the separator only has to
+ * divide the four tones - and at that job a thinner, card-coloured hairline
+ * does it without eating the band.
+ * ------------------------------------------------------------------------ */
+.cultivation-health-chart__slice {
+  stroke-width: 1;
+  /* Sharp band edges: a merged band is a solid block, so its top and bottom
+     should meet the neighbouring tone cleanly rather than feathering. */
+  shape-rendering: crispEdges;
+}
+
+html[data-theme="dark"] .cultivation-health-chart__slice {
+  /* The white hairline was tuned for the light card. On the dark card it drew
+     a bright line between every band; match the dark surface instead. */
+  stroke: rgba(9, 24, 16, 0.55);
+}
+
+/* ---------------------------------------------------------------------------
+ * 10. Cultivation chart text legibility on narrow cards.
+ *
+ * The tower chart's viewBox is 1680 units wide and it is drawn with
+ * preserveAspectRatio="none", so the horizontal scale is card width / 1680.
+ * The axis labels are set in viewBox units (22px) which is fine on a 1100px
+ * desktop card (renders ~14px) but collapses to ~4px on the 290px kiosk card
+ * and ~4.5px on a phone - the row names and the 0-100 scale become unreadable
+ * smudges, which is what the narrow screenshots showed.
+ *
+ * Scaling the font size per breakpoint keeps the geometry (bars, grid, clip
+ * paths) exactly as computed in app.js and only enlarges the glyphs, so no
+ * layout maths has to change and the desktop rendering is untouched.
+ * ------------------------------------------------------------------------ */
+@media (max-width: 1100px) {
+  .cultivation-batch-chart .cultivation-batch-chart__grid text,
+  .cultivation-batch-chart .cultivation-batch-chart__axis text {
+    font-size: 26px;
+  }
+
+  .cultivation-batch-chart .cultivation-health-chart__value {
+    font-size: 34px;
+  }
+}
+
+@media (max-width: 820px) {
+  .cultivation-batch-chart .cultivation-batch-chart__grid text,
+  .cultivation-batch-chart .cultivation-batch-chart__axis text {
+    font-size: 32px;
+  }
+
+  .cultivation-batch-chart .cultivation-health-chart__value {
+    font-size: 40px;
+  }
+}
+
+/* The kiosk card is the narrowest of all, so it needs the largest units to
+   land at a readable pixel size on the 800x480 panel. */
+html.pi-kiosk .cultivation-batch-chart .cultivation-batch-chart__grid text,
+html.pi-kiosk .cultivation-batch-chart .cultivation-batch-chart__axis text {
+  font-size: 40px;
+}
+
+html.pi-kiosk .cultivation-batch-chart .cultivation-health-chart__value {
+  font-size: 46px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 11. Icon stroke weight.
+ *
+ * ui-icons.svg draws every symbol at stroke-width 1.8, but `.icon` in the
+ * shell stylesheets sets stroke-width 2 on the <svg>, which inherits into the
+ * <use> and overrides all 41 glyphs. The icons were being rendered heavier
+ * than they were drawn, which is what made them look slightly blunt next to
+ * the text. Let the sprite's own weight stand.
+ *
+ * vector-effect keeps that weight honest: without it an icon scaled by a
+ * parent (the sensor cards and the kiosk both do) has its stroke scaled too,
+ * so the same glyph reads heavier in one place than another.
+ * ------------------------------------------------------------------------ */
+.icon use,
+.icon {
+  stroke-width: 1.8;
+}
+
+/* The pi kiosk sits about an arm's length away on a small panel, where a
+   hairline drops out at a glance. A touch more weight there only. */
+html.pi-kiosk .icon use,
+html.pi-kiosk .icon {
+  stroke-width: 2;
+}
+
+/* ---------------------------------------------------------------------------
+ * 12. Tank level cards.
+ *
+ * Three faults in the shipped card, all visible at a glance:
+ *
+ * 1. The litre readout was printed INSIDE the vessel, on the liquid. Measured
+ *    against the fill it ran at 1.0-1.6:1 where WCAG asks 4.5:1 - "2.9L" was
+ *    dark grey on near-black fertilizer, and the lime figure was white on
+ *    white. Legibility also changed with the level, because what sits behind
+ *    the text is whatever the tank happens to be holding.
+ * 2. The vessel is small and the card is wide, so most of the card was empty
+ *    while the one meaningful element was cramped.
+ * 3. Nothing but the sentence encoded "low". 17% and 97% read the same at a
+ *    glance, which is the opposite of what a tank gauge is for.
+ *
+ * tankTemplate now emits the readout as a sibling of the vessel rather than a
+ * child, plus a horizontal gauge and a level class. This lays that out: vessel
+ * on the left as the illustration, the numbers on the card surface where their
+ * contrast is fixed, and a bar long enough to read across the card.
+ * ------------------------------------------------------------------------ */
+.tank-card.tank-card--compact {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  justify-items: stretch;
+  place-items: center stretch;
+  gap: 0.72rem;
+  padding: 0.58rem 0.72rem;
+  text-align: left;
+}
+
+/* The vessel is now the illustration beside the data, not the whole card. */
+.tank-card--compact > .tank {
+  width: 2.9rem;
+  height: 4.15rem;
+  flex: none;
+}
+
+.tank-card--compact > .tank-card__meta {
+  display: grid;
+  gap: 0.22rem;
+  justify-items: start;
+  text-align: left;
+  min-width: 0;
+  width: 100%;
+}
+
+.tank-card--compact > .tank-card__meta > strong {
+  font-size: 0.9rem;
+  line-height: 1.15;
+}
+
+/* Litre figure on the card surface: one fixed background behind it, so the
+   contrast no longer depends on how full the tank is. */
+.tank-card__reading {
+  display: flex;
+  align-items: baseline;
+  gap: 0.26rem;
+}
+
+.tank-card__amount {
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+
+.tank-card__max {
+  font-size: 0.72rem;
+  opacity: 0.68;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The gauge carries the level across the full width of the card, which is the
+   space that used to be empty. */
+.tank-card__gauge {
+  width: 100%;
+  height: 0.3rem;
+  border-radius: 999px;
+  background: rgba(120, 150, 128, 0.22);
+  overflow: hidden;
+}
+
+.tank-card__gauge-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--tank-gauge-accent, #35a06a);
+  /* Level changes arrive on a poll, so the bar eases to its new width instead
+     of jumping. Width is cheap here: one 4px-tall bar, no compositor layer. */
+  transition: width var(--transition, 220ms) ease;
+}
+
+.tank-card__status {
+  font-size: 0.72rem;
+  line-height: 1.25;
+  opacity: 0.72;
+}
+
+/* Level bands. The accent is what makes "needs refilling" visible before the
+   sentence is read; the vessel keeps its own liquid colour so Water still
+   looks like water. */
+.tank-card--level-ok {
+  --tank-gauge-accent: #35a06a;
+}
+
+.tank-card--level-low {
+  --tank-gauge-accent: #d8a12a;
+}
+
+.tank-card--level-critical {
+  --tank-gauge-accent: #d4574c;
+}
+
+/* On the kiosk the row is short and the panel is 480px tall, so the vessel
+   gives up a little more height to keep all three cards on screen. */
+html.pi-kiosk .tank-card--compact > .tank {
+  width: 2.4rem;
+  height: 3.4rem;
+}
+
+html.pi-kiosk .tank-card--compact {
+  padding: 0.46rem 0.56rem;
+  gap: 0.56rem;
+}
+
+/* Fertilizer liquid. The shipped ramp ends at rgba(24,30,26,.98) - near black,
+   which reads as sludge rather than as nutrient solution and was the surface
+   the old dark-grey readout sat on. An amber-brown keeps it clearly distinct
+   from Water and Lime while looking like something you would feed a crop. */
+.tank--fertilizer {
+  --tank-liquid-from: rgba(196, 152, 74, 0.96);
+  --tank-liquid-to: rgba(122, 84, 32, 0.98);
+  --tank-liquid-shadow: rgba(122, 84, 32, 0.34);
+  --tank-wave-color: rgba(255, 246, 228, 0.9);
+  --tank-bubble-color: rgba(255, 246, 228, 0.74);
+}
+
+/* Lime solution was white-on-white against the light card. A soft mineral
+   grey-blue keeps the "clear liquid" read while gaining an edge of its own. */
+.tank--solution {
+  --tank-liquid-from: rgba(232, 240, 244, 0.98);
+  --tank-liquid-to: rgba(158, 178, 188, 0.96);
+  --tank-liquid-shadow: rgba(140, 160, 170, 0.3);
+  --tank-wave-color: rgba(255, 255, 255, 0.96);
+  --tank-bubble-color: rgba(246, 250, 252, 0.88);
+}
+
+/* ---------------------------------------------------------------------------
+ * 13. Progress bars that animate nothing.
+ *
+ * .progress-fill::before and ::after each run an endless animation
+ * (liquid-progress-flow, liquid-progress-sheen). Ten of them were live on the
+ * dashboard, and every one of the bars they were animating was 0px wide,
+ * because those sensors are off and the fill is 0%. That is a compositor
+ * ticking forever to move a gradient across nothing.
+ *
+ * Running them only when the bar has width costs nothing when it does, and
+ * stops the work entirely when it does not. A zero-width bar cannot show a
+ * sheen anyway, so nothing is lost visually.
+ * ------------------------------------------------------------------------ */
+.progress-fill[style*="width: 0%"]::before,
+.progress-fill[style*="width:0%"]::before,
+.progress-fill[style*="width: 0%"]::after,
+.progress-fill[style*="width:0%"]::after {
+  animation: none !important;
+  content: none !important;
+}
+
+/* The sheen is decoration on a value the eye has already read. Off-screen it
+   is pure cost, so let the browser drop it when the card scrolls away. */
+.progress-track,
+.tank-card__gauge {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 0.3rem;
+}
+
+/* The restructured meta column is taller than the old centred layout (name,
+   figure, gauge, status), so the card has to stop constraining its own
+   height or the status line is clipped - which it was, by about half a line. */
+.tank-card.tank-card--compact {
+  height: auto;
+  min-height: 0;
+  align-content: center;
+}
+
+.dashboard-panel--tanks .tank-grid--triple {
+  align-items: stretch;
+}
+
+.dashboard-panel--tanks .tank-card--compact > .tank-card__meta {
+  padding-block: 0.06rem;
+}
+
+/* Lime solution is a pale liquid in a pale vessel, so on the light card the
+   fill had no edge at all and the tank looked empty at any level. A defined
+   rim on the fill gives it a boundary without darkening the liquid itself. */
+.tank__fill--solution {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 0 0 1px rgba(120, 146, 156, 0.34),
+    0 0 14px rgba(140, 160, 170, 0.24);
+}
+
+/* A nearly-empty tank still has to look like a tank with something in it. At
+   17% the fill is a few pixels of liquid at the bottom of the vessel, which
+   at kiosk size reads as "empty" rather than as "low" - and empty and low are
+   different things to a grower deciding whether to refill today.
+   A minimum height keeps the liquid visible; the gauge and the percentage
+   carry the exact value, so the vessel does not have to be linear at the very
+   bottom of its range to be honest. */
+.tank__fill {
+  min-height: 0.42rem;
+}
+
+/* The critical band also tints the vessel rim, so a low tank is identifiable
+   from the illustration alone and not only from the bar beside it. */
+.tank-card--level-critical > .tank {
+  border-color: rgba(212, 87, 76, 0.62);
+}
+
+.tank-card--level-low > .tank {
+  border-color: rgba(216, 161, 42, 0.55);
+}
+
+/* ---------------------------------------------------------------------------
+ * 14. Scroll cost is style recalc, not paint.
+ *
+ * A devtools trace of a real wheel-scroll on the kiosk (6x throttle) breaks
+ * down as: UpdateLayoutTree 190ms, RasterTask 69ms, Paint 18ms. The expensive
+ * part is recalculating style, not drawing - which is why softening shadows
+ * during the gesture changed nothing measurable (A/B over 7 runs each: p95
+ * 21.4 -> 20.8ms, worst 69.6 -> 66.1ms, ranges fully overlapping).
+ *
+ * The cause is that the shell toggles three classes on <body> while scrolling
+ * (is-motion-paused, is-interface-scrolling, is-dashboard-scrolling). Each
+ * toggle invalidates style for the whole document, and this app carries 2,846
+ * rules of which 1,678 use !important. Measured directly: one body class
+ * toggle costs 23-31ms of recalc on the kiosk - about two dropped frames, and
+ * it happens several times per swipe.
+ *
+ * CSS containment is the lever that actually applies. `contain: layout style`
+ * on the dashboard cards stops a style invalidation inside one card from
+ * escaping into its siblings, so a body-level toggle no longer forces the
+ * entire tree to be re-matched. This is a hint about isolation, not a visual
+ * change: nothing here alters how anything looks.
+ * ------------------------------------------------------------------------ */
+:is(
+  .dashboard-panel,
+  .mobile-mini-panel,
+  .tank-card,
+  .sensor-card,
+  .metric-card,
+  .iot-monitor-card,
+  .irrigation-row-card,
+  .tank-trend-card
+) {
+  contain: layout style;
+}
+
+/* Off-screen cards skip layout and paint entirely until they scroll in.
+   contain-intrinsic-size keeps the scrollbar honest so the page does not jump
+   as sections are realised. */
+.dashboard-panel,
+.mobile-mini-panel {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 22rem;
+}
+
+/* The scroller keeps a compositor hint so its content is not re-uploaded every
+   frame. Deliberately NOT removing will-change from the nav and icon buttons:
+   measured three times, taking it away made the kiosk worse, because the
+   compositor then rebuilds those layers around every gesture instead of
+   keeping them parked. */
+.page-content {
+  will-change: scroll-position;
+}
+
+/* ---------------------------------------------------------------------------
+ * 16. Tank level cards - light mode had no card at all.
+ *
+ * Section 12 restructured the card, but on the light theme the result reads as
+ * three floating tanks on an empty white field. Two causes, both measurable:
+ *
+ * 1. .tank-card--compact's own surface is rgba(255,255,255,0.038) - white at
+ *    4% over a white panel. On the dark theme that is a visible lift; on the
+ *    light theme it is nothing.
+ * 2. The emerald theme then paints .tank-card--compact with
+ *    `background: var(--card-solid-fill) !important` - a white-to-off-white
+ *    gradient - on top of a panel that is ALSO --card-solid-fill. Card and
+ *    panel end up the same colour, so the border is the only thing separating
+ *    them, and its rgba(255,255,255,0.11) is invisible too.
+ *
+ * The result: white on white on white. This block gives each card a surface
+ * with an identity, tinted by what the tank actually holds, and a level band
+ * that is legible before the sentence under it is read.
+ *
+ * Everything here is scoped to html:not([data-theme="dark"]) so the dark
+ * theme keeps its own glass treatment untouched - the trap this codebase has
+ * been caught by before is a blanket surface rule with no theme scope.
+ * ------------------------------------------------------------------------ */
+
+/* Per-tank identity tokens. The tint is the tank's own liquid, pulled down to
+   a surface weight (4-7% ink) so three cards side by side read as a set
+   rather than as three unrelated swatches. */
+.tank-card--compact {
+  --tank-surface-tint: 46, 128, 84;
+  --tank-surface-edge: rgba(35, 103, 67, 0.2);
+}
+
+.tank-card--compact:has(.tank--water) {
+  --tank-surface-tint: 38, 116, 176;
+  --tank-surface-edge: rgba(38, 116, 176, 0.24);
+}
+
+.tank-card--compact:has(.tank--fertilizer) {
+  --tank-surface-tint: 150, 104, 38;
+  --tank-surface-edge: rgba(150, 104, 38, 0.24);
+}
+
+.tank-card--compact:has(.tank--solution) {
+  --tank-surface-tint: 92, 116, 128;
+  --tank-surface-edge: rgba(92, 116, 128, 0.26);
+}
+
+/* The card surface itself. A tinted wash plus a light source at the top-left
+   corner, matching the direction every other shadow in the shell uses, so the
+   card sits on the panel instead of dissolving into it.
+
+   The shadow is tinted with the card's own hue rather than black: a neutral
+   drop shadow under a coloured wash is what made the earlier pass read as
+   grey. */
+html:not([data-theme="dark"]) body .page-content .tank-card.tank-card--compact,
+html:not([data-theme="dark"]) body.mobile-web .page-content .tank-card.tank-card--compact {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(var(--tank-surface-tint), 0.13), transparent 58%),
+    linear-gradient(160deg, rgba(var(--tank-surface-tint), 0.075), rgba(var(--tank-surface-tint), 0.028)) !important;
+  border: 1px solid var(--tank-surface-edge) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 1px 2px rgba(var(--tank-surface-tint), 0.1),
+    0 8px 18px rgba(var(--tank-surface-tint), 0.11) !important;
+}
+
+/* Level band on the card edge. A tank below a fifth should be identifiable
+   from across the room, before any number is read - which is the whole point
+   of a gauge. The band overrides the liquid tint, because "needs refilling"
+   outranks "this is the water one". */
+html:not([data-theme="dark"]) body .page-content .tank-card--compact.tank-card--level-low,
+html:not([data-theme="dark"]) body.mobile-web .page-content .tank-card--compact.tank-card--level-low {
+  --tank-surface-tint: 168, 122, 26;
+  border-color: rgba(184, 134, 26, 0.44) !important;
+}
+
+html:not([data-theme="dark"]) body .page-content .tank-card--compact.tank-card--level-critical,
+html:not([data-theme="dark"]) body.mobile-web .page-content .tank-card--compact.tank-card--level-critical {
+  --tank-surface-tint: 176, 62, 52;
+  border-color: rgba(196, 68, 58, 0.46) !important;
+}
+
+/* Typography. The name was 0.9rem semi-bold sitting directly above a 1.12rem
+   bold figure - two competing headings, no hierarchy. Demoting the name to a
+   tracked label lets the litre figure be the thing the eye lands on. */
+/* Both the size and the colour need !important here, and not for the usual
+   reason. The emerald theme sets `color: var(--text) !important; opacity: 1
+   !important` on .tank-card__meta strong (to rescue it from an earlier
+   washed-out pass), and sets the font-size with !important again at four
+   different breakpoints. Without matching that, the label silently keeps the
+   old 0.72-0.86rem near-black treatment and the hierarchy below never
+   appears. */
+html body .page-content .tank-card--compact > .tank-card__meta > strong,
+html body.mobile-web .page-content .tank-card--compact > .tank-card__meta > strong {
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: rgba(var(--tank-surface-tint), 0.95) !important;
+  opacity: 0.92 !important;
+}
+
+html body .page-content .tank-card--compact .tank-card__amount,
+html body.mobile-web .page-content .tank-card--compact .tank-card__amount {
+  font-size: 1.24rem !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--green-900, #0c3823) !important;
+}
+
+html body .page-content .tank-card--compact .tank-card__max,
+html body.mobile-web .page-content .tank-card--compact .tank-card__max {
+  font-size: 0.7rem !important;
+  font-weight: 500 !important;
+  opacity: 0.55 !important;
+}
+
+/* The status line is the least important thing on the card and was set at the
+   same opacity as the capacity. Pull it back so the reading order is
+   name -> figure -> gauge -> sentence. */
+/* Same story: .tank-card__status carries the .section-copy class, which the
+   emerald theme sizes with !important per breakpoint. */
+html body .page-content .tank-card--compact .tank-card__status,
+html body.mobile-web .page-content .tank-card--compact .tank-card__status {
+  font-size: 0.68rem !important;
+  line-height: 1.28 !important;
+  opacity: 0.6 !important;
+  text-wrap: pretty;
+}
+
+/* The gauge track was a flat grey bar of one fixed colour on every card. On a
+   tinted surface that reads as a scratch. Tint the track with the card's hue
+   and give the fill a two-stop ramp so it has some body at small sizes. */
+html:not([data-theme="dark"]) body .page-content .tank-card--compact .tank-card__gauge,
+html:not([data-theme="dark"]) body.mobile-web .page-content .tank-card--compact .tank-card__gauge {
+  height: 0.34rem;
+  background: rgba(var(--tank-surface-tint), 0.16);
+  box-shadow: inset 0 1px 1px rgba(var(--tank-surface-tint), 0.16);
+}
+
+html:not([data-theme="dark"]) body .page-content .tank-card--compact .tank-card__gauge-fill,
+html:not([data-theme="dark"]) body.mobile-web .page-content .tank-card--compact .tank-card__gauge-fill {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--tank-gauge-accent, #35a06a) 76%, white),
+    var(--tank-gauge-accent, #35a06a)
+  );
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.28) inset;
+}
+
+/* The vessel. On the light card its rgba(214,239,219,0.8) rim was a pale mint
+   line against a pale mint panel - the tank had no outline, which is most of
+   why the lime tank in the screenshot reads as an empty rectangle. Give it the
+   card's own edge colour so the illustration is bounded. */
+html:not([data-theme="dark"]) body .page-content .tank-card--compact > .tank,
+html:not([data-theme="dark"]) body.mobile-web .page-content .tank-card--compact > .tank {
+  border-color: var(--tank-surface-edge);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(var(--tank-surface-tint), 0.07));
+  box-shadow:
+    inset 0 8px 14px rgba(var(--tank-surface-tint), 0.09),
+    0 6px 12px rgba(var(--tank-surface-tint), 0.16);
+}
+
+/* Hover is the one affordance the card has - it is not a control, so it gets
+   a lift and nothing more. transform and box-shadow only: both composite, so
+   this costs no layout on the kiosk. */
+@media (hover: hover) and (pointer: fine) {
+  html:not([data-theme="dark"]) body .page-content .tank-card.tank-card--compact:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 2px 4px rgba(var(--tank-surface-tint), 0.12),
+      0 12px 24px rgba(var(--tank-surface-tint), 0.16) !important;
+  }
+}
+
+/* Mobile. The card is narrower and stacked, so the padding opens up a little
+   and the figure carries the card. Scoped to the same breakpoint the mobile
+   layout sheet uses for this panel. */
+@media (max-width: 1024px) {
+  .page-stack--dashboard > .dashboard-panel--tanks .tank-card--compact {
+    padding: 0.6rem 0.66rem;
+    gap: 0.62rem;
+  }
+
+  html body .page-content .tank-card--compact .tank-card__amount,
+  html body.mobile-web .page-content .tank-card--compact .tank-card__amount {
+    font-size: 1.16rem !important;
+  }
+}
+
+/* Pi kiosk. 800x480, viewed at arm's length: the tint has to carry further,
+   and the type sizes above are a touch small on the panel. The kiosk sheet
+   sizes the card with !important, so this only adjusts what it does not set.
+   Not touching the dark kiosk graph surface below it. */
+html.pi-kiosk:not([data-theme="dark"]) body .page-content .tank-card.tank-card--compact {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(var(--tank-surface-tint), 0.17), transparent 58%),
+    linear-gradient(160deg, rgba(var(--tank-surface-tint), 0.1), rgba(var(--tank-surface-tint), 0.04)) !important;
+}
+
+html.pi-kiosk body .page-content .tank-card--compact > .tank-card__meta > strong {
+  font-size: 0.74rem !important;
+}
+
+html.pi-kiosk body .page-content .tank-card--compact .tank-card__amount {
+  font-size: 1.3rem !important;
+}
+
+html.pi-kiosk body .page-content .tank-card--compact .tank-card__status {
+  font-size: 0.7rem !important;
+  opacity: 0.66 !important;
+}
+
+html.pi-kiosk .tank-card--compact .tank-card__gauge {
+  height: 0.38rem;
+}
+
+/* The vessel's ::before highlight is a 0.55rem white lozenge pinned near the
+   top of the tank. It was drawn to read as a glass reflection, but it sits
+   BELOW the liquid line on any tank over ~85% and above it on any tank under
+   it - so on a full tank it reads as trapped air and on an empty one as a
+   smear. Narrowing it and pulling it to one side makes it read as a
+   highlight down the edge of the glass, which is where a real one would be,
+   and it no longer straddles the fill line. */
+.tank-card--compact > .tank::before {
+  inset: 0.34rem auto auto 0.42rem;
+  width: 0.42rem;
+  height: 38%;
+  border-radius: 999px;
+  opacity: 0.5;
+}
+
+/* An empty tank is the one case where the illustration carries no information
+   at all - the lime vessel in the reported screenshot is a blank rectangle,
+   which is indistinguishable from "no sensor" and from "not rendered". Give a
+   fully-drained tank a faint floor so the vessel still reads as a container
+   that happens to be empty. The gauge and the figure carry the actual value;
+   this only stops the shape from disappearing. */
+html:not([data-theme="dark"]) body .page-content .tank-card--compact > .tank::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 0.3rem;
+  background: linear-gradient(180deg, transparent, rgba(var(--tank-surface-tint), 0.22));
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * 17. The same identity on the dark theme.
+ *
+ * Section 16 is deliberately light-only, because the reported fault was
+ * light-mode. But the dark card has the matching flaw for a different reason:
+ * the emerald theme sets `color: var(--text) !important` on
+ * .tank-card__meta strong, so on dark all three labels come out the same
+ * green and the level bands - the whole point of a gauge - are invisible.
+ *
+ * These are the same tokens lifted for a dark surface: the tint has to
+ * brighten rather than darken to separate from the card behind it.
+ * ------------------------------------------------------------------------ */
+html[data-theme="dark"] .tank-card--compact {
+  --tank-surface-tint: 126, 200, 158;
+  --tank-surface-edge: rgba(126, 200, 158, 0.26);
+}
+
+html[data-theme="dark"] .tank-card--compact:has(.tank--water) {
+  --tank-surface-tint: 122, 186, 240;
+  --tank-surface-edge: rgba(122, 186, 240, 0.3);
+}
+
+html[data-theme="dark"] .tank-card--compact:has(.tank--fertilizer) {
+  --tank-surface-tint: 226, 178, 104;
+  --tank-surface-edge: rgba(226, 178, 104, 0.3);
+}
+
+html[data-theme="dark"] .tank-card--compact:has(.tank--solution) {
+  --tank-surface-tint: 176, 198, 210;
+  --tank-surface-edge: rgba(176, 198, 210, 0.32);
+}
+
+html[data-theme="dark"] .tank-card--compact.tank-card--level-low {
+  --tank-surface-tint: 240, 198, 108;
+  --tank-surface-edge: rgba(240, 198, 108, 0.42);
+}
+
+html[data-theme="dark"] .tank-card--compact.tank-card--level-critical {
+  --tank-surface-tint: 244, 146, 134;
+  --tank-surface-edge: rgba(244, 146, 134, 0.44);
+}
+
+html[data-theme="dark"] body .page-content .tank-card.tank-card--compact {
+  border-color: var(--tank-surface-edge) !important;
+}
+
+/* The label needs the full `body:not(.mobile-web):not(.is-auth-screen)`
+   prefix to be reached at all. icucrops-live-graph-fix.css sets
+   `color: #f7fff8 !important` on `.tank-card strong` behind exactly that
+   selector, and two negation pseudo-classes outrank the plain `body` the rest
+   of this file uses - which is why the dark labels stayed uniformly white
+   through the first pass of this block. */
+html[data-theme="dark"] body:not(.mobile-web):not(.is-auth-screen) .page-content .tank-card--compact > .tank-card__meta > strong,
+html[data-theme="dark"] body.mobile-web .page-content .tank-card--compact > .tank-card__meta > strong {
+  color: rgba(var(--tank-surface-tint), 0.95) !important;
+  opacity: 0.95 !important;
+}
+
+/* Same prefix, same reason: the card's own border is set by that sheet too. */
+html[data-theme="dark"] body:not(.mobile-web):not(.is-auth-screen) .page-content .tank-card.tank-card--compact {
+  border-color: var(--tank-surface-edge) !important;
+}
+
+html[data-theme="dark"] body .page-content .tank-card--compact > .tank {
+  border-color: var(--tank-surface-edge);
+}
+
+html[data-theme="dark"] body .page-content .tank-card--compact .tank-card__gauge {
+  height: 0.34rem;
+  background: rgba(var(--tank-surface-tint), 0.2);
+}
+
+html[data-theme="dark"] body .page-content .tank-card--compact .tank-card__gauge-fill {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--tank-gauge-accent, #35a06a) 72%, white),
+    var(--tank-gauge-accent, #35a06a)
+  );
+}
+
+/* The level accents from section 12 are tuned for a white card; on the dark
+   surface #d8a12a and #d4574c both drop close to the background. Lift them. */
+html[data-theme="dark"] .tank-card--level-ok {
+  --tank-gauge-accent: #4fc98a;
+}
+
+html[data-theme="dark"] .tank-card--level-low {
+  --tank-gauge-accent: #f0c66c;
+}
+
+html[data-theme="dark"] .tank-card--level-critical {
+  --tank-gauge-accent: #f49286;
+}
+
+/* The amount is hard-coded to --green-900 in section 16, which is near-black
+   and disappears on the dark card. */
+html[data-theme="dark"] body:not(.mobile-web):not(.is-auth-screen) .page-content .tank-card--compact .tank-card__amount,
+html[data-theme="dark"] body.mobile-web .page-content .tank-card--compact .tank-card__amount {
+  color: #f2f8f4 !important;
+}
+
+
+/* Tank Levels used to sit beside Sensor Health in this row, and the rules
+   elsewhere still size the row as two columns and stack the three health cards
+   into one narrow one. With the tanks gone that left Sensor Health at a fifth
+   of the width with the rest of the row empty.
+
+   This lives at the end of the last stylesheet the shells load, so it settles
+   the cascade without editing the many earlier rules that shaped the old
+   two-panel row. auto-fit gives the row exactly as many columns as it has
+   panels and spreads the cards across the width they now have, so both stay
+   correct if a panel is ever added back beside Sensor Health. */
+.page-stack--dashboard .dashboard-lower-layout {
+  grid-template-columns: repeat(auto-fit, minmax(min(19rem, 100%), 1fr)) !important;
+}
+
+.page-stack--dashboard .dashboard-panel--health .health-grid,
+.page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--health .health-grid {
+  /* Three sensors, three equal columns. auto-fit was measured resolving to a
+     single track here because an earlier rule fixes the row count, so the
+     column count is stated plainly and the wrap is handled by the media query
+     below rather than by the grid guessing. */
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-template-rows: auto !important;
+  grid-auto-rows: auto !important;
+  align-items: stretch !important;
+}
+
+/* Narrow desktop windows and tablets: two across, then one. The panel is the
+   full width of the dashboard now, so these only matter well below it. */
+@media (max-width: 900px) {
+  .page-stack--dashboard .dashboard-panel--health .health-grid,
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--health .health-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  /* Three cards across two columns leaves the third alone on its row with a
+     gap beside it. It spans both instead, so the block stays a filled
+     rectangle at this width. */
+  .page-stack--dashboard .dashboard-panel--health .health-grid > .health-item:last-child,
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--health .health-grid > .health-item:last-child {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .page-stack--dashboard .dashboard-panel--health .health-grid,
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--health .health-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+/* The cards read as a cramped strip beside their neighbours: measured at 41px
+   tall against the 134px metric tiles in IoT Device Rows above, on roughly half
+   their padding. These give them the same vertical stack those tiles use, an
+   icon block over a name over its status, so the row sits in the dashboard
+   rather than on top of it. The 22px radius is the one every card here uses
+   and is left alone. */
+.page-stack--dashboard .dashboard-panel--health .health-item,
+.page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--health .health-item {
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) !important;
+  grid-template-rows: auto auto !important;
+  align-items: center !important;
+  justify-items: start !important;
+  gap: 0.15rem 0.6rem !important;
+  height: 100% !important;
+  min-height: 4.6rem !important;
+  padding: 0.72rem 0.8rem !important;
+  position: relative !important;
+}
+
+/* The icon block spans both rows so the name and its status line up against
+   it, the way the metric tiles set their own icon. */
+.page-stack--dashboard .dashboard-panel--health .health-item .health-item__meta,
+.page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--health .health-item .health-item__meta {
+  display: contents !important;
+}
+
+.page-stack--dashboard .dashboard-panel--health .health-item .nav-button__icon,
+.page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--health .health-item .nav-button__icon {
+  grid-row: 1 / span 2 !important;
+  display: grid !important;
+  place-items: center !important;
+  width: 2.35rem !important;
+  height: 2.35rem !important;
+  border-radius: var(--radius-sm, 12px) !important;
+  background: color-mix(in srgb, currentColor 13%, transparent) !important;
+}
+
+@supports not (background: color-mix(in srgb, red 50%, transparent)) {
+  .page-stack--dashboard .dashboard-panel--health .health-item .nav-button__icon {
+    background: rgba(28, 128, 80, 0.12) !important;
+  }
+}
+
+/* The live dot rides on the icon block instead of taking a column of its own,
+   so the two rows of text start at the same edge.
+
+   It used to sit beside the icon, pinned to fixed offsets from the card's
+   corner. The icon is centred in a card whose height changes with the screen,
+   so on a tall card the dot floated above the icon instead of on it, and the
+   emerald theme's 16% pill tint turned it into a hollow ring. It now lives
+   inside the icon block and is pinned to that block's own corner, so it stays
+   on the icon at every card size, in a solid status colour. */
+.dashboard-panel--health .health-item .nav-button__icon {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.dashboard-panel--health .health-item .nav-button__icon .status-dot {
+  position: absolute !important;
+  top: -0.2rem !important;
+  right: -0.2rem !important;
+  width: 0.62rem !important;
+  height: 0.62rem !important;
+  flex: none !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  box-shadow: 0 0 0 2px var(--surface-strong, #ffffff) !important;
+}
+
+html[data-theme="dark"] .dashboard-panel--health .health-item .nav-button__icon .status-dot {
+  box-shadow: 0 0 0 2px var(--surface, #101d16) !important;
+}
+
+.dashboard-panel--health .health-item .nav-button__icon .status-dot--online {
+  background: #25aa67 !important;
+}
+
+.dashboard-panel--health .health-item .nav-button__icon .status-dot--warning {
+  background: #e0a024 !important;
+}
+
+.dashboard-panel--health .health-item .nav-button__icon .status-dot--offline {
+  background: #d84f4f !important;
+}
+
+.page-stack--dashboard .dashboard-panel--health .health-item strong,
+.page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--health .health-item strong {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  align-self: end !important;
+  font-size: 0.92rem !important;
+  line-height: 1.25 !important;
+}
+
+.page-stack--dashboard .dashboard-panel--health .health-item .section-copy,
+.page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--health .health-item .section-copy {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  align-self: start !important;
+  font-size: 0.76rem !important;
+  line-height: 1.3 !important;
+}
+
+/* The status pill closes the card on the right, centred against both rows. */
+.page-stack--dashboard .dashboard-panel--health .health-item > .pill,
+.page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--health .health-item > .pill {
+  grid-column: 3 !important;
+  grid-row: 1 / span 2 !important;
+  justify-self: end !important;
+  align-self: center !important;
+}
+
+.page-stack--dashboard .dashboard-panel--health .health-item,
+.page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--health .health-item {
+  grid-template-columns: auto minmax(0, 1fr) auto !important;
+}
+
+
+/* The mobile shell draws Sensor Health as chips in its own two-column grid.
+   Three sensors leave the third alone on the second row with a gap beside it,
+   so it spans both columns and the block stays a filled rectangle. */
+body.mobile-web .mobile-health-grid > .mobile-health-chip:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+
+/* Below the two-up breakpoint the card has the full width to itself, so the
+   pill sits under the text instead of squeezing the sensor name into three
+   wrapped lines. */
+@media (max-width: 560px) {
+  /* At this width the icon and the pill together leave the name about half the
+     card, which wrapped "Soil Capacitive Sensor" onto three lines. Dropping the
+     pill's column gives the text the full remaining width and it reads on one
+     or two lines instead. */
+  .page-stack--dashboard .dashboard-panel--health .health-item,
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--health .health-item {
+    grid-template-columns: auto minmax(0, 1fr) !important;
+    min-height: 0 !important;
+    padding: 0.68rem 0.75rem !important;
+  }
+
+  .page-stack--dashboard .dashboard-panel--health .health-item strong {
+    font-size: 0.88rem !important;
+  }
+
+  .page-stack--dashboard .dashboard-panel--health .health-item > .pill,
+  .page-stack--dashboard .dashboard-lower-layout > .dashboard-panel--health .health-item > .pill {
+    grid-column: 2 !important;
+    grid-row: 3 !important;
+    justify-self: start !important;
+    margin-top: 0.3rem !important;
+  }
+}
+
+/* The phone row cards' bar in its reading's status colour, as the desktop
+   card's .progress-fill--warning / --critical are. The mobile bar only ever
+   had the green fill, so a Warning or Critical card on a phone showed an
+   amber or red badge over a green bar. Colours copied from administrator/
+   styles.css so a card reads the same on every screen. */
+body .mobile-reading.mobile-reading--warning .mobile-reading__bar span {
+  background: linear-gradient(90deg, #f0cf62 0%, #c28924 46%, #f4d873 100%);
+}
+
+body .mobile-reading.mobile-reading--critical .mobile-reading__bar span {
+  background: linear-gradient(90deg, #ef7a70 0%, #d9564d 46%, #f38d7f 100%);
+}

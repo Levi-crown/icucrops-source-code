@@ -1,0 +1,3139 @@
+.mobile-web {
+  --mobile-safe-top: env(safe-area-inset-top, 0px);
+  --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --mobile-nav-height: 4.35rem;
+  --mobile-drawer-width: min(80vw, 18.5rem);
+  --mobile-page-gutter: clamp(0.58rem, 2.8vw, 0.82rem);
+  --text-strong: var(--text, #101828);
+  --mobile-glass-border: rgba(255, 255, 255, 0.72);
+  --mobile-glass-border-soft: rgba(210, 225, 207, 0.76);
+  --mobile-glass-fill: linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(239, 246, 235, 0.9));
+  --mobile-glass-fill-strong: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(242, 247, 238, 0.94));
+  --mobile-glass-fill-soft: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(239, 245, 235, 0.88));
+  --mobile-glass-shadow:
+    0 14px 28px rgba(18, 76, 50, 0.1),
+    0 4px 10px rgba(18, 76, 50, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.32);
+  --mobile-glass-blur: none;
+}
+
+html:has(body.mobile-web) {
+  overflow-x: hidden;
+}
+
+body.mobile-web {
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(143, 201, 154, 0.14), transparent 22%),
+    radial-gradient(circle at 82% 18%, rgba(224, 212, 187, 0.2), transparent 25%),
+    linear-gradient(145deg, rgba(241, 238, 229, 0.98), rgba(232, 242, 232, 0.96) 42%, rgba(238, 235, 225, 0.98) 100%);
+  overflow-x: hidden;
+}
+
+body.mobile-web::before,
+body.mobile-web::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  transform: none;
+  backface-visibility: hidden;
+}
+
+body.mobile-web::before {
+  display: block !important;
+  background: center center / cover no-repeat url("../assets/background-wide.png");
+  opacity: 0.48;
+  filter: none;
+}
+
+body.mobile-web::after {
+  display: block !important;
+  background:
+    linear-gradient(180deg, rgba(243, 238, 228, 0.2), rgba(243, 238, 228, 0.08) 24%, rgba(243, 238, 228, 0.03) 58%, rgba(69, 148, 90, 0.04) 100%),
+    radial-gradient(circle at center, rgba(246, 240, 232, 0.03) 0%, transparent 28%, rgba(234, 243, 232, 0.08) 100%);
+}
+
+body.mobile-web .app-main::before,
+body.mobile-web .app-main::after,
+body.mobile-web .glass-card::before {
+  display: none !important;
+}
+
+body.mobile-web.is-mobile-drawer-open {
+  overflow: hidden;
+}
+
+body.mobile-web .app-shell {
+  position: relative;
+  /* `z-index: 1` here used to open a stacking context that trapped the drawer
+     sidebar inside it. The sidebar asks for z-index 50, but the drawer scrim
+     (#mobile-drawer-backdrop) is a direct child of <body> at z-index 42, so
+     the comparison that actually happened was app-shell's 1 vs the scrim's 42
+     -- the scrim won and covered the whole sidebar, swallowing every nav tap.
+     Keeping this `auto` leaves the sidebar in the body stacking context where
+     its 50 correctly beats the scrim, while .app-main (no z-index of its own)
+     still paints below the scrim and stays dimmed. */
+  z-index: auto;
+  display: block;
+  min-height: 100dvh;
+  padding-bottom: calc(var(--mobile-nav-height) + 1.35rem + var(--mobile-safe-bottom));
+}
+
+body.mobile-web .glass-card,
+body.mobile-web .nav-button,
+body.mobile-web .icon-button,
+body.mobile-web .profile-pill--button {
+  backdrop-filter: var(--mobile-glass-blur);
+  -webkit-backdrop-filter: var(--mobile-glass-blur);
+}
+
+body.mobile-web .glass-card:hover,
+body.mobile-web .nav-button:hover,
+body.mobile-web .icon-button:hover {
+  transform: none;
+}
+
+body.mobile-web .sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--mobile-drawer-width);
+  min-width: var(--mobile-drawer-width);
+  height: 100dvh;
+  gap: 0.58rem;
+  padding: calc(var(--mobile-safe-top) + 0.8rem) 0.72rem calc(0.82rem + var(--mobile-safe-bottom));
+  overflow-y: auto;
+  transform: translate3d(-106%, 0, 0);
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 50;
+  isolation: isolate;
+  backface-visibility: hidden;
+  pointer-events: auto;
+  /* Fallback only -- the shared emerald theme owns the real palette via
+     `.sidebar, body.mobile-web .sidebar`, which is the same declaration the
+     desktop sidebar uses, so the drawer matches desktop in light and dark. */
+  background: linear-gradient(180deg, rgba(29, 100, 67, 0.78) 0%, rgba(12, 56, 35, 0.82) 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 14px 0 28px rgba(9, 42, 24, 0.16);
+}
+
+/* NOTE: there used to be a block of hard-coded `!important` nav-button and
+   nav-button__icon colours here, added to "match the desktop sidebar palette".
+   It did the opposite: the emerald theme already styles
+   `body.mobile-web .sidebar ...` with the exact same declarations it gives the
+   desktop sidebar, and these copies won often enough to drift away from it
+   (icon chips lost their translucent background, the active row dimmed from
+   0.14 to 0.12) and to override the dark theme too. Leaving the theme to own
+   the palette is what actually keeps mobile, desktop and dark mode identical. */
+
+body.mobile-web.is-mobile-drawer-open .sidebar {
+  transform: translate3d(0, 0, 0);
+}
+
+body.mobile-web .sidebar::after {
+  display: none;
+}
+
+body.mobile-web .sidebar__brand {
+  margin-bottom: 0.1rem;
+  padding: 0.72rem;
+  display: flex;
+  justify-content: center;
+}
+
+body.mobile-web .brand-lockup {
+  justify-content: center;
+  text-align: center;
+}
+
+body.mobile-web .brand-lockup > div {
+  display: block;
+  text-align: center;
+}
+
+body.mobile-web .brand-lockup__logo {
+  width: 2.1rem;
+  height: 2.1rem;
+}
+
+body.mobile-web .brand-lockup__title {
+  font-family: var(--font-brand);
+  font-size: 1.12rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+body.mobile-web .brand-lockup__subtitle {
+  font-size: 0.72rem;
+}
+
+body.mobile-web .sidebar__nav,
+body.mobile-web .sidebar__actions {
+  gap: 0.36rem;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+body.mobile-web .sidebar__actions {
+  padding-top: 0.24rem;
+}
+
+body.mobile-web .sidebar .nav-button {
+  justify-content: flex-start;
+  gap: 0.62rem;
+  min-height: 2.7rem;
+  padding: 0.72rem 0.78rem;
+  border-radius: 0.92rem;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+body.mobile-web .sidebar .nav-button > span:not(.nav-button__icon) {
+  display: block;
+}
+
+body.mobile-web .sidebar .nav-button__icon {
+  width: 1.08rem;
+  height: 1.08rem;
+  flex-basis: 1.08rem;
+}
+
+body.mobile-web .mobile-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 23, 13, 0.34);
+  opacity: 0;
+  pointer-events: none;
+  /* Same duration/easing as the sidebar's transform so the dim tracks the
+     slide-in exactly (no gap, no over-dark) without needing a huge-spread
+     box-shadow, which was expensive to repaint and bled its color into the
+     translucent sidebar background. */
+  transition: opacity 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 42;
+}
+
+body.mobile-web.is-mobile-drawer-open .mobile-drawer-backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.mobile-web.is-mobile-drawer-open .app-main,
+body.mobile-web.is-mobile-drawer-open .mobile-bottom-nav {
+  pointer-events: none;
+}
+
+body.mobile-web.is-mobile-drawer-open .sidebar,
+body.mobile-web.is-mobile-drawer-open .sidebar * {
+  pointer-events: auto;
+}
+
+body.mobile-web .app-main {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100dvh;
+  margin-left: 0;
+  overflow-x: hidden;
+  background: transparent;
+}
+
+body.mobile-web .topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 2.3rem minmax(0, 1fr) 2.3rem;
+  align-items: center;
+  gap: 0.58rem;
+  margin: 0;
+  padding: calc(var(--mobile-safe-top) + 0.72rem) 0.78rem 0.78rem;
+  border: 0;
+  border-radius: 0 0 1.28rem 1.28rem;
+  background: linear-gradient(145deg, rgba(29, 100, 67, 0.74), rgba(12, 56, 35, 0.8));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 14px 28px rgba(12, 56, 35, 0.14);
+  transform: none;
+  backface-visibility: hidden;
+}
+
+body.mobile-web .topbar__lead {
+  display: contents;
+}
+
+body.mobile-web .topbar__brand {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.56rem;
+  min-width: 0;
+  width: 100%;
+  max-width: min(100%, 18rem);
+  justify-self: center;
+}
+
+body.mobile-web .topbar__brand-logo {
+  width: 2.35rem;
+  height: 2.35rem;
+  flex: 0 0 2.35rem;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  object-fit: contain;
+}
+
+body.mobile-web .topbar__brand-copy {
+  min-width: 0;
+  text-align: center;
+}
+
+body.mobile-web .topbar__brand-title,
+body.mobile-web .topbar__brand-subtitle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+body.mobile-web .topbar__brand-title {
+  margin: 0;
+  font-family: var(--font-brand);
+  color: #ffffff;
+  font-size: clamp(0.98rem, 4.1vw, 1.3rem);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+body.mobile-web .topbar__brand-subtitle {
+  margin: 0.2rem 0 0;
+  color: rgba(245, 250, 242, 0.88);
+  font-size: 0.7rem;
+}
+
+body.mobile-web .topbar__actions {
+  grid-column: 3;
+  width: 2.3rem;
+  min-width: 2.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0;
+  flex-wrap: nowrap;
+  flex: 0 0 2.3rem;
+}
+
+body.mobile-web .topbar__actions > * {
+  flex: 0 0 auto;
+}
+
+body.mobile-web .mobile-menu-button,
+body.mobile-web .notification-button.icon-button {
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 0.82rem;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+body.mobile-web .mobile-menu-button {
+  grid-column: 1;
+  justify-self: start;
+}
+
+body.mobile-web .mobile-menu-button__bars {
+  display: grid;
+  gap: 0.24rem;
+}
+
+body.mobile-web .mobile-menu-button__bars span {
+  display: block;
+  width: 1.06rem;
+  height: 0.14rem;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+body.mobile-web .notification-button.icon-button .nav-button__icon {
+  width: 1.62rem;
+  height: 1.62rem;
+  flex-basis: 1.62rem;
+  color: inherit;
+}
+
+body.mobile-web .notification-button.icon-button .nav-button__icon .icon {
+  width: 1.12rem;
+  height: 1.12rem;
+}
+
+body.mobile-web .profile-pill--button {
+  display: none;
+}
+
+body.mobile-web .profile-pill--button:hover {
+  transform: none;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+body.mobile-web .profile-pill {
+  width: auto;
+  align-self: auto;
+  justify-content: flex-end;
+  gap: 0;
+  flex: 0 0 auto;
+}
+
+body.mobile-web .profile-pill__copy {
+  display: none;
+}
+
+body.mobile-web .profile-pill__avatar,
+body.mobile-web .avatar-circle {
+  width: 2.18rem;
+  height: 2.18rem;
+  box-shadow: none;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+body.mobile-web .page-content {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0.64rem var(--mobile-page-gutter) calc(var(--mobile-nav-height) + 1.45rem + var(--mobile-safe-bottom));
+  scroll-padding-bottom: calc(var(--mobile-nav-height) + 1.45rem + var(--mobile-safe-bottom));
+  overflow: visible;
+}
+
+body.mobile-web .page-scene {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
+body.mobile-web .page-stack,
+body.mobile-web .page-stack--dashboard {
+  gap: 0.58rem;
+  width: 100%;
+  min-width: 0;
+}
+
+body.mobile-web .mobile-dashboard {
+  display: grid;
+  gap: 0.42rem;
+  width: 100%;
+  max-width: 100%;
+  margin-inline: 0;
+  box-sizing: border-box;
+}
+
+body.mobile-web .mobile-dashboard__overview,
+body.mobile-web .mobile-row-card,
+body.mobile-web .mobile-mini-panel {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid var(--mobile-glass-border);
+  border-radius: 0.92rem;
+  background:
+    var(--mobile-glass-fill-strong),
+    linear-gradient(180deg, rgba(27, 138, 82, 0.08), rgba(27, 138, 82, 0));
+  box-shadow: var(--mobile-glass-shadow);
+  backdrop-filter: var(--mobile-glass-blur);
+  -webkit-backdrop-filter: var(--mobile-glass-blur);
+  contain: paint;
+}
+
+body.mobile-web .mobile-dashboard__overview,
+body.mobile-web .mobile-row-card,
+body.mobile-web .mobile-mini-panel,
+body.mobile-web .mobile-reading,
+body.mobile-web .mobile-health-chip,
+body.mobile-web .mobile-tank-row {
+  min-width: 0;
+}
+
+body.mobile-web .mobile-dashboard__overview {
+  display: grid;
+  gap: 0.42rem;
+  padding: 0.56rem 0.6rem;
+}
+
+body.mobile-web .mobile-dashboard__overview-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.42rem;
+  flex-wrap: wrap;
+}
+
+body.mobile-web .mobile-dashboard__overview-top .mobile-dashboard__headline {
+  flex: 1 1 9rem;
+  min-width: 0;
+}
+
+body.mobile-web .mobile-dashboard__overview-top .mobile-dashboard__row-toggle {
+  width: auto;
+  min-height: 2.3rem;
+  padding-inline: 0.72rem;
+}
+
+body.mobile-web .mobile-dashboard__headline {
+  display: grid;
+  gap: 0.08rem;
+}
+
+body.mobile-web .mobile-dashboard__headline strong {
+  color: var(--text-strong);
+  font-size: 0.96rem;
+  line-height: 1.12;
+}
+
+body.mobile-web .mobile-dashboard__kicker {
+  color: var(--green-700);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body.mobile-web .mobile-dashboard__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 0.28rem;
+}
+
+body.mobile-web .mobile-dashboard__stat {
+  display: grid;
+  align-content: start;
+  gap: 0.08rem;
+  height: 100%;
+  min-height: 3rem;
+  padding: 0.4rem;
+  border: 1px solid var(--mobile-glass-border-soft);
+  border-radius: 0.72rem;
+  background: var(--mobile-glass-fill-soft);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+body.mobile-web .mobile-dashboard__stat span,
+body.mobile-web .mobile-row-card__head span,
+body.mobile-web .mobile-reading__label,
+body.mobile-web .mobile-health-chip span,
+body.mobile-web .mobile-tank-row span {
+  color: var(--text-soft);
+  font-size: 0.62rem;
+  line-height: 1.15;
+}
+
+body.mobile-web .mobile-dashboard__stat strong {
+  color: var(--text-strong);
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+body.mobile-web .mobile-row-list,
+body.mobile-web .mobile-dashboard__graphs,
+body.mobile-web .mobile-tank-list,
+body.mobile-web .mobile-dashboard__lower {
+  display: grid;
+  gap: 0.42rem;
+  width: 100%;
+  max-width: 100%;
+  margin-inline: 0;
+  box-sizing: border-box;
+}
+
+body.mobile-web .mobile-row-card,
+body.mobile-web .mobile-mini-panel {
+  display: grid;
+  gap: 0.36rem;
+  padding: 0.5rem;
+}
+
+body.mobile-web .mobile-row-card__head,
+body.mobile-web .mobile-reading__top,
+body.mobile-web .mobile-mini-panel__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.42rem;
+}
+
+body.mobile-web .mobile-row-card__head > div {
+  display: grid;
+  gap: 0.08rem;
+  min-width: 0;
+}
+
+body.mobile-web .mobile-row-card__statuses {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.28rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+body.mobile-web .mobile-row-card__head strong,
+body.mobile-web .mobile-mini-panel__head strong {
+  color: var(--text-strong);
+  font-size: 0.94rem;
+  line-height: 1.1;
+}
+
+body.mobile-web .mobile-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: max-content;
+  padding: 0.18rem 0.4rem;
+  border-radius: 999px;
+  color: var(--green-800);
+  font-size: 0.56rem;
+  font-weight: 800;
+  line-height: 1;
+  background: rgba(109, 211, 143, 0.2);
+}
+
+body.mobile-web .mobile-status--warning {
+  color: #7a6427;
+  background: rgba(244, 180, 0, 0.2);
+}
+
+body.mobile-web .mobile-status--critical {
+  color: #8b3f37;
+  background: rgba(217, 86, 77, 0.16);
+}
+
+body.mobile-web .mobile-reading-grid,
+body.mobile-web .mobile-health-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  align-items: stretch;
+  gap: 0.34rem;
+}
+
+/* An odd last chip would otherwise sit beside an empty cell in the two-column
+   grid. The dashboard's Sensor Health panel now renders .health-item rows
+   instead, but .mobile-health-grid is still what the live updater fills, so
+   this stays for any surface that uses the chips. */
+body.mobile-web .mobile-health-grid > .mobile-health-chip:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+/* Sensor Health reads as one row per sensor -- dot, icon, name and detail on
+   the left, status pill hard right -- which is the desktop and kiosk shape and
+   what the panel is recognised by.
+
+   Two rules collided to break that here. The shared phone rule stands
+   .health-item on end (flex-direction: column; align-items: start) so a cramped
+   row can stack, and .dashboard-panel--health .health-item then restates
+   align-items: center for the desktop panel. Together they gave a column that
+   was also centred: name, detail and pill stacked down the middle of the card.
+   There is room for the real row at phone width, so put it back explicitly --
+   both properties, or the stray half of one pair wins again. */
+body.mobile-web .dashboard-panel--health .health-item {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  text-align: start;
+}
+
+body.mobile-web .mobile-reading {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.26rem;
+  min-height: 5rem;
+  height: 100%;
+  padding: 0.44rem;
+  color: var(--text-strong);
+  text-align: left;
+  border: 1px solid var(--mobile-glass-border-soft);
+  border-radius: 0.82rem;
+  background: var(--mobile-glass-fill-soft);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 8px 18px rgba(18, 76, 50, 0.04);
+  font: inherit;
+  cursor: pointer;
+  backdrop-filter: var(--mobile-glass-blur);
+  -webkit-backdrop-filter: var(--mobile-glass-blur);
+}
+
+body.mobile-web .mobile-reading > * {
+  min-width: 0;
+}
+
+body.mobile-web .mobile-reading__icon {
+  display: grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  color: var(--green-600);
+  border-radius: 0.46rem;
+  background: rgba(109, 211, 143, 0.14);
+}
+
+body.mobile-web .mobile-reading__icon .icon {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+body.mobile-web .mobile-reading strong,
+body.mobile-web .mobile-tank-row strong,
+body.mobile-web .mobile-health-chip strong {
+  color: var(--text-strong);
+}
+
+body.mobile-web .mobile-reading strong {
+  display: flex;
+  align-items: flex-end;
+  align-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.16rem;
+  min-height: 2rem;
+  font-size: 0.94rem;
+  line-height: 1.05;
+}
+
+body.mobile-web .mobile-reading small {
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
+body.mobile-web .mobile-reading__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.24rem;
+  min-height: 1.32rem;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+body.mobile-web .mobile-reading__chips span {
+  padding: 0.16rem 0.28rem;
+  border-radius: 999px;
+  color: var(--text-soft);
+  font-size: 0.54rem;
+  font-weight: 800;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+body.mobile-web .mobile-reading__bar,
+body.mobile-web .mobile-tank-row__bar {
+  overflow: hidden;
+  width: 100%;
+  height: 0.34rem;
+  margin-top: auto;
+  border-radius: 999px;
+  background: rgba(223, 232, 223, 0.72);
+}
+
+body.mobile-web .mobile-reading__bar span,
+body.mobile-web .mobile-tank-row__bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--green-300), var(--green-600));
+}
+
+body.mobile-web .mobile-health-chip,
+body.mobile-web .mobile-tank-row {
+  display: grid;
+  align-content: start;
+  gap: 0.08rem;
+  height: 100%;
+  padding: 0.44rem;
+  border-radius: 0.68rem;
+  border: 1px solid var(--mobile-glass-border-soft);
+  background: var(--mobile-glass-fill-soft);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+body.mobile-web .mobile-health-chip strong {
+  font-size: 0.72rem;
+}
+
+body.mobile-web .mobile-tank-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.24rem 0.45rem;
+}
+
+body.mobile-web .mobile-tank-row strong {
+  font-size: 0.78rem;
+}
+
+body.mobile-web .mobile-tank-row__bar {
+  grid-column: 1 / -1;
+}
+
+body.mobile-web .dashboard-card-head,
+body.mobile-web .dashboard-panel__head-actions,
+body.mobile-web .cultivation-chart-row__head {
+  align-items: stretch;
+  flex-direction: column;
+}
+
+body.mobile-web .dashboard-panel__head-actions,
+body.mobile-web .dashboard-row-summary,
+body.mobile-web .dashboard-panel__action,
+body.mobile-web .mobile-dashboard__row-toggle {
+  width: 100%;
+}
+
+body.mobile-web .mobile-dashboard__overview-top .mobile-dashboard__row-toggle {
+  width: auto;
+}
+
+body.mobile-web .dashboard-row-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.34rem;
+}
+
+body.mobile-web .dashboard-row-summary span {
+  flex: 1 1 7rem;
+  justify-content: center;
+  background: rgba(248, 250, 244, 0.98);
+}
+
+body.mobile-web .cultivation-chart-list,
+body.mobile-web .cultivation-chart-row__body,
+body.mobile-web .tank-dashboard-layout,
+body.mobile-web .tank-trend-row {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+body.mobile-web .cultivation-chart-row,
+body.mobile-web .tank-trend-card {
+  padding: 0.64rem;
+}
+
+body.mobile-web .tank-trend-row__delta {
+  justify-content: flex-start;
+}
+
+body.mobile-web .mobile-chart-list,
+body.mobile-web .mobile-tank-trend-list {
+  display: grid;
+  gap: 0.42rem;
+}
+
+body.mobile-web .mobile-chart-row,
+body.mobile-web .mobile-tank-trend {
+  display: grid;
+  gap: 0.28rem;
+  min-width: 0;
+  padding: 0.46rem;
+  border: 1px solid var(--mobile-glass-border-soft);
+  border-radius: 0.72rem;
+  background: var(--mobile-glass-fill-soft);
+}
+
+body.mobile-web .mobile-chart-row__head,
+body.mobile-web .mobile-chart-row__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+body.mobile-web .mobile-chart-row__head span,
+body.mobile-web .mobile-chart-row__foot span,
+body.mobile-web .mobile-tank-trend span {
+  color: var(--text-soft);
+  font-size: 0.62rem;
+  line-height: 1.2;
+}
+
+body.mobile-web .mobile-chart-row__head strong {
+  color: var(--text-strong);
+  font-size: 0.82rem;
+  line-height: 1.1;
+  text-align: right;
+}
+
+body.mobile-web .mobile-chart-row__bar {
+  overflow: hidden;
+  height: 0.36rem;
+  border-radius: 999px;
+  background: rgba(223, 232, 223, 0.72);
+}
+
+body.mobile-web .mobile-chart-row__bar span {
+  display: block;
+  height: 100%;
+  min-width: 0.4rem;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--green-300), var(--green-600));
+}
+
+body.mobile-web .mobile-tank-trend {
+  grid-template-columns: minmax(0, 4.2rem) minmax(0, 1fr);
+  align-items: center;
+}
+
+body.mobile-web .mobile-tank-trend__bars {
+  display: flex;
+  align-items: end;
+  gap: 0.14rem;
+  height: 2.05rem;
+  min-width: 0;
+}
+
+body.mobile-web .mobile-tank-trend__bars i {
+  flex: 1 1 0;
+  min-width: 0.18rem;
+  border-radius: 999px 999px 0.18rem 0.18rem;
+  background: linear-gradient(180deg, var(--green-300), var(--green-700));
+}
+
+body.mobile-web .mobile-line-chart-card {
+  padding: 0.5rem;
+}
+
+body.mobile-web .mobile-line-chart-card .dashboard-line-chart {
+  min-height: 8.4rem;
+}
+
+body.mobile-web .mobile-mini-panel--chart {
+  gap: 0.46rem;
+  padding: 0.46rem;
+}
+
+body.mobile-web .mobile-mini-panel__head--chart {
+  align-items: flex-start;
+  gap: 0.46rem;
+  flex-wrap: wrap;
+}
+
+body.mobile-web .mobile-mini-panel__head--chart > div {
+  display: grid;
+  gap: 0.08rem;
+  min-width: 0;
+}
+
+body.mobile-web .mobile-mini-panel__head--chart .dashboard-graph-range {
+  width: 100%;
+  min-width: 0;
+}
+
+body.mobile-web .mobile-mini-panel__head--chart .dashboard-graph-range__label {
+  font-size: 0.56rem;
+}
+
+body.mobile-web .mobile-mini-panel__head--chart .dashboard-graph-range__select {
+  width: 100%;
+  min-width: 0;
+  min-height: 2.3rem;
+  padding-block: 0.5rem;
+  font-size: 0.74rem;
+}
+
+body.mobile-web .mobile-mini-panel--chart .mobile-line-chart-card {
+  padding: 0.48rem;
+}
+
+body.mobile-web .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+  min-height: 8.5rem;
+}
+
+body.mobile-web .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart__grid text,
+body.mobile-web .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart__axis text {
+  font-size: 0.62rem;
+}
+
+body.mobile-web .mobile-chart-empty-state {
+  min-height: 8rem;
+  padding: 0.72rem;
+}
+
+body.mobile-web .mobile-line-chart-card .dashboard-graph-legend {
+  gap: 0.28rem 0.44rem;
+}
+
+body.mobile-web .mobile-line-chart-card .dashboard-graph-legend__item {
+  font-size: 0.62rem;
+}
+
+body.mobile-web .mobile-line-chart-card .dashboard-line-chart__grid text,
+body.mobile-web .mobile-line-chart-card .dashboard-line-chart__axis text {
+  font-size: 0.62rem;
+}
+
+body.mobile-web .page-heading,
+body.mobile-web .card-head,
+body.mobile-web .sensor-card__top {
+  gap: 0.34rem;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+body.mobile-web .page-heading h1 {
+  font-size: 1.34rem;
+  line-height: 1.08;
+}
+
+body.mobile-web .page-heading > *,
+body.mobile-web .card-head > *,
+body.mobile-web .sensor-card__top > * {
+  min-width: 0;
+}
+
+body.mobile-web .page-heading h1,
+body.mobile-web .page-heading p,
+body.mobile-web .section-title,
+body.mobile-web .section-copy,
+body.mobile-web .muted,
+body.mobile-web .field__hint,
+body.mobile-web .notification-item__title,
+body.mobile-web .notification-item__body,
+body.mobile-web .user-row__name,
+body.mobile-web .user-row__email,
+body.mobile-web .settings-menu__button {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+body.mobile-web .page-heading p,
+body.mobile-web .section-copy,
+body.mobile-web .muted {
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+body.mobile-web .card,
+body.mobile-web .dashboard-panel,
+body.mobile-web .iot-row-card,
+body.mobile-web .metric-card,
+body.mobile-web .sensor-row-card,
+body.mobile-web .sensor-management-card,
+body.mobile-web .cultivation-panel {
+  padding: 0.72rem;
+  border-radius: 1rem;
+  border: 1px solid var(--mobile-glass-border);
+  background: var(--mobile-glass-fill-strong);
+  box-shadow: var(--mobile-glass-shadow);
+  backdrop-filter: var(--mobile-glass-blur);
+  -webkit-backdrop-filter: var(--mobile-glass-blur);
+}
+
+body.mobile-web :is(
+  .glass-card:not(.glass-card--dark),
+  .card,
+  .dashboard-panel,
+  .sensor-card,
+  .health-item,
+  .list-tile,
+  .cultivation-item,
+  .user-row,
+  .stat-card,
+  .tank-card,
+  .tank-card--compact,
+  .mode-card,
+  .timeline-card,
+  .metric-card,
+  .notification-item,
+  .iot-row-card,
+  .iot-monitor-card,
+  .iot-monitor-card__group-item,
+  .cultivation-chart-row,
+  .cultivation-summary-card,
+  .dashboard-graph-card,
+  .dashboard-empty-state,
+  .mobile-line-chart-card,
+  .tank-trend-card,
+  .tank-trend-row,
+  .mobile-chart-row,
+  .mobile-tank-trend,
+  .sensor-row-card,
+  .sensor-row-control,
+  .sensor-management-card,
+  .developer-card,
+  .about-panel,
+  .about-brand-card,
+  .contact-card,
+  .settings-section-card,
+  .password-otp-card,
+  .cultivation-crop-option,
+  .cultivation-setup-summary,
+  .cultivation-mode-panel,
+  .cultivation-parameter-selection,
+  .cultivation-parameter-card,
+  .cultivation-parameter-static,
+  .modal--settings .settings-section-card,
+  .modal--settings .about-panel,
+  .modal--settings .about-brand-card,
+  .modal--settings .developer-card,
+  .modal--settings .contact-card
+) {
+  background: var(--mobile-glass-fill-strong);
+  border-color: var(--mobile-glass-border-soft);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.mobile-web :is(.modal, .drawer, .modal--cultivation, .cultivation-preview-modal, .password-otp-modal) {
+  background: var(--mobile-glass-fill-strong);
+  border-color: var(--mobile-glass-border);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.mobile-web :is(.modal__header, .modal--settings .modal__header, .modal--cultivation .modal__header, .cultivation-preview-modal .modal__header) {
+  background: rgba(248, 246, 240, 0.98);
+}
+
+body.mobile-web :is(.modal__body, .modal--settings .modal__body, .modal--cultivation .modal__body, .cultivation-preview-modal__body) {
+  background: var(--mobile-glass-fill);
+}
+
+body.mobile-web .section-title,
+body.mobile-web .cultivation-panel .section-title {
+  font-size: 0.94rem;
+  line-height: 1.22;
+}
+
+body.mobile-web .field__label,
+body.mobile-web .cultivation-panel .field__label {
+  font-size: 0.76rem;
+}
+
+body.mobile-web .center-banner {
+  padding: 0.66rem 0.72rem;
+  border-radius: 0.88rem;
+  font-size: 0.76rem;
+}
+
+body.mobile-web .button,
+body.mobile-web button.button {
+  min-height: 2.7rem;
+  padding: 0.62rem 0.84rem;
+  border-radius: 0.9rem;
+  font-size: 0.82rem;
+  min-width: 0;
+  white-space: normal;
+}
+
+body.mobile-web select,
+body.mobile-web input,
+body.mobile-web textarea,
+body.mobile-web .select {
+  min-height: 2.8rem;
+  padding: 0.68rem 0.82rem;
+  border-radius: 0.92rem;
+  font-size: 0.94rem;
+  border: 1px solid var(--mobile-glass-border);
+  background: var(--mobile-glass-fill-soft);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 8px 18px rgba(18, 76, 50, 0.03);
+  backdrop-filter: var(--mobile-glass-blur);
+  -webkit-backdrop-filter: var(--mobile-glass-blur);
+}
+
+body.mobile-web .input-grid {
+  gap: 0.62rem;
+}
+
+body.mobile-web .center-banner,
+body.mobile-web .cultivation-empty-state,
+body.mobile-web .cultivation-empty-state span {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+body.mobile-web .iot-row-card,
+body.mobile-web .user-row,
+body.mobile-web .health-item,
+body.mobile-web .cultivation-item,
+body.mobile-web .notification-item,
+body.mobile-web .sensor-management-card,
+body.mobile-web .metric-card,
+body.mobile-web .iot-monitor-card,
+body.mobile-web .card-head > div,
+body.mobile-web .page-heading > div,
+body.mobile-web .field,
+body.mobile-web .input,
+body.mobile-web .select,
+body.mobile-web .switch,
+body.mobile-web .topbar__brand-copy {
+  min-width: 0;
+}
+
+body.mobile-web .switch {
+  flex: 0 0 2rem;
+}
+
+body.mobile-web .pill {
+  min-width: max-content;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+body.mobile-web .sensor-row-card__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+body.mobile-web .sensor-row-card__head .pill {
+  justify-self: start;
+}
+
+body.mobile-web .user-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+body.mobile-web .user-row__meta {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.62rem;
+  min-width: 0;
+}
+
+body.mobile-web .user-row__meta > div:last-child {
+  min-width: 0;
+}
+
+body.mobile-web .user-row__avatar {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+body.mobile-web .user-row__name {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.18rem 0.38rem;
+}
+
+body.mobile-web .role-badge {
+  margin-left: 0;
+}
+
+body.mobile-web .user-row__email {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  max-width: 100%;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+
+body.mobile-web .user-row__email-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 1rem;
+}
+
+body.mobile-web .user-row__email-icon .icon {
+  width: 0.98rem;
+  height: 0.98rem;
+}
+
+body.mobile-web .user-row__email-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.mobile-web .cultivation-item__right {
+  width: 100%;
+  margin-left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.62rem;
+}
+
+body.mobile-web .cultivation-item__summary {
+  text-align: left;
+}
+
+body.mobile-web .cultivation-item__delete {
+  width: 2.6rem;
+  height: 2.6rem;
+  flex: 0 0 2.6rem;
+}
+
+body.mobile-web .notification-item {
+  flex-direction: column;
+}
+
+body.mobile-web .notification-item__meta,
+body.mobile-web .notification-item__actions {
+  width: 100%;
+}
+
+body.mobile-web .notification-item__actions {
+  justify-content: space-between;
+  margin-left: 0;
+}
+
+body.mobile-web .notification-item__delete {
+  width: 2.6rem;
+  height: 2.6rem;
+  flex: 0 0 2.6rem;
+}
+
+body.mobile-web .grid--cards,
+body.mobile-web .grid--two,
+body.mobile-web .grid--split,
+body.mobile-web .feature-grid,
+body.mobile-web .contact-grid,
+body.mobile-web .developer-grid,
+body.mobile-web .input-grid--two,
+body.mobile-web .input-grid--three,
+body.mobile-web .metric-row,
+body.mobile-web .split-row,
+body.mobile-web .tank-grid,
+body.mobile-web .mode-grid,
+body.mobile-web .irrigation-type-grid,
+body.mobile-web .sensor-row-grid,
+body.mobile-web .dashboard-grid,
+body.mobile-web .dashboard-sensor-grid,
+body.mobile-web .health-grid,
+body.mobile-web .cultivation-parameter-grid {
+  grid-template-columns: 1fr !important;
+}
+
+body.mobile-web select,
+body.mobile-web input,
+body.mobile-web textarea {
+  max-width: 100%;
+}
+
+body.mobile-web .settings-menu {
+  top: calc(var(--mobile-safe-top) + 5rem) !important;
+  right: 0.82rem !important;
+  left: auto !important;
+  width: min(15rem, calc(100vw - 1.64rem));
+}
+
+body.mobile-web .drawer {
+  width: min(100%, 27rem);
+  height: min(86vh, 100%);
+  margin-top: auto;
+  border-radius: 1.4rem 1.4rem 0 0;
+}
+
+body.mobile-web .modal {
+  width: min(100%, calc(100vw - 0.9rem));
+  max-width: 32rem;
+}
+
+/* Any overlay opened from inside the hamburger drawer must outrank the
+   drawer's own z-index (50) so it isn't hidden behind the drawer while it
+   slides shut; the dialog variant stacks one step above its own backdrop. */
+body.mobile-web .overlay {
+  z-index: 52;
+}
+
+body.mobile-web .overlay--dialog {
+  z-index: 54;
+  padding: 0.68rem;
+}
+
+body.mobile-web .logout-confirm-modal {
+  width: min(100%, calc(100vw - 1.36rem));
+  max-width: 21rem;
+  border-radius: 1rem;
+}
+
+body.mobile-web .logout-confirm-modal__body {
+  gap: 0.78rem;
+  padding: 0.86rem 0.82rem 0.8rem;
+}
+
+body.mobile-web .logout-confirm-modal__icon {
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 0.9rem;
+}
+
+body.mobile-web .logout-confirm-modal__icon .icon {
+  width: 1.18rem;
+  height: 1.18rem;
+}
+
+body.mobile-web .logout-confirm-modal__eyebrow {
+  font-size: 0.64rem;
+}
+
+body.mobile-web .logout-confirm-modal__title {
+  font-size: 1rem;
+}
+
+body.mobile-web .logout-confirm-modal__text {
+  font-size: 0.76rem;
+  line-height: 1.34;
+}
+
+body.mobile-web .logout-confirm-modal__actions {
+  grid-template-columns: 1fr;
+  gap: 0.42rem;
+}
+
+body.mobile-web .logout-confirm-modal .button {
+  min-height: 2.6rem;
+  padding: 0.58rem 0.78rem;
+  border-radius: 0.88rem;
+  font-size: 0.82rem;
+}
+
+body.mobile-web .delete-user-confirm-modal {
+  width: min(100%, calc(100vw - 1.36rem));
+  max-width: 21rem;
+  border-radius: 1rem;
+}
+
+body.mobile-web .delete-user-confirm-modal__body {
+  gap: 0.78rem;
+  padding: 0.86rem 0.82rem 0.8rem;
+}
+
+body.mobile-web .delete-user-confirm-modal__icon {
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 0.9rem;
+}
+
+body.mobile-web .delete-user-confirm-modal__icon .icon {
+  width: 1.18rem;
+  height: 1.18rem;
+}
+
+body.mobile-web .delete-user-confirm-modal__eyebrow {
+  font-size: 0.64rem;
+}
+
+body.mobile-web .delete-user-confirm-modal__title {
+  font-size: 1rem;
+}
+
+body.mobile-web .delete-user-confirm-modal__text,
+body.mobile-web .delete-user-confirm-modal__email {
+  font-size: 0.76rem;
+  line-height: 1.34;
+}
+
+body.mobile-web .delete-user-confirm-modal__actions {
+  grid-template-columns: 1fr;
+  gap: 0.42rem;
+}
+
+body.mobile-web .delete-user-confirm-modal .button {
+  min-height: 2.6rem;
+  padding: 0.58rem 0.78rem;
+  border-radius: 0.88rem;
+  font-size: 0.82rem;
+}
+
+body.mobile-web .delete-cultivation-confirm-modal {
+  width: min(100%, calc(100vw - 1.36rem));
+  max-width: 21rem;
+  border-radius: 1rem;
+}
+
+body.mobile-web .harvest-cultivation-confirm-modal {
+  width: min(100%, calc(100vw - 1.36rem));
+  max-width: 21rem;
+  border-radius: 1rem;
+}
+
+body.mobile-web .delete-cultivation-confirm-modal__body {
+  gap: 0.78rem;
+  padding: 0.86rem 0.82rem 0.8rem;
+}
+
+body.mobile-web .harvest-cultivation-confirm-modal__body {
+  gap: 0.78rem;
+  padding: 0.86rem 0.82rem 0.8rem;
+}
+
+body.mobile-web .delete-cultivation-confirm-modal__icon {
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 0.9rem;
+}
+
+body.mobile-web .harvest-cultivation-confirm-modal__icon {
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 0.9rem;
+}
+
+body.mobile-web .delete-cultivation-confirm-modal__icon .icon {
+  width: 1.18rem;
+  height: 1.18rem;
+}
+
+body.mobile-web .harvest-cultivation-confirm-modal__icon .icon {
+  width: 1.18rem;
+  height: 1.18rem;
+}
+
+body.mobile-web .delete-cultivation-confirm-modal__eyebrow {
+  font-size: 0.64rem;
+}
+
+body.mobile-web .harvest-cultivation-confirm-modal__eyebrow {
+  font-size: 0.64rem;
+}
+
+body.mobile-web .delete-cultivation-confirm-modal__title {
+  font-size: 1rem;
+}
+
+body.mobile-web .harvest-cultivation-confirm-modal__title {
+  font-size: 1rem;
+}
+
+body.mobile-web .delete-cultivation-confirm-modal__text,
+body.mobile-web .delete-cultivation-confirm-modal__meta {
+  font-size: 0.76rem;
+  line-height: 1.34;
+}
+
+body.mobile-web .harvest-cultivation-confirm-modal__text,
+body.mobile-web .harvest-cultivation-confirm-modal__meta {
+  font-size: 0.76rem;
+  line-height: 1.34;
+}
+
+body.mobile-web .delete-cultivation-confirm-modal__actions {
+  grid-template-columns: 1fr;
+  gap: 0.42rem;
+}
+
+body.mobile-web .harvest-cultivation-confirm-modal__actions {
+  grid-template-columns: 1fr;
+  gap: 0.42rem;
+}
+
+body.mobile-web .delete-cultivation-confirm-modal .button {
+  min-height: 2.6rem;
+  padding: 0.58rem 0.78rem;
+  border-radius: 0.88rem;
+  font-size: 0.82rem;
+}
+
+body.mobile-web .harvest-cultivation-confirm-modal .button {
+  min-height: 2.6rem;
+  padding: 0.58rem 0.78rem;
+  border-radius: 0.88rem;
+  font-size: 0.82rem;
+}
+
+body.mobile-web .delete-notifications-confirm-modal {
+  width: min(100%, calc(100vw - 1.36rem));
+  max-width: 21rem;
+  border-radius: 1rem;
+}
+
+body.mobile-web .delete-notifications-confirm-modal__body {
+  gap: 0.78rem;
+  padding: 0.86rem 0.82rem 0.8rem;
+}
+
+body.mobile-web .delete-notifications-confirm-modal__icon {
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 0.9rem;
+}
+
+body.mobile-web .delete-notifications-confirm-modal__icon .icon {
+  width: 1.18rem;
+  height: 1.18rem;
+}
+
+body.mobile-web .delete-notifications-confirm-modal__eyebrow {
+  font-size: 0.64rem;
+}
+
+body.mobile-web .delete-notifications-confirm-modal__title {
+  font-size: 1rem;
+}
+
+body.mobile-web .delete-notifications-confirm-modal__text,
+body.mobile-web .delete-notifications-confirm-modal__meta {
+  font-size: 0.76rem;
+  line-height: 1.34;
+}
+
+body.mobile-web .delete-notifications-confirm-modal__actions {
+  grid-template-columns: 1fr;
+  gap: 0.42rem;
+}
+
+body.mobile-web .delete-notifications-confirm-modal .button {
+  min-height: 2.6rem;
+  padding: 0.58rem 0.78rem;
+  border-radius: 0.88rem;
+  font-size: 0.82rem;
+}
+
+body.mobile-web .toast-stack {
+  top: calc(var(--mobile-safe-top) + 5.2rem);
+  right: 0.65rem;
+  bottom: auto;
+  left: 0.65rem;
+  width: auto;
+  gap: 0.52rem;
+}
+
+body.mobile-web .toast {
+  max-width: none;
+  gap: 0.7rem;
+  padding: 0.78rem 0.82rem;
+  border-radius: 1rem;
+  border: 1px solid var(--mobile-glass-border);
+  background: var(--mobile-glass-fill-strong);
+  box-shadow: var(--mobile-glass-shadow);
+  backdrop-filter: var(--mobile-glass-blur);
+  -webkit-backdrop-filter: var(--mobile-glass-blur);
+}
+
+body.mobile-web .toast__body {
+  gap: 0.18rem;
+}
+
+body.mobile-web .toast__meta {
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+body.mobile-web .toast__eyebrow {
+  font-size: 0.6rem;
+  letter-spacing: 0.07em;
+}
+
+body.mobile-web .toast__time {
+  font-size: 0.68rem;
+}
+
+body.mobile-web .toast__title {
+  font-size: 0.84rem;
+  line-height: 1.3;
+}
+
+body.mobile-web .toast__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-basis: 1.5rem;
+}
+
+body.mobile-web .toast .icon-button {
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  border-radius: 0.75rem;
+}
+
+body.mobile-web .mobile-bottom-nav {
+  position: fixed;
+  right: 0.34rem;
+  bottom: calc(0.32rem + var(--mobile-safe-bottom));
+  left: 0.34rem;
+  z-index: 38;
+  display: grid;
+  grid-template-columns: repeat(var(--mobile-bottom-nav-columns, 3), minmax(0, 1fr));
+  gap: 0.16rem;
+  padding: 0.2rem 0.16rem 0.24rem;
+  border-radius: 0.92rem;
+  border: 1px solid var(--mobile-glass-border);
+  background: var(--mobile-glass-fill-strong);
+  box-shadow:
+    0 16px 30px rgba(20, 65, 40, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  backdrop-filter: var(--mobile-glass-blur);
+  -webkit-backdrop-filter: var(--mobile-glass-blur);
+  transform: none;
+  backface-visibility: hidden;
+}
+
+/* No content-visibility on these cards. `contain-intrinsic-size: auto 9rem`
+   only has a remembered size for an element the browser has already laid out,
+   and the live updates replace cards with brand new nodes -- so every
+   off-screen card came back as a 9rem placeholder instead of its real ~32rem
+   height. Four row cards collapsing at once shortened the page by more than a
+   thousand pixels, the browser clamped the scroll position to the shorter
+   page, and the reader was walked back toward the top on every sensor tick or
+   actuator toggle. Skipping off-screen paint is not worth losing the reader's
+   place. */
+
+body.mobile-web .mobile-bottom-nav[hidden] {
+  display: none !important;
+}
+
+body.mobile-web .mobile-bottom-nav__button {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.16rem;
+  min-height: 3.52rem;
+  padding: 0.26rem 0.16rem;
+  border-radius: 0.72rem;
+  color: #27402d;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+body.mobile-web .mobile-bottom-nav__button.is-active {
+  color: #0f6b3f;
+  background: linear-gradient(180deg, rgba(223, 246, 229, 0.96), rgba(205, 238, 214, 0.92));
+}
+
+body.mobile-web .mobile-bottom-nav__icon {
+  width: 1.46rem;
+  height: 1.46rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.64rem;
+  background: rgba(28, 119, 72, 0.08);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+body.mobile-web .mobile-bottom-nav__button.is-active .mobile-bottom-nav__icon {
+  background: rgba(28, 119, 72, 0.12);
+}
+
+body.mobile-web .mobile-bottom-nav__icon .icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+body.mobile-web .mobile-bottom-nav__label {
+  min-width: 0;
+  display: block;
+  font-size: 0.6rem;
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 430px) {
+  body.mobile-web {
+    --mobile-nav-height: 4.35rem;
+  }
+
+  body.mobile-web .topbar {
+    padding-inline: 0.62rem;
+    gap: 0.34rem;
+  }
+
+  body.mobile-web .topbar__brand-logo {
+    width: 2rem;
+    height: 2rem;
+    flex-basis: 2rem;
+  }
+
+  body.mobile-web .topbar__brand-title {
+    font-size: 0.9rem;
+  }
+
+  body.mobile-web .topbar__brand-subtitle {
+    display: none;
+  }
+
+  body.mobile-web .topbar__actions {
+    display: flex;
+  }
+
+  body.mobile-web .page-heading h1 {
+    font-size: 1.18rem;
+  }
+
+  body.mobile-web .page-heading,
+  body.mobile-web .card-head,
+  body.mobile-web .sensor-card__top {
+    gap: 0.42rem;
+  }
+
+  body.mobile-web .card-head {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 360px) {
+  body.mobile-web {
+    --mobile-page-gutter: 0.5rem;
+  }
+
+  body.mobile-web .mobile-dashboard {
+    gap: 0.42rem;
+  }
+
+  body.mobile-web .mobile-dashboard__overview,
+  body.mobile-web .mobile-row-card,
+  body.mobile-web .mobile-mini-panel {
+    padding: 0.56rem;
+    border-radius: 0.82rem;
+  }
+
+  body.mobile-web .mobile-reading-grid,
+  body.mobile-web .mobile-health-grid {
+    gap: 0.32rem;
+  }
+
+  body.mobile-web .mobile-reading {
+    min-height: 5.15rem;
+    padding: 0.44rem;
+    border-radius: 0.72rem;
+  }
+
+  body.mobile-web .mobile-reading strong {
+    font-size: 0.94rem;
+  }
+
+  body.mobile-web .mobile-status {
+    padding-inline: 0.3rem;
+    font-size: 0.52rem;
+  }
+
+  body.mobile-web .mobile-menu-button,
+  body.mobile-web .notification-button.icon-button {
+    width: 2.1rem;
+    height: 2.1rem;
+  }
+
+  body.mobile-web .profile-pill__avatar,
+  body.mobile-web .avatar-circle {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  body.mobile-web .user-row {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 0.42rem;
+  }
+
+  body.mobile-web .user-row__meta {
+    grid-template-columns: 2.55rem minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  body.mobile-web .user-row__avatar {
+    width: 2.55rem;
+    height: 2.55rem;
+  }
+
+  body.mobile-web .user-row > .icon-button {
+    justify-self: end;
+  }
+
+  body.mobile-web .mobile-bottom-nav__label {
+    font-size: 0.56rem;
+  }
+}
+
+body.mobile-web .mobile-dashboard__stats,
+body.mobile-web .mobile-reading-grid,
+body.mobile-web .mobile-health-grid,
+body.mobile-web .mobile-tank-list {
+  grid-auto-rows: 1fr;
+}
+
+body.mobile-web .mobile-dashboard__stat {
+  min-height: 3rem;
+}
+
+body.mobile-web .mobile-reading {
+  height: 5.1rem;
+  min-height: 5.1rem;
+  overflow: hidden;
+}
+
+body.mobile-web .mobile-health-chip,
+body.mobile-web .mobile-tank-row {
+  min-height: 3.45rem;
+}
+
+body.mobile-web .mobile-line-chart-card {
+  overflow: hidden;
+}
+
+body.mobile-web .mobile-line-chart-card .dashboard-line-chart {
+  min-height: 8rem;
+  max-height: 8.6rem;
+}
+
+body.mobile-web .dashboard-graph-legend__item {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 360px) {
+  body.mobile-web .mobile-dashboard__overview-top .mobile-dashboard__row-toggle {
+    width: 100%;
+  }
+
+  body.mobile-web .mobile-reading {
+    height: 5rem;
+    min-height: 5rem;
+  }
+
+body.mobile-web .mobile-line-chart-card .dashboard-line-chart {
+  min-height: 7.2rem;
+  max-height: 7.8rem;
+}
+}
+
+/* Final mobile dashboard clamps prevent narrow viewport overflow after role CSS loads. */
+html:has(body.mobile-web),
+body.mobile-web {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body.mobile-web .app-shell,
+body.mobile-web .app-main,
+body.mobile-web .page-content,
+body.mobile-web .page-scene,
+body.mobile-web .page-stack,
+body.mobile-web .page-stack--dashboard,
+body.mobile-web .mobile-dashboard,
+body.mobile-web .mobile-dashboard__overview,
+body.mobile-web .mobile-dashboard__graphs,
+body.mobile-web .mobile-row-list,
+body.mobile-web .mobile-row-card,
+body.mobile-web .mobile-dashboard__lower,
+body.mobile-web .mobile-mini-panel,
+body.mobile-web .mobile-line-chart-card,
+body.mobile-web .mobile-reading-grid,
+body.mobile-web .mobile-health-grid,
+body.mobile-web .mobile-tank-list {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+body.mobile-web .app-main,
+body.mobile-web .page-content {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: clip;
+}
+
+body.mobile-web .page-content {
+  padding-inline: var(--mobile-page-gutter);
+}
+
+body.mobile-web .mobile-dashboard__overview,
+body.mobile-web .mobile-row-card,
+body.mobile-web .mobile-mini-panel {
+  width: min(100%, calc(100vw - (var(--mobile-page-gutter) * 2)));
+  justify-self: stretch;
+}
+
+body.mobile-web .mobile-dashboard__stats {
+  width: 100%;
+  max-width: 100%;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.28rem;
+  overflow: hidden;
+}
+
+body.mobile-web .mobile-dashboard__stat {
+  min-width: 0;
+  min-height: 3rem;
+  padding: 0.38rem 0.34rem;
+}
+
+body.mobile-web .mobile-dashboard__stat span,
+body.mobile-web .mobile-dashboard__stat strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.mobile-web .mobile-dashboard__stat span {
+  white-space: nowrap;
+  font-size: 0.58rem;
+}
+
+body.mobile-web .mobile-dashboard__stat strong {
+  font-size: 0.82rem;
+  line-height: 1.05;
+}
+
+body.mobile-web .mobile-line-chart-card {
+  width: 100%;
+  overflow: hidden;
+  padding-inline: 0.4rem;
+}
+
+body.mobile-web .mobile-line-chart-card .dashboard-line-chart {
+  width: 100%;
+  max-width: 100%;
+  min-height: 8.1rem;
+  max-height: 8.9rem;
+  overflow: hidden;
+}
+
+body.mobile-web .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+  min-height: 8.2rem;
+}
+
+body.mobile-web .mobile-line-chart-card .dashboard-graph-legend {
+  min-width: 0;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.24rem 0.38rem;
+}
+
+body.mobile-web .mobile-line-chart-card .dashboard-graph-legend__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  min-width: 0;
+  max-width: 100%;
+  font-size: 0.58rem;
+  line-height: 1.1;
+}
+
+body.mobile-web .mobile-reading {
+  height: 5.2rem;
+  min-height: 5.2rem;
+  gap: 0.2rem;
+}
+
+body.mobile-web .mobile-reading strong {
+  min-height: 1.18rem;
+  font-size: 0.92rem;
+}
+
+body.mobile-web .mobile-reading__chips {
+  min-height: auto;
+  gap: 0.18rem;
+}
+
+body.mobile-web .mobile-reading__chips span {
+  min-width: 0;
+  font-size: 0.5rem;
+  white-space: nowrap;
+}
+
+body.mobile-web .mobile-reading--group .mobile-reading__chips {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, max-content));
+  justify-content: start;
+}
+
+body.mobile-web .mobile-chart-row__head,
+body.mobile-web .mobile-chart-row__foot {
+  min-width: 0;
+}
+
+body.mobile-web .mobile-chart-row__head span,
+body.mobile-web .mobile-chart-row__head strong,
+body.mobile-web .mobile-chart-row__foot span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Mobile sensors must never widen the viewport. */
+body.mobile-web .sensor-row-grid,
+body.mobile-web .sensor-management-grid,
+body.mobile-web .sensor-row-card,
+body.mobile-web .sensor-row-card__controls,
+body.mobile-web .sensor-row-control,
+body.mobile-web .sensor-management-card,
+body.mobile-web .sensor-management-card__meta,
+body.mobile-web .sensor-row-control__field,
+body.mobile-web .sensor-management-card__field {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+body.mobile-web .sensor-row-grid,
+body.mobile-web .sensor-management-grid {
+  grid-template-columns: minmax(0, 1fr) !important;
+  overflow-x: hidden;
+}
+
+body.mobile-web .sensor-row-card,
+body.mobile-web .sensor-management-card,
+body.mobile-web .sensor-row-control {
+  overflow: hidden;
+}
+
+body.mobile-web .sensor-row-card__head,
+body.mobile-web .sensor-row-control__head,
+body.mobile-web .sensor-management-card__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+body.mobile-web .sensor-row-card__head .pill,
+body.mobile-web .sensor-row-control__head .pill,
+body.mobile-web .sensor-management-card__head .pill {
+  max-width: 100%;
+  justify-self: end;
+}
+
+body.mobile-web .sensor-row-card :is(.section-copy, p, span, strong),
+body.mobile-web .sensor-row-control :is(.section-copy, p, span, strong),
+body.mobile-web .sensor-management-card :is(.section-copy, p, span, strong, h3) {
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+body.mobile-web .sensor-management-card__select,
+body.mobile-web .sensor-row-control select,
+body.mobile-web .sensor-management-card select {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 520px) {
+  body.mobile-web .sensor-row-card__head,
+  body.mobile-web .sensor-row-control__head,
+  body.mobile-web .sensor-management-card__head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.mobile-web .sensor-row-card__head .pill,
+  body.mobile-web .sensor-row-control__head .pill,
+  body.mobile-web .sensor-management-card__head .pill {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 360px) {
+  body.mobile-web .mobile-dashboard__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.mobile-web .mobile-dashboard__stat {
+    min-height: 3.05rem;
+  }
+
+  body.mobile-web .mobile-line-chart-card .dashboard-graph-legend {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.mobile-web .mobile-reading {
+    height: 5rem;
+    min-height: 5rem;
+  }
+
+  body.mobile-web .mobile-line-chart-card .dashboard-line-chart {
+    min-height: 7.4rem;
+    max-height: 8rem;
+  }
+
+  body.mobile-web .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart,
+  body.mobile-web .mobile-chart-empty-state {
+    min-height: 7rem;
+  }
+}
+
+/* Theme restore for mobile web shells. */
+body.mobile-web {
+  --mobile-glass-border: rgba(72, 111, 75, 0.42);
+  --mobile-glass-border-soft: rgba(88, 129, 87, 0.34);
+  --mobile-glass-fill:
+    linear-gradient(145deg, rgba(249, 252, 244, 0.82), rgba(224, 239, 216, 0.7)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(126, 166, 111, 0.12));
+  --mobile-glass-fill-strong:
+    linear-gradient(145deg, rgba(251, 253, 247, 0.88), rgba(226, 240, 218, 0.76)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.38), rgba(126, 166, 111, 0.14));
+  --mobile-glass-fill-soft:
+    linear-gradient(145deg, rgba(248, 252, 242, 0.76), rgba(221, 237, 213, 0.64)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(126, 166, 111, 0.1));
+  --mobile-glass-shadow:
+    0 12px 24px rgba(18, 76, 50, 0.13),
+    0 3px 10px rgba(18, 76, 50, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.44);
+}
+
+body.mobile-web :is(
+  .glass-card:not(.glass-card--dark),
+  .card,
+  .dashboard-panel,
+  .sensor-card,
+  .health-item,
+  .list-tile,
+  .cultivation-item,
+  .user-row,
+  .stat-card,
+  .tank-card,
+  .tank-card--compact,
+  .mode-card,
+  .timeline-card,
+  .metric-card,
+  .notification-item,
+  .iot-row-card,
+  .iot-monitor-card,
+  .iot-monitor-card__group-item,
+  .cultivation-chart-row,
+  .cultivation-summary-card,
+  .dashboard-graph-card,
+  .dashboard-empty-state,
+  .mobile-line-chart-card,
+  .tank-trend-card,
+  .tank-trend-row,
+  .mobile-chart-row,
+  .mobile-tank-trend,
+  .sensor-row-card,
+  .sensor-row-control,
+  .sensor-management-card,
+  .developer-card,
+  .about-panel,
+  .about-brand-card,
+  .contact-card,
+  .settings-section-card,
+  .password-otp-card,
+  .cultivation-crop-option,
+  .cultivation-setup-summary,
+  .cultivation-mode-panel,
+  .cultivation-parameter-selection,
+  .cultivation-parameter-card,
+  .cultivation-parameter-static,
+  .modal--settings .settings-section-card,
+  .modal--settings .about-panel,
+  .modal--settings .about-brand-card,
+  .modal--settings .developer-card,
+  .modal--settings .contact-card
+) {
+  background: var(--mobile-glass-fill) !important;
+  border: 1px solid var(--mobile-glass-border-soft) !important;
+  box-shadow: var(--mobile-glass-shadow) !important;
+}
+
+body.mobile-web :is(
+  .dashboard-panel,
+  .iot-row-card,
+  .metric-card,
+  .dashboard-graph-card,
+  .mobile-dashboard__overview,
+  .mobile-row-card,
+  .mobile-mini-panel,
+  .mobile-reading,
+  .mobile-tank-row
+) {
+  border-color: var(--mobile-glass-border) !important;
+}
+
+body.mobile-web :is(.modal, .drawer, .modal--cultivation, .cultivation-preview-modal, .password-otp-modal) {
+  background: var(--mobile-glass-fill-strong) !important;
+  border: 1px solid var(--mobile-glass-border) !important;
+  box-shadow:
+    0 20px 42px rgba(18, 76, 50, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.48) !important;
+}
+
+/* Mobile web graph sizing after removing duplicate stat chips. */
+body.mobile-web .page-stack--dashboard .dashboard-panel--cultivation-graph .dashboard-graph-card--sensors,
+body.mobile-web .page-stack--dashboard .dashboard-panel--cultivation-building .dashboard-graph-card--cultivation-batch {
+  grid-template-rows: auto auto !important;
+  align-content: start !important;
+  min-height: 0 !important;
+  height: auto !important;
+  gap: 0.5rem !important;
+}
+
+body.mobile-web .page-stack--dashboard .dashboard-panel--cultivation-graph .dashboard-line-chart--wide,
+body.mobile-web .page-stack--dashboard .cultivation-batch-chart,
+body.mobile-web .mobile-line-chart-card .dashboard-line-chart,
+body.mobile-web .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+  height: 8.8rem !important;
+  min-height: 8.8rem !important;
+  max-height: 8.8rem !important;
+}
+
+/* Final mobile web theme and chart containment pass. */
+body.mobile-web {
+  --mobile-glass-border: rgba(50, 92, 55, 0.5);
+  --mobile-glass-border-soft: rgba(70, 115, 72, 0.42);
+  --mobile-glass-fill:
+    linear-gradient(145deg, rgba(244, 250, 238, 0.88), rgba(211, 233, 201, 0.76)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(80, 128, 79, 0.14));
+  --mobile-glass-fill-strong:
+    linear-gradient(145deg, rgba(246, 251, 240, 0.94), rgba(214, 235, 204, 0.84)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(80, 128, 79, 0.16));
+  --mobile-glass-fill-soft:
+    linear-gradient(145deg, rgba(241, 248, 234, 0.82), rgba(204, 229, 195, 0.68)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(80, 128, 79, 0.12));
+}
+
+body.mobile-web :is(.modal--settings .input, .modal--settings .select, .settings-section-card .input, .settings-section-card .select) {
+  color: #101828 !important;
+  background:
+    linear-gradient(145deg, rgba(246, 251, 241, 0.92), rgba(217, 237, 208, 0.76)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(80, 128, 79, 0.1)) !important;
+  border: 1px solid rgba(65, 111, 68, 0.46) !important;
+}
+
+body.mobile-web :is(.modal--settings .input[readonly], .settings-section-card .input[readonly]) {
+  color: #20392c !important;
+  background: linear-gradient(145deg, rgba(232, 244, 225, 0.9), rgba(207, 229, 197, 0.78)) !important;
+}
+
+body.mobile-web :is(.field__label, .modal--settings .field__label) {
+  color: #20392c !important;
+}
+
+body.mobile-web :is(.field__hint, .modal--settings .field__hint, .modal--settings .section-copy) {
+  color: #345444 !important;
+}
+
+body.mobile-web .dashboard-graph-card,
+body.mobile-web .mobile-line-chart-card {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+body.mobile-web .dashboard-line-chart,
+body.mobile-web .cultivation-batch-chart {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+body.mobile-web .page-stack--dashboard .dashboard-panel--cultivation-graph .dashboard-line-chart--wide,
+body.mobile-web .page-stack--dashboard .cultivation-batch-chart,
+body.mobile-web .mobile-line-chart-card .dashboard-line-chart,
+body.mobile-web .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+  height: clamp(11.25rem, 54vw, 14rem) !important;
+  min-height: clamp(11.25rem, 54vw, 14rem) !important;
+  max-height: clamp(11.25rem, 54vw, 14rem) !important;
+}
+
+@media (max-width: 360px) {
+  body.mobile-web .page-stack--dashboard .dashboard-panel--cultivation-graph .dashboard-line-chart--wide,
+  body.mobile-web .page-stack--dashboard .cultivation-batch-chart,
+  body.mobile-web .mobile-line-chart-card .dashboard-line-chart,
+  body.mobile-web .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+    height: 10.25rem !important;
+    min-height: 10.25rem !important;
+    max-height: 10.25rem !important;
+  }
+}
+
+/* Stronger mobile web theme and full-card graphs. */
+body.mobile-web {
+  --mobile-glass-border: rgba(39, 89, 48, 0.58);
+  --mobile-glass-border-soft: rgba(58, 105, 61, 0.5);
+  --mobile-glass-fill:
+    linear-gradient(145deg, rgba(231, 246, 224, 0.92), rgba(192, 224, 183, 0.82)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(54, 112, 58, 0.18));
+  --mobile-glass-fill-strong:
+    linear-gradient(145deg, rgba(236, 248, 229, 0.96), rgba(200, 229, 191, 0.9)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(54, 112, 58, 0.2));
+  --mobile-glass-fill-soft:
+    linear-gradient(145deg, rgba(225, 242, 217, 0.9), rgba(184, 216, 176, 0.78)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(54, 112, 58, 0.16));
+}
+
+body.mobile-web :is(.input, .select, input, select, textarea, .dashboard-graph-range__select) {
+  color: #101828 !important;
+  background:
+    linear-gradient(145deg, rgba(235, 247, 228, 0.94), rgba(197, 226, 188, 0.84)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(54, 112, 58, 0.14)) !important;
+  border-color: rgba(48, 96, 53, 0.5) !important;
+}
+
+body.mobile-web :is(.dashboard-line-chart__plot) {
+  fill: rgba(235, 247, 228, 0.72) !important;
+  stroke: rgba(65, 111, 68, 0.34) !important;
+}
+
+body.mobile-web :is(
+  .mobile-dashboard__overview,
+  .mobile-row-card,
+  .mobile-mini-panel,
+  .mobile-reading,
+  .mobile-dashboard__stat,
+  .mobile-health-chip,
+  .mobile-tank-row,
+  .mobile-chart-row,
+  .mobile-tank-trend
+) {
+  background: var(--mobile-glass-fill) !important;
+  border-color: var(--mobile-glass-border-soft) !important;
+  box-shadow:
+    0 12px 24px rgba(18, 76, 50, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34) !important;
+}
+
+body.mobile-web .page-stack--dashboard .dashboard-panel--cultivation-graph .dashboard-line-chart--wide,
+body.mobile-web .page-stack--dashboard .cultivation-batch-chart,
+body.mobile-web .mobile-line-chart-card .dashboard-line-chart,
+body.mobile-web .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+  height: clamp(12.5rem, 56vw, 16rem) !important;
+  min-height: clamp(12.5rem, 56vw, 16rem) !important;
+  max-height: clamp(12.5rem, 56vw, 16rem) !important;
+}
+
+/* Final mobile graph containment: role CSS imports first, so this wins for user/admin mobile shells. */
+body.mobile-web .mobile-dashboard,
+body.mobile-web .mobile-dashboard__graphs,
+body.mobile-web .mobile-mini-panel--chart,
+body.mobile-web .mobile-line-chart-card {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+body.mobile-web .mobile-line-chart-card {
+  box-sizing: border-box !important;
+  contain: paint;
+}
+
+body.mobile-web .dashboard-line-chart,
+body.mobile-web .cultivation-batch-chart {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+body.mobile-web .page-stack--dashboard .dashboard-panel--cultivation-graph .dashboard-line-chart--wide,
+body.mobile-web .page-stack--dashboard .cultivation-batch-chart,
+body.mobile-web .mobile-line-chart-card .dashboard-line-chart,
+body.mobile-web .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+  height: clamp(10.5rem, 48vw, 13rem) !important;
+  min-height: clamp(10.5rem, 48vw, 13rem) !important;
+  max-height: clamp(10.5rem, 48vw, 13rem) !important;
+}
+
+@media (max-width: 380px) {
+  body.mobile-web .page-stack--dashboard .dashboard-panel--cultivation-graph .dashboard-line-chart--wide,
+  body.mobile-web .page-stack--dashboard .cultivation-batch-chart,
+  body.mobile-web .mobile-line-chart-card .dashboard-line-chart,
+  body.mobile-web .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+    height: 9.75rem !important;
+    min-height: 9.75rem !important;
+    max-height: 9.75rem !important;
+  }
+}
+
+/* Final mobile web tank/motion pass shared by admin and user shells. */
+body.mobile-web {
+  --mobile-transition-fast: 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --mobile-transition: 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --mobile-transition-spring: 620ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.mobile-web .tank-dashboard-layout {
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 0.68rem !important;
+}
+
+body.mobile-web .tank-grid--triple {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 0.48rem !important;
+}
+
+body.mobile-web .tank-card--compact {
+  grid-template-columns: auto minmax(0, 1fr) !important;
+  place-items: center start !important;
+  min-height: 6.25rem !important;
+  padding: 0.46rem 0.48rem !important;
+  gap: 0.44rem !important;
+  text-align: left !important;
+}
+
+body.mobile-web .tank-card--compact:nth-child(3) {
+  grid-column: 1 / -1 !important;
+}
+
+body.mobile-web .tank {
+  width: 2.58rem !important;
+  height: 4.08rem !important;
+  border-width: 2px !important;
+  animation-duration: 7.4s !important;
+}
+
+body.mobile-web .tank__fill {
+  animation-duration: 4.8s !important;
+}
+
+body.mobile-web .tank__fill::after {
+  animation-duration: 5.4s !important;
+}
+
+body.mobile-web .tank__wave--back {
+  animation-duration: 8.6s !important;
+}
+
+body.mobile-web .tank__wave--back::after {
+  animation-duration: 3.8s !important;
+}
+
+body.mobile-web .tank__wave--front {
+  animation-duration: 7.2s !important;
+}
+
+body.mobile-web .tank__wave--front::after {
+  animation-duration: 3.2s !important;
+}
+
+body.mobile-web .tank-trend-card {
+  overflow: hidden !important;
+  padding: 0.58rem !important;
+}
+
+body.mobile-web .tank-trend-card .dashboard-graph-card--tank {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0.32rem 0 0 !important;
+  border-radius: 0 !important;
+  min-height: 0 !important;
+}
+
+body.mobile-web .dashboard-graph-card--tank .dashboard-line-chart {
+  height: clamp(9.2rem, 42vw, 11.25rem) !important;
+  min-height: clamp(9.2rem, 42vw, 11.25rem) !important;
+  max-height: clamp(9.2rem, 42vw, 11.25rem) !important;
+}
+
+body.mobile-web :is(
+  .glass-card,
+  .card,
+  .dashboard-panel,
+  .dashboard-graph-card,
+  .mobile-line-chart-card,
+  .tank-trend-card,
+  .sensor-card,
+  .health-item,
+  .tank-card,
+  .metric-card,
+  .mobile-row-card,
+  .mobile-mini-panel,
+  .mobile-reading,
+  .mobile-tank-row,
+  .mobile-chart-row,
+  .mobile-tank-trend,
+  .button,
+  .icon-button,
+  .nav-button,
+  .profile-pill--button
+) {
+  backface-visibility: hidden !important;
+  transform: none;
+  transition:
+    transform var(--mobile-transition-spring),
+    box-shadow var(--mobile-transition),
+    border-color var(--mobile-transition),
+    background-color var(--mobile-transition),
+    color var(--mobile-transition-fast) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.mobile-web :is(.tank-card, .metric-card, .mobile-row-card, .mobile-mini-panel, .mobile-reading):hover {
+    transform: translate3d(0, -3px, 0) scale(1.008) !important;
+    box-shadow:
+      0 14px 26px rgba(18, 76, 50, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.36) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  body.mobile-web .tank-card--compact {
+    min-height: 5.9rem !important;
+    padding: 0.42rem !important;
+  }
+
+  body.mobile-web .tank {
+    width: 2.32rem !important;
+    height: 3.76rem !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.mobile-web *,
+  body.mobile-web *::before,
+  body.mobile-web *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Desktop-matched mobile palette: keep the mobile layout, remove green card fills. */
+body.mobile-web {
+  --mobile-glass-border: rgba(255, 255, 255, 0.74);
+  --mobile-glass-border-soft: rgba(210, 225, 207, 0.76);
+  --mobile-glass-fill: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(240, 246, 236, 0.92));
+  --mobile-glass-fill-strong: linear-gradient(145deg, rgba(255, 255, 255, 0.99), rgba(242, 247, 238, 0.95));
+  --mobile-glass-fill-soft: linear-gradient(145deg, rgba(255, 255, 255, 0.93), rgba(239, 245, 235, 0.88));
+  --mobile-glass-shadow:
+    0 12px 28px rgba(12, 56, 35, 0.09),
+    0 8px 18px rgba(12, 56, 35, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.52);
+  background:
+    radial-gradient(circle at 14% 18%, rgba(143, 201, 154, 0.14), transparent 22%),
+    radial-gradient(circle at 82% 18%, rgba(224, 212, 187, 0.2), transparent 25%),
+    linear-gradient(145deg, rgba(241, 238, 229, 0.98), rgba(232, 242, 232, 0.96) 42%, rgba(238, 235, 225, 0.98) 100%) !important;
+}
+
+body.mobile-web :is(
+  .glass-card:not(.glass-card--dark),
+  .card,
+  .dashboard-panel,
+  .sensor-card,
+  .health-item,
+  .list-tile,
+  .cultivation-item,
+  .user-row,
+  .stat-card,
+  .tank-card,
+  .tank-card--compact,
+  .mode-card,
+  .timeline-card,
+  .metric-card,
+  .notification-item,
+  .iot-row-card,
+  .iot-monitor-card,
+  .iot-monitor-card__group-item,
+  .cultivation-chart-row,
+  .cultivation-summary-card,
+  .dashboard-graph-card,
+  .dashboard-empty-state,
+  .mobile-dashboard__overview,
+  .mobile-row-card,
+  .mobile-mini-panel,
+  .mobile-line-chart-card,
+  .mobile-dashboard__stat,
+  .mobile-reading,
+  .mobile-health-chip,
+  .mobile-tank-row,
+  .mobile-chart-row,
+  .mobile-tank-trend,
+  .tank-trend-card,
+  .tank-trend-row,
+  .sensor-row-card,
+  .sensor-row-control,
+  .sensor-management-card,
+  .developer-card,
+  .about-panel,
+  .about-brand-card,
+  .contact-card,
+  .settings-section-card,
+  .password-otp-card,
+  .cultivation-crop-option,
+  .cultivation-setup-summary,
+  .cultivation-mode-panel,
+  .cultivation-parameter-selection,
+  .cultivation-parameter-card,
+  .cultivation-parameter-static,
+  .modal--settings .settings-section-card,
+  .modal--settings .about-panel,
+  .modal--settings .about-brand-card,
+  .modal--settings .developer-card,
+  .modal--settings .contact-card
+) {
+  color: var(--text, #101828) !important;
+  background: var(--mobile-glass-fill) !important;
+  border-color: var(--mobile-glass-border-soft) !important;
+  box-shadow: var(--mobile-glass-shadow) !important;
+}
+
+body.mobile-web :is(.mobile-reading, .mobile-health-chip, .mobile-tank-row, .mobile-dashboard__stat, .sensor-row-control) {
+  background: var(--mobile-glass-fill-soft) !important;
+  box-shadow:
+    0 8px 18px rgba(12, 56, 35, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.48) !important;
+}
+
+body.mobile-web :is(.input, .select, input, select, textarea, .dashboard-graph-range__select) {
+  color: #101828 !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(246, 249, 244, 0.94)) !important;
+  border-color: rgba(210, 225, 207, 0.95) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.58) !important;
+}
+
+body.mobile-web :is(.dashboard-line-chart__plot) {
+  fill: rgba(255, 255, 255, 0.84) !important;
+  stroke: rgba(210, 225, 207, 0.92) !important;
+}
+
+body.mobile-web :is(.mobile-reading__chips span, .dashboard-row-summary span) {
+  background: rgba(255, 255, 255, 0.76) !important;
+}
+
+/* Final mobile performance pass: keep the same motion language with cheaper paint work. */
+body.mobile-web {
+  --mobile-glass-shadow:
+    0 8px 18px rgba(12, 56, 35, 0.07),
+    0 2px 6px rgba(12, 56, 35, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* The nav clearance belongs to .page-content alone, which is the element that
+   scrolls and whose last card would otherwise end up behind the bar. Setting it
+   here too stacked a second full nav-height onto the first, leaving ~197px of
+   blank page under the final card that nothing could scroll away. */
+body.mobile-web .app-shell {
+  padding-bottom: var(--mobile-safe-bottom) !important;
+}
+
+body.mobile-web .page-content {
+  padding-bottom: calc(var(--mobile-nav-height) + 1.55rem + var(--mobile-safe-bottom)) !important;
+  scroll-padding-bottom: calc(var(--mobile-nav-height) + 1.55rem + var(--mobile-safe-bottom)) !important;
+}
+
+body.mobile-web .mobile-bottom-nav {
+  bottom: calc(0.28rem + var(--mobile-safe-bottom)) !important;
+  padding: 0.18rem 0.16rem 0.22rem !important;
+  box-shadow:
+    0 10px 22px rgba(20, 65, 40, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  transform: none !important;
+}
+
+body.mobile-web .mobile-bottom-nav__button {
+  min-height: 3.45rem !important;
+  padding: 0.24rem 0.14rem !important;
+}
+
+body.mobile-web .mobile-bottom-nav__icon {
+  width: 1.34rem !important;
+  height: 1.34rem !important;
+}
+
+body.mobile-web .mobile-bottom-nav__label {
+  font-size: 0.56rem !important;
+  line-height: 1.05 !important;
+}
+
+body.mobile-web .mobile-dashboard {
+  gap: 0.38rem !important;
+}
+
+body.mobile-web .mobile-mini-panel--chart {
+  gap: 0.36rem !important;
+  padding: 0.44rem !important;
+  contain: layout paint;
+}
+
+body.mobile-web .mobile-line-chart-card {
+  padding: 0.42rem !important;
+  contain: layout paint;
+}
+
+body.mobile-web .mobile-line-chart-card .dashboard-line-chart,
+body.mobile-web .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+  height: clamp(8.35rem, 36vw, 9.75rem) !important;
+  min-height: clamp(8.35rem, 36vw, 9.75rem) !important;
+  max-height: clamp(8.35rem, 36vw, 9.75rem) !important;
+}
+
+body.mobile-web .dashboard-graph-card--tank .dashboard-line-chart {
+  height: clamp(8.8rem, 39vw, 10.4rem) !important;
+  min-height: clamp(8.8rem, 39vw, 10.4rem) !important;
+  max-height: clamp(8.8rem, 39vw, 10.4rem) !important;
+}
+
+body.mobile-web .mobile-mini-panel__head--chart {
+  gap: 0.36rem !important;
+}
+
+body.mobile-web .mobile-mini-panel__head--chart .dashboard-graph-range__select {
+  min-height: 2.18rem !important;
+  padding-block: 0.42rem !important;
+}
+
+body.mobile-web :is(.dashboard-chart-line, .dashboard-chart-point, .dashboard-chart-area) {
+  filter: none !important;
+}
+
+body.mobile-web.is-dashboard-scrolling :is(
+  .glass-card,
+  .card,
+  .dashboard-panel,
+  .dashboard-graph-card,
+  .mobile-line-chart-card,
+  .tank-trend-card,
+  .sensor-card,
+  .health-item,
+  .tank-card,
+  .metric-card,
+  .mobile-row-card,
+  .mobile-mini-panel,
+  .mobile-reading,
+  .mobile-tank-row,
+  .mobile-chart-row,
+  .mobile-tank-trend,
+  .button,
+  .icon-button,
+  .nav-button,
+  .profile-pill--button
+) {
+  transition-duration: 1ms !important;
+  box-shadow:
+    0 4px 10px rgba(12, 56, 35, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42) !important;
+}
+
+body.mobile-web.is-performance-interacting {
+  --mobile-glass-shadow:
+    0 4px 10px rgba(12, 56, 35, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42);
+}
+
+body.mobile-web.is-performance-interacting::before,
+body.mobile-web.is-performance-interacting::after {
+  opacity: 0.36 !important;
+  transform: none !important;
+}
+
+body.mobile-web.is-performance-interacting :is(
+  .topbar,
+  .mobile-bottom-nav,
+  .glass-card,
+  .card,
+  .dashboard-panel,
+  .dashboard-graph-card,
+  .mobile-line-chart-card,
+  .tank-trend-card,
+  .sensor-card,
+  .health-item,
+  .tank-card,
+  .metric-card,
+  .mobile-row-card,
+  .mobile-mini-panel,
+  .mobile-reading,
+  .mobile-dashboard__stat,
+  .mobile-health-chip,
+  .mobile-tank-row,
+  .mobile-chart-row,
+  .mobile-tank-trend,
+  .button,
+  .icon-button,
+  .nav-button,
+  .profile-pill--button
+) {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition-duration: 1ms !important;
+  box-shadow:
+    0 4px 10px rgba(12, 56, 35, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42) !important;
+}
+
+body.mobile-web.is-performance-interacting .glass-card::before,
+body.mobile-web.is-performance-interacting .dashboard-panel::before,
+body.mobile-web.is-performance-interacting .dashboard-graph-card::before,
+body.mobile-web.is-performance-interacting .sensor-card::before,
+body.mobile-web.is-performance-interacting .tank-card::before,
+body.mobile-web.is-performance-interacting .metric-card::before {
+  opacity: 0 !important;
+}
+
+body.mobile-web.is-performance-interacting :is(
+  .dashboard-chart-area,
+  .tank,
+  .tank__fill,
+  .tank__fill::after,
+  .tank__wave,
+  .tank__glow,
+  .tank__bubble,
+  .progress-fill,
+  .progress-fill::after
+) {
+  animation-play-state: paused !important;
+  filter: none !important;
+}
+
+@media (max-width: 380px) {
+  body.mobile-web .mobile-line-chart-card .dashboard-line-chart,
+  body.mobile-web .mobile-line-chart-card--cultivation-batch .cultivation-batch-chart {
+    height: 8rem !important;
+    min-height: 8rem !important;
+    max-height: 8rem !important;
+  }
+
+  body.mobile-web .dashboard-graph-card--tank .dashboard-line-chart {
+    height: 8.35rem !important;
+    min-height: 8.35rem !important;
+    max-height: 8.35rem !important;
+  }
+}
+
+body.mobile-web.is-performance-interacting .mobile-mini-panel,
+body.mobile-web.is-performance-interacting .mobile-row-card,
+body.mobile-web.is-performance-interacting .mobile-dashboard__overview,
+body.mobile-web.is-performance-interacting .mobile-line-chart-card,
+body.mobile-web.is-performance-interacting .mobile-reading,
+body.mobile-web.is-performance-interacting .mobile-dashboard__stat,
+body.mobile-web.is-performance-interacting .mobile-health-chip,
+body.mobile-web.is-performance-interacting .mobile-tank-row,
+body.mobile-web.is-performance-interacting .mobile-chart-row,
+body.mobile-web.is-performance-interacting .mobile-tank-trend,
+body.mobile-web.is-performance-interacting .mobile-bottom-nav {
+  box-shadow:
+    0 4px 10px rgba(12, 56, 35, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42) !important;
+  transition-duration: 1ms !important;
+}
+
+/* Role-independent mobile header guard: keep theme and bell controls identical. */
+body.mobile-web .topbar {
+  grid-template-columns: 2.3rem minmax(0, 1fr) auto !important;
+}
+
+body.mobile-web .topbar__actions {
+  width: auto !important;
+  min-width: 0 !important;
+  flex: 0 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 0.42rem !important;
+}
+
+body.mobile-web .topbar :is(.theme-toggle-button.icon-button, .notification-button.icon-button),
+body.mobile-web .topbar :is(.theme-toggle-button.icon-button, .notification-button.icon-button):is(:hover, :focus-visible, :active, .is-active),
+:is(html[data-theme="dark"], html.pi-kiosk[data-theme="dark"]) body.mobile-web .topbar :is(.theme-toggle-button.icon-button, .notification-button.icon-button),
+:is(html[data-theme="dark"], html.pi-kiosk[data-theme="dark"]) body.mobile-web .topbar :is(.theme-toggle-button.icon-button, .notification-button.icon-button):is(:hover, :focus-visible, :active, .is-active) {
+  width: 2.3rem !important;
+  height: 2.3rem !important;
+  min-width: 2.3rem !important;
+  flex: 0 0 2.3rem !important;
+  padding: 0 !important;
+  border-radius: 0.82rem !important;
+  display: grid !important;
+  place-items: center !important;
+}
+
+body.mobile-web .topbar :is(.theme-toggle-button.icon-button, .notification-button.icon-button) .nav-button__icon,
+body.mobile-web .topbar :is(.theme-toggle-button.icon-button, .notification-button.icon-button):is(:hover, :focus-visible, :active, .is-active) .nav-button__icon,
+:is(html[data-theme="dark"], html.pi-kiosk[data-theme="dark"]) body.mobile-web .topbar :is(.theme-toggle-button.icon-button, .notification-button.icon-button) .nav-button__icon,
+:is(html[data-theme="dark"], html.pi-kiosk[data-theme="dark"]) body.mobile-web .topbar :is(.theme-toggle-button.icon-button, .notification-button.icon-button):is(:hover, :focus-visible, :active, .is-active) .nav-button__icon {
+  width: 1.62rem !important;
+  height: 1.62rem !important;
+  flex: 0 0 1.62rem !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body.mobile-web .topbar :is(.theme-toggle-button.icon-button, .notification-button.icon-button) .nav-button__icon .icon,
+:is(html[data-theme="dark"], html.pi-kiosk[data-theme="dark"]) body.mobile-web .topbar :is(.theme-toggle-button.icon-button, .notification-button.icon-button) .nav-button__icon .icon {
+  width: 1.12rem !important;
+  height: 1.12rem !important;
+  stroke-width: 2.1 !important;
+}
+
+/* Mobile-first irrigation: keep every row readable and every control touch-friendly. */
+body.mobile-web .irrigation-row-controller-grid {
+  gap: 0.78rem !important;
+}
+
+body.mobile-web .irrigation-row-overview {
+  grid-template-columns: 2.65rem minmax(0, 1fr) !important;
+  gap: 0.72rem !important;
+  padding: 0.86rem !important;
+}
+
+body.mobile-web .irrigation-row-overview__icon {
+  width: 2.65rem !important;
+  height: 2.65rem !important;
+  border-radius: 0.82rem !important;
+}
+
+body.mobile-web .irrigation-row-overview .irrigation-row-count {
+  grid-column: 1 / -1 !important;
+  justify-self: start !important;
+  padding: 0.36rem 0.65rem !important;
+}
+
+body.mobile-web .irrigation-row-picker {
+  grid-column: 1 / -1 !important;
+  gap: 0.28rem !important;
+}
+
+body.mobile-web .irrigation-row-picker > span {
+  font-size: 0.68rem !important;
+}
+
+body.mobile-web .irrigation-row-select {
+  min-height: 2.85rem !important;
+  padding-inline: 0.72rem !important;
+  font-size: 0.78rem !important;
+}
+
+body.mobile-web .irrigation-row-controller {
+  gap: 0.72rem !important;
+  padding: 0.86rem !important;
+  border-left-width: 4px !important;
+  border-radius: 1.08rem !important;
+}
+
+body.mobile-web .irrigation-row-controller__head {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: start !important;
+  gap: 0.55rem !important;
+}
+
+body.mobile-web .irrigation-row-controller__title {
+  gap: 0.48rem !important;
+}
+
+body.mobile-web .irrigation-row-controller__mode {
+  padding: 0.34rem 0.58rem !important;
+  font-size: 0.68rem !important;
+}
+
+body.mobile-web .irrigation-row-modes {
+  gap: 0.3rem !important;
+  padding: 0.34rem !important;
+  border-radius: 0.86rem !important;
+}
+
+body.mobile-web .irrigation-row-mode {
+  min-height: 3.2rem !important;
+  padding: 0.35rem 0.2rem !important;
+  flex-direction: column !important;
+  gap: 0.16rem !important;
+  border-radius: 0.7rem !important;
+  font-size: 0.72rem !important;
+  line-height: 1.05 !important;
+}
+
+body.mobile-web .irrigation-row-mode .icon {
+  width: 1.08rem !important;
+  height: 1.08rem !important;
+}
+
+body.mobile-web .irrigation-row-locked {
+  padding: 0.68rem 0.78rem !important;
+  border-radius: 0.72rem !important;
+  font-size: 0.78rem !important;
+  line-height: 1.35 !important;
+}
+
+body.mobile-web .irrigation-type-grid--row {
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 0.68rem !important;
+}
+
+body.mobile-web .irrigation-type-grid--row .irrigation-type-card {
+  gap: 0.72rem !important;
+  padding: 0.78rem !important;
+  border-radius: 0.9rem !important;
+}
+
+body.mobile-web .irrigation-type-card__head {
+  gap: 0.62rem !important;
+}
+
+body.mobile-web .irrigation-type-card__icon {
+  width: 2.35rem !important;
+  height: 2.35rem !important;
+  flex: 0 0 2.35rem !important;
+  border-radius: 0.78rem !important;
+}
+
+body.mobile-web .irrigation-type-card__title {
+  font-size: 0.92rem !important;
+}
+
+body.mobile-web .irrigation-type-card__copy {
+  font-size: 0.75rem !important;
+}
+
+body.mobile-web .irrigation-row-fields {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 0.52rem !important;
+}
+
+body.mobile-web .irrigation-type-grid--row :is(.input, .select, .button) {
+  min-height: 2.7rem !important;
+}
+
+body.mobile-web .irrigation-option-toggle {
+  min-height: 2.35rem !important;
+  align-items: center !important;
+}
+
+/* Inactive mobile rows stay visible without occupying a full control panel. */
+body.mobile-web .irrigation-row-controller.is-inactive {
+  gap: 0.55rem !important;
+  padding-block: 0.72rem !important;
+}
+
+body.mobile-web .irrigation-row-controller.is-inactive .irrigation-row-modes {
+  display: none !important;
+}
+
+body.mobile-web .irrigation-row-controller.is-inactive .irrigation-row-locked {
+  margin-top: 0.08rem !important;
+}
+
+@media (max-width: 360px) {
+  body.mobile-web .irrigation-row-controller {
+    padding-inline: 0.72rem !important;
+  }
+
+  body.mobile-web .irrigation-row-fields {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  body.mobile-web .irrigation-row-mode {
+    font-size: 0.66rem !important;
+  }
+}
+
+/* Five row readings leave the final cell of the two-column grid empty.
+   Let Humidity use that complete last row so every mobile row card ends on a
+   clean full-width edge instead of showing a blank white half-card space. */
+body.mobile-web
+  .mobile-reading-grid
+  > .mobile-reading[data-id$="-humidity"] {
+  grid-column: 1 / -1;
+  width: 100%;
+}
