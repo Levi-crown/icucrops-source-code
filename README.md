@@ -260,11 +260,14 @@ icucrops-source-code/
 
 This repository only has part of the ICuCrops source code.
 If you want the full source code, or you have a question about the project,
-send me a message on Telegram.
+send me a message on Telegram or Facebook.
 
 <p align="center">
   <a href="https://t.me/hachi0427">
     <img src="https://img.shields.io/badge/Telegram-@hachi0427-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram @hachi0427">
+  </a>
+  <a href="https://web.facebook.com/chris.benedict.00">
+    <img src="https://img.shields.io/badge/Facebook-chris.benedict.00-1877F2?style=for-the-badge&logo=facebook&logoColor=white" alt="Facebook chris.benedict.00">
   </a>
 </p>
 
