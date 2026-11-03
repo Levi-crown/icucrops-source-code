@@ -42,7 +42,7 @@
     <rect x="448" y="214" width="118" height="32" rx="16" fill="#ffffff" fill-opacity="0.14"/>
     <text x="507" y="235" text-anchor="middle">Irrigation</text>
     <rect x="578" y="214" width="134" height="32" rx="16" fill="#ffffff" fill-opacity="0.14"/>
-    <text x="645" y="235" text-anchor="middle">Greenhouse</text>
+    <text x="645" y="235" text-anchor="middle">Cultivation</text>
     <rect x="724" y="214" width="122" height="32" rx="16" fill="#3ecf8e" fill-opacity="0.9"/>
     <text x="785" y="235" text-anchor="middle" fill="#0e3d2b">Supabase</text>
   </g>
