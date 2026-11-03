@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/readme-banner.svg" alt="ICuCrops — Smart greenhouse and crop monitoring system" width="100%">
+  <img src="assets/readme-banner.svg" alt="ICuCrops — An IoT Web-Based System for Crops Cultivation and Monitoring for Sarate Agriculture Farm in San Pablo, Laguna" width="100%">
 </p>
 
 <p align="center">
@@ -26,7 +26,8 @@
 
 ## 🌱 About
 
-ICuCrops is a smart-farming system built for a greenhouse. Sensors in the soil and in
+ICuCrops is an IoT web-based system for crops cultivation and monitoring, built for
+Sarate Agriculture Farm in San Pablo, Laguna. Sensors in the soil and in
 the air report their readings to a Flask backend, which stores them, decides when to
 irrigate, run the fan or switch on the grow light, and serves a web dashboard where
 people see every row at a glance and control the equipment by hand when they need to.
@@ -240,5 +241,5 @@ python main.py
 <p align="center">
   <img src="assets/icucrops-logo-transparent.png" width="120" alt="ICuCrops logo">
   <br>
-  <sub>🌿 ICuCrops · Smart greenhouse and crop monitoring · Powered by Supabase &amp; SQLite</sub>
+  <sub>🌿 ICuCrops · An IoT Web-Based System for Crops Cultivation and Monitoring for Sarate Agriculture Farm in San Pablo, Laguna · Powered by Supabase &amp; SQLite</sub>
 </p>
