@@ -254,6 +254,22 @@ icucrops-source-code/
   <img src="assets/sheilaPic.png" width="90" alt="Team member">
 </p>
 
+---
+
+## <img src="assets/badges/paper-plane-tilt.svg" width="30" height="30" align="absmiddle" alt=""> Contact
+
+This repository only has part of the ICuCrops source code.
+If you want the full source code, or you have a question about the project,
+send me a message on Telegram.
+
+<p align="center">
+  <a href="https://t.me/hachi0427">
+    <img src="https://img.shields.io/badge/Telegram-@hachi0427-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram @hachi0427">
+  </a>
+</p>
+
+---
+
 <p align="center">
   <img src="assets/icucrops-logo-transparent.png" width="120" alt="ICuCrops logo">
   <br>
