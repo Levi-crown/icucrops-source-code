@@ -71,16 +71,16 @@ sensor firmware is not included.
 ## <img src="assets/badges/code.svg" width="30" height="30" align="absmiddle" alt=""> Languages used
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=py,js,html,css,postgres,sqlite,supabase,flask&theme=dark" alt="Python, JavaScript, HTML, CSS, SQL, SQLite, Supabase, Flask">
+  <img src="https://skillicons.dev/icons?i=py,js,html,css&theme=dark" alt="Python, JavaScript, HTML, CSS">
 </p>
 
-| Language | Used for |
-| --- | --- |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" width="20"> **Python** | The Flask server, the watering and climate rules, database code and reports |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" width="20"> **JavaScript** | The dashboard, live graphs and equipment controls |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" width="20"> **HTML5** | The administrator, user, sign-in and mobile pages |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" width="20"> **CSS3** | Layout, colors, dark mode and the touchscreen panel |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" width="20"> **SQL** | The Supabase tables and the SQLite queries |
+| Language | Type | Used for |
+| --- | --- | --- |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" width="20"> **Python** | Programming language | The Flask server, the watering and climate rules, database code and reports |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" width="20"> **JavaScript** | Programming language | The dashboard, live graphs and equipment controls |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" width="20"> **HTML5** | Markup language | The administrator, user, sign-in and mobile pages |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" width="20"> **CSS3** | Style sheet language | Layout, colors, dark mode and the touchscreen panel |
+| <img src="assets/badges/database.svg" width="20"> **SQL** | Query language | The Supabase tables and the SQLite queries |
 
 ---
 
@@ -209,10 +209,17 @@ sensor firmware is not included.
 
 ## <img src="assets/badges/stack.svg" width="30" height="30" align="absmiddle" alt=""> Tech stack
 
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=flask,supabase,postgres,sqlite,vercel,raspberrypi&theme=dark" alt="Flask, Supabase, PostgreSQL, SQLite, Vercel, Raspberry Pi">
+</p>
+
 | Part | Built with |
 | --- | --- |
-| **Database** | Supabase (PostgreSQL) online, SQLite offline |
-| **Backend** | Python 3.11+, Flask, psycopg, Pillow |
+| **Backend framework** | Flask (Python 3.11+), with psycopg and Pillow |
+| **Online database** | Supabase (PostgreSQL) |
+| **Offline database** | SQLite |
+| **Website hosting** | Vercel |
+| **Local server** | Raspberry Pi 4, with the Mosquitto MQTT broker |
 | **Frontend** | HTML5, CSS3 and plain JavaScript, no framework |
 | **Reports** | Excel (.xlsx) and PDF files made by the server itself |
 
