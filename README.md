@@ -247,12 +247,39 @@ icucrops-source-code/
 
 ## <img src="assets/badges/users-three.svg" width="30" height="30" align="absmiddle" alt=""> Team
 
-<p align="center">
-  <img src="assets/ChrisPic.png" width="90" alt="Team member">
-  <img src="assets/EronPic.png" width="90" alt="Team member">
-  <img src="assets/jhonelPic.png" width="90" alt="Team member">
-  <img src="assets/sheilaPic.png" width="90" alt="Team member">
-</p>
+<table align="center">
+  <tr>
+    <td align="center" valign="top" width="100%">
+      <img src="assets/sheilaPic.png" width="120" alt="Shiela Mae Abejero"><br>
+      <b>Shiela Mae Abejero</b><br>
+      <sub><b>Leader</b></sub><br>
+      <sub>Led the research work and organized the project papers, documentation, and study requirements.</sub>
+    </td>
+  </tr>
+</table>
+
+<table align="center">
+  <tr>
+    <td align="center" valign="top" width="33%">
+      <img src="assets/ChrisPic.png" width="120" alt="Chris Benedict Corona"><br>
+      <b>Chris Benedict Corona</b><br>
+      <sub><b>Developer</b></sub><br>
+      <sub>Developed the web app, backend flow, sensor integrations, testing, and calibration support.</sub>
+    </td>
+    <td align="center" valign="top" width="33%">
+      <img src="assets/jhonelPic.png" width="120" alt="Jhonel Azañes"><br>
+      <b>Jhonel Azañes</b><br>
+      <sub><b>Designer</b></sub><br>
+      <sub>Designed the IoT device layout and helped prepare the project documents.</sub>
+    </td>
+    <td align="center" valign="top" width="33%">
+      <img src="assets/EronPic.png" width="120" alt="Eron Cataga"><br>
+      <b>Eron Cataga</b><br>
+      <sub><b>IoT Builder</b></sub><br>
+      <sub>Built and wired the IoT device and checked that the sensors worked correctly.</sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
