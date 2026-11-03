@@ -25,7 +25,7 @@
 
 ---
 
-## 🌱 About
+## <img src="assets/icons/leaf.svg" width="26" height="26" align="absmiddle" alt=""> About
 
 ICuCrops is an IoT web-based system for crops cultivation and monitoring, built for
 Sarate Agriculture Farm in San Pablo, Laguna. Sensors in the soil and in
@@ -42,14 +42,14 @@ internet drops.
 > The sensor firmware and hardware-communication code are not included.
 
 > [!IMPORTANT]
-> 🔒 **No sensitive information is included in this repository.**
+> **No sensitive information is included in this repository.**
 > There are **no API keys**, no `.env` files, no passwords, no Supabase connection
 > strings, no tokens and no database files here. Every secret is read from the
 > environment of the machine that runs ICuCrops and is never written into the code.
 
 ---
 
-## 🗄️ Database
+## <img src="assets/icons/database.svg" width="26" height="26" align="absmiddle" alt=""> Database
 
 <table>
   <tr>
@@ -73,7 +73,7 @@ internet drops.
 
 ---
 
-## 💻 Languages used
+## <img src="assets/icons/code.svg" width="26" height="26" align="absmiddle" alt=""> Languages used
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=py,js,html,css,postgres,sqlite,supabase,flask&theme=dark" alt="Python, JavaScript, HTML, CSS, SQL, SQLite, Supabase, Flask">
@@ -89,36 +89,38 @@ internet drops.
 
 ---
 
-## 📡 What ICuCrops monitors
+## <img src="assets/icons/gauge.svg" width="26" height="26" align="absmiddle" alt=""> What ICuCrops monitors
 
 | | Reading | Sensor | What it is used for |
 | :---: | --- | --- | --- |
-| 💧 | **Soil Moisture** | Capacitive soil-moisture probes (per row) | Decides when each row needs water |
-| 🧪 | **Soil pH** | RS485 soil sensor | Shows soil acidity; tells when lime solution is needed |
-| ⚡ | **EC (Electrical Conductivity)** | RS485 soil sensor | Shows the nutrient / salt level of the soil |
-| 🌡️ | **Temperature** | DHT22 | Greenhouse air temperature; drives the fan and grow light |
-| 💦 | **Humidity** | DHT22 | Greenhouse air humidity; turns the fan on when it is too humid |
-| ☀️ | **Light** | HW-072 light sensor | Detects dark or bright; runs the grow light in the dark |
+| <img src="assets/icons/tile-drop.svg" width="36" height="36" alt=""> | **Soil Moisture** | Capacitive soil-moisture probes (per row) | Decides when each row needs water |
+| <img src="assets/icons/tile-flask.svg" width="36" height="36" alt=""> | **Soil pH** | RS485 soil sensor | Shows soil acidity; tells when lime solution is needed |
+| <img src="assets/icons/tile-lightning.svg" width="36" height="36" alt=""> | **EC (Electrical Conductivity)** | RS485 soil sensor | Shows the nutrient / salt level of the soil |
+| <img src="assets/icons/tile-thermometer-simple.svg" width="36" height="36" alt=""> | **Temperature** | DHT22 | Greenhouse air temperature; drives the fan and grow light |
+| <img src="assets/icons/tile-drop-half-bottom.svg" width="36" height="36" alt=""> | **Humidity** | DHT22 | Greenhouse air humidity; turns the fan on when it is too humid |
+| <img src="assets/icons/tile-sun.svg" width="36" height="36" alt=""> | **Light** | HW-072 light sensor | Detects dark or bright; runs the grow light in the dark |
 
-## 🎛️ What ICuCrops controls
+## <img src="assets/icons/sliders-horizontal.svg" width="26" height="26" align="absmiddle" alt=""> What ICuCrops controls
 
 | | Equipment | How it runs |
 | :---: | --- | --- |
-| 🚿 | **Irrigation pump** | Automatic, Manual or Scheduled, per row, with moisture safety limits |
-| 🌫️ | **Misting** | Follows the irrigation, or on a timer |
-| 🌀 | **Fan** | Turns on when the humidity is high |
-| 💡 | **Grow light** | Turns on in the dark, with a daily limit |
-| 🧴 | **Lime solution** | Applied when the soil pH is too low |
+| <img src="assets/icons/tile-shower.svg" width="36" height="36" alt=""> | **Irrigation pump** | Automatic, Manual or Scheduled, per row, with moisture safety limits |
+| <img src="assets/icons/tile-cloud-fog.svg" width="36" height="36" alt=""> | **Misting** | Follows the irrigation, or on a timer |
+| <img src="assets/icons/tile-fan.svg" width="36" height="36" alt=""> | **Fan** | Turns on when the humidity is high |
+| <img src="assets/icons/tile-lightbulb.svg" width="36" height="36" alt=""> | **Grow light** | Turns on in the dark, with a daily limit |
+| <img src="assets/icons/tile-test-tube.svg" width="36" height="36" alt=""> | **Lime solution** | Applied when the soil pH is too low |
 
 ---
 
-## ✨ Features
+## <img src="assets/icons/squares-four.svg" width="26" height="26" align="absmiddle" alt=""> Features
 
 <table>
   <tr>
     <td width="50%" valign="top">
 
-### 💧 Smart irrigation
+<img src="assets/icons/tile-drop.svg" width="44" height="44" alt="">
+
+### Smart irrigation
 - Live soil-moisture reading for every row
 - **Automatic**, **Manual** and **Scheduled** watering modes
 - Safety bands that stop watering at the right moisture level
@@ -127,7 +129,9 @@ internet drops.
     </td>
     <td width="50%" valign="top">
 
-### 🌡️ Greenhouse climate
+<img src="assets/icons/tile-thermometer-simple.svg" width="44" height="44" alt="">
+
+### Greenhouse climate
 - Temperature and humidity (DHT22) and light sensing
 - Fan runs on high humidity
 - Grow light runs in the dark, with a daily limit
@@ -138,7 +142,9 @@ internet drops.
   <tr>
     <td width="50%" valign="top">
 
-### 📊 Monitoring & reports
+<img src="assets/icons/tile-chart-line-up.svg" width="44" height="44" alt="">
+
+### Monitoring & reports
 - Real-time dashboard and live graphs
 - Per-sensor detail pages and history log
 - Downloadable reports as **Excel (.xlsx)** and **PDF**
@@ -147,7 +153,9 @@ internet drops.
     </td>
     <td width="50%" valign="top">
 
-### 🌾 Cultivation tracking
+<img src="assets/icons/tile-plant.svg" width="44" height="44" alt="">
+
+### Cultivation tracking
 - Plant and track crops per row
 - Growth parameters and harvest records
 - Cultivation requests from growers, approved by admins
@@ -158,7 +166,9 @@ internet drops.
   <tr>
     <td width="50%" valign="top">
 
-### 🔐 Accounts & security
+<img src="assets/icons/tile-shield-check.svg" width="44" height="44" alt="">
+
+### Accounts & security
 - Separate **Administrator** and **User** portals
 - Email OTP password reset
 - Single-session sign-in per account
@@ -167,7 +177,9 @@ internet drops.
     </td>
     <td width="50%" valign="top">
 
-### 📱 Works everywhere
+<img src="assets/icons/tile-devices.svg" width="44" height="44" alt="">
+
+### Works everywhere
 - Desktop web dashboard
 - Mobile-friendly pages
 - Touch kiosk mode for the greenhouse panel
@@ -179,20 +191,20 @@ internet drops.
 
 ---
 
-## 🧭 How it works
+## <img src="assets/icons/flow-arrow.svg" width="26" height="26" align="absmiddle" alt=""> How it works
 
 ```mermaid
 flowchart LR
-    A["🌱 Greenhouse sensors<br/>soil · pH · DHT22 · light"] --> B["⚙️ Flask backend<br/>main.py"]
-    B -- relays --> C["💧 Pumps · fan · grow light"]
-    B <--> D[("☁️ Supabase<br/>PostgreSQL")]
-    B <--> E[("💾 Local SQLite<br/>offline copy")]
-    B --> F["🖥️ Web dashboard<br/>Administrator · User · Mobile"]
+    A["Greenhouse sensors<br/>moisture, pH, EC, DHT22, light"] --> B["Flask backend<br/>main.py"]
+    B -- relays --> C["Pump, misting, fan,<br/>grow light, lime"]
+    B <--> D[("Supabase<br/>PostgreSQL")]
+    B <--> E[("Local SQLite<br/>offline copy")]
+    B --> F["Web dashboard<br/>Administrator, User, Mobile"]
 ```
 
 ---
 
-## 🛠️ Tech stack
+## <img src="assets/icons/stack.svg" width="26" height="26" align="absmiddle" alt=""> Tech stack
 
 | Layer | Technology |
 | --- | --- |
@@ -204,7 +216,7 @@ flowchart LR
 
 ---
 
-## 📁 Project structure
+## <img src="assets/icons/folder-open.svg" width="26" height="26" align="absmiddle" alt=""> Project structure
 
 ```text
 icucrops-source-code/
@@ -224,7 +236,7 @@ icucrops-source-code/
 
 ---
 
-## 👥 Team
+## <img src="assets/icons/users-three.svg" width="26" height="26" align="absmiddle" alt=""> Team
 
 <p align="center">
   <img src="assets/ChrisPic.png" width="90" alt="Team member">
@@ -236,5 +248,5 @@ icucrops-source-code/
 <p align="center">
   <img src="assets/icucrops-logo-transparent.png" width="120" alt="ICuCrops logo">
   <br>
-  <sub>🌿 ICuCrops · An IoT Web-Based System for Crops Cultivation and Monitoring for Sarate Agriculture Farm in San Pablo, Laguna</sub>
+  <sub>ICuCrops: An IoT Web-Based System for Crops Cultivation and Monitoring for Sarate Agriculture Farm in San Pablo, Laguna</sub>
 </p>
