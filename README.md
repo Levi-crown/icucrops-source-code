@@ -99,11 +99,12 @@ sensor firmware is not included.
 
 | | Equipment | How it runs |
 | :---: | --- | --- |
-| <img src="assets/icons/tile-shower.svg" width="36" height="36" alt=""> | **Water valve** (one per row) | Automatic, Manual or Scheduled. Stops when the soil has enough water. |
+| <img src="assets/icons/tile-shower.svg" width="36" height="36" alt=""> | **Water pump** | Automatic, Manual or Scheduled, for each row. Stops when the soil has enough water. |
 | <img src="assets/icons/tile-cloud-fog.svg" width="36" height="36" alt=""> | **Misting** | Turned on from the dashboard, or set to run with the irrigation |
 | <img src="assets/icons/tile-fan.svg" width="36" height="36" alt=""> | **Exhaust fan** | Runs when the humidity goes above the crop's limit |
 | <img src="assets/icons/tile-lightbulb.svg" width="36" height="36" alt=""> | **Grow light** | Runs when it is dark (up to 4 hours at a time) or when the air is too cold |
 | <img src="assets/icons/tile-test-tube.svg" width="36" height="36" alt=""> | **Lime solution** | Applied by the staff after ICuCrops flags a low soil pH |
+| <img src="assets/icons/tile-plant.svg" width="36" height="36" alt=""> | **Fertilizer** | Applied by the staff when the EC reading shows the soil needs it |
 
 ---
 
@@ -185,7 +186,7 @@ sensor firmware is not included.
 ## <img src="assets/icons/flow-arrow.svg" width="26" height="26" align="absmiddle" alt=""> How it works
 
 <p align="center">
-  <img src="assets/icucrops-flow.svg" alt="How ICuCrops works, from the sensors to the website and the kiosk" width="100%">
+  <img src="assets/icucrops-system-flow.svg" alt="How ICuCrops works, from the sensors to the website and the kiosk" width="100%">
 </p>
 
 1. The sensors take the readings. Each of the 4 rows has 3 soil-moisture probes and an RS485
@@ -194,8 +195,8 @@ sensor firmware is not included.
    sensors, and send them to the Raspberry Pi 4 over MQTT.
 3. The Raspberry Pi runs ICuCrops. The Flask server checks every reading against the crop
    planted in that row, saves it in SQLite, and sends back what to turn on or off.
-4. The ESP32 boards switch the relays for the water valves, the lime and fertilizer lines,
-   the 7 exhaust fans, the grow light and the misting line.
+4. The ESP32 boards switch the relays for the water pump, the lime solution, the fertilizer,
+   the 7 exhaust fans, the grow light and the misting.
 5. When the internet is on, the Pi syncs with Supabase. The website on Vercel reads from
    Supabase, so the farm can be checked from a phone or a computer, and the sign-in and
    reset codes are sent by email.
