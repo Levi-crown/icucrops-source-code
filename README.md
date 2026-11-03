@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/icucrops-sensors-hero.svg" alt="ICuCrops: An IoT Web-Based System for Crops Cultivation and Monitoring for Sarate Agriculture Farm in San Pablo, Laguna" width="100%">
+  <img src="assets/icucrops-hero-banner.svg" alt="ICuCrops: An IoT Web-Based System for Crops Cultivation and Monitoring for Sarate Agriculture Farm in San Pablo, Laguna" width="100%">
 </p>
 
 <p align="center">
@@ -16,7 +16,7 @@
 
 ---
 
-## <img src="assets/icons/leaf.svg" width="26" height="26" align="absmiddle" alt=""> About
+## <img src="assets/badges/leaf.svg" width="30" height="30" align="absmiddle" alt=""> About
 
 ICuCrops was made for Sarate Agriculture Farm in San Pablo, Laguna. The farm grows
 pechay, bok choy, mustasa and green ice lettuce in soil beds, and it used to water them
@@ -45,7 +45,7 @@ sensor firmware is not included.
 
 ---
 
-## <img src="assets/icons/database.svg" width="26" height="26" align="absmiddle" alt=""> Database
+## <img src="assets/badges/database.svg" width="30" height="30" align="absmiddle" alt=""> Database
 
 <table>
   <tr>
@@ -68,7 +68,7 @@ sensor firmware is not included.
 
 ---
 
-## <img src="assets/icons/code.svg" width="26" height="26" align="absmiddle" alt=""> Languages used
+## <img src="assets/badges/code.svg" width="30" height="30" align="absmiddle" alt=""> Languages used
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=py,js,html,css,postgres,sqlite,supabase,flask&theme=dark" alt="Python, JavaScript, HTML, CSS, SQL, SQLite, Supabase, Flask">
@@ -84,38 +84,38 @@ sensor firmware is not included.
 
 ---
 
-## <img src="assets/icons/gauge.svg" width="26" height="26" align="absmiddle" alt=""> What ICuCrops monitors
+## <img src="assets/badges/gauge.svg" width="30" height="30" align="absmiddle" alt=""> What ICuCrops monitors
 
 | | Reading | Sensor | What ICuCrops does with it |
 | :---: | --- | --- | --- |
-| <img src="assets/icons/tile-drop.svg" width="36" height="36" alt=""> | **Soil moisture** | Capacitive probes, averaged per row | Waters the row when it is too dry |
-| <img src="assets/icons/tile-flask.svg" width="36" height="36" alt=""> | **Soil pH** | RS485 soil sensor | Alerts the staff when the pH is outside the crop's range |
-| <img src="assets/icons/tile-lightning.svg" width="36" height="36" alt=""> | **EC** (electrical conductivity) | RS485 soil sensor | Alerts the staff when the soil is too salty or low on nutrients |
-| <img src="assets/icons/tile-thermometer-simple.svg" width="36" height="36" alt=""> | **Temperature** | DHT22 | Turns on the grow light when it is too cold, alerts when it is too hot |
-| <img src="assets/icons/tile-drop-half-bottom.svg" width="36" height="36" alt=""> | **Humidity** | DHT22 | Runs the exhaust fan when the air is too humid |
-| <img src="assets/icons/tile-sun.svg" width="36" height="36" alt=""> | **Light** | HW-072 light sensor | Turns on the grow light when it is dark |
+| <img src="assets/badges/drop.svg" width="38" height="38" alt=""> | **Soil moisture** | Capacitive probes, averaged per row | Waters the row when it is too dry |
+| <img src="assets/badges/flask.svg" width="38" height="38" alt=""> | **Soil pH** | RS485 soil sensor | Alerts the staff when the pH is outside the crop's range |
+| <img src="assets/badges/lightning.svg" width="38" height="38" alt=""> | **EC** (electrical conductivity) | RS485 soil sensor | Alerts the staff when the soil is too salty or low on nutrients |
+| <img src="assets/badges/thermometer-simple.svg" width="38" height="38" alt=""> | **Temperature** | DHT22 | Turns on the grow light when it is too cold, alerts when it is too hot |
+| <img src="assets/badges/drop-half-bottom.svg" width="38" height="38" alt=""> | **Humidity** | DHT22 | Runs the exhaust fan when the air is too humid |
+| <img src="assets/badges/sun.svg" width="38" height="38" alt=""> | **Light** | HW-072 light sensor | Turns on the grow light when it is dark |
 
-## <img src="assets/icons/sliders-horizontal.svg" width="26" height="26" align="absmiddle" alt=""> What ICuCrops controls
+## <img src="assets/badges/toggle-right.svg" width="30" height="30" align="absmiddle" alt=""> What ICuCrops controls
 
 | | Equipment | How it runs |
 | :---: | --- | --- |
-| <img src="assets/icons/tile-shower.svg" width="36" height="36" alt=""> | **Water** | Automatic, Manual or Scheduled, for each row. Stops when the soil has enough water. |
-| <img src="assets/icons/tile-drop.svg" width="36" height="36" alt=""> | **Water pump** | Supplies the water to the rows |
-| <img src="assets/icons/tile-cloud-fog.svg" width="36" height="36" alt=""> | **Misting** | Turned on from the dashboard, or set to run with the irrigation |
-| <img src="assets/icons/tile-fan.svg" width="36" height="36" alt=""> | **Exhaust fan** | Runs when the humidity goes above the crop's limit |
-| <img src="assets/icons/tile-lightbulb.svg" width="36" height="36" alt=""> | **Grow light** | Runs when it is dark (up to 4 hours at a time) or when the air is too cold |
-| <img src="assets/icons/tile-test-tube.svg" width="36" height="36" alt=""> | **Lime solution** | Applied by the staff after ICuCrops flags a low soil pH |
-| <img src="assets/icons/tile-plant.svg" width="36" height="36" alt=""> | **Fertilizer** | Applied by the staff when the EC reading shows the soil needs it |
+| <img src="assets/badges/waves.svg" width="38" height="38" alt=""> | **Water** | Automatic, Manual or Scheduled, for each row. Stops when the soil has enough water. |
+| <img src="assets/badges/pipe.svg" width="38" height="38" alt=""> | **Water pump** | Supplies the water to the rows |
+| <img src="assets/badges/cloud-fog.svg" width="38" height="38" alt=""> | **Misting** | Turned on from the dashboard, or set to run with the irrigation |
+| <img src="assets/badges/fan.svg" width="38" height="38" alt=""> | **Exhaust fan** | Runs when the humidity goes above the crop's limit |
+| <img src="assets/badges/lightbulb-filament.svg" width="38" height="38" alt=""> | **Grow light** | Runs when it is dark (up to 4 hours at a time) or when the air is too cold |
+| <img src="assets/badges/test-tube.svg" width="38" height="38" alt=""> | **Lime solution** | Applied by the staff after ICuCrops flags a low soil pH |
+| <img src="assets/badges/plant.svg" width="38" height="38" alt=""> | **Fertilizer** | Applied by the staff when the EC reading shows the soil needs it |
 
 ---
 
-## <img src="assets/icons/squares-four.svg" width="26" height="26" align="absmiddle" alt=""> Features
+## <img src="assets/badges/list-checks.svg" width="30" height="30" align="absmiddle" alt=""> Features
 
 <table>
   <tr>
     <td width="50%" valign="top">
 
-<img src="assets/icons/tile-drop.svg" width="44" height="44" alt="">
+<img src="assets/badges/drop.svg" width="46" height="46" alt="">
 
 ### Irrigation
 - Each row is watered on its own
@@ -125,7 +125,7 @@ sensor firmware is not included.
     </td>
     <td width="50%" valign="top">
 
-<img src="assets/icons/tile-thermometer-simple.svg" width="44" height="44" alt="">
+<img src="assets/badges/thermometer-simple.svg" width="46" height="46" alt="">
 
 ### Greenhouse climate
 - Exhaust fan for high humidity
@@ -137,7 +137,7 @@ sensor firmware is not included.
   <tr>
     <td width="50%" valign="top">
 
-<img src="assets/icons/tile-chart-line-up.svg" width="44" height="44" alt="">
+<img src="assets/badges/chart-line-up.svg" width="46" height="46" alt="">
 
 ### Readings and reports
 - Live readings and graphs for each row
@@ -148,7 +148,7 @@ sensor firmware is not included.
     </td>
     <td width="50%" valign="top">
 
-<img src="assets/icons/tile-plant.svg" width="44" height="44" alt="">
+<img src="assets/badges/plant.svg" width="46" height="46" alt="">
 
 ### Cultivation
 - Pick a crop and a row to start a cultivation
@@ -161,7 +161,7 @@ sensor firmware is not included.
   <tr>
     <td width="50%" valign="top">
 
-<img src="assets/icons/tile-shield-check.svg" width="44" height="44" alt="">
+<img src="assets/badges/shield-check.svg" width="46" height="46" alt="">
 
 ### Accounts
 - Administrator and User accounts
@@ -171,7 +171,7 @@ sensor firmware is not included.
     </td>
     <td width="50%" valign="top">
 
-<img src="assets/icons/tile-devices.svg" width="44" height="44" alt="">
+<img src="assets/badges/devices.svg" width="46" height="46" alt="">
 
 ### Where to use it
 - On a computer or a phone
@@ -184,10 +184,10 @@ sensor firmware is not included.
 
 ---
 
-## <img src="assets/icons/flow-arrow.svg" width="26" height="26" align="absmiddle" alt=""> How it works
+## <img src="assets/badges/tree-structure.svg" width="30" height="30" align="absmiddle" alt=""> How it works
 
 <p align="center">
-  <img src="assets/icucrops-how-it-works-flow.svg" alt="How ICuCrops works, from the sensors to the website and the kiosk" width="100%">
+  <img src="assets/icucrops-how-it-works-diagram.svg" alt="How ICuCrops works, from the sensors to the website and the kiosk" width="100%">
 </p>
 
 1. The sensors take the readings. Each of the 4 rows has 3 soil-moisture probes and an RS485
@@ -207,7 +207,7 @@ sensor firmware is not included.
 
 ---
 
-## <img src="assets/icons/stack.svg" width="26" height="26" align="absmiddle" alt=""> Tech stack
+## <img src="assets/badges/stack.svg" width="30" height="30" align="absmiddle" alt=""> Tech stack
 
 | Part | Built with |
 | --- | --- |
@@ -218,7 +218,7 @@ sensor firmware is not included.
 
 ---
 
-## <img src="assets/icons/folder-open.svg" width="26" height="26" align="absmiddle" alt=""> Project structure
+## <img src="assets/badges/folder-simple.svg" width="30" height="30" align="absmiddle" alt=""> Project structure
 
 ```text
 icucrops-source-code/
@@ -238,7 +238,7 @@ icucrops-source-code/
 
 ---
 
-## <img src="assets/icons/users-three.svg" width="26" height="26" align="absmiddle" alt=""> Team
+## <img src="assets/badges/users-three.svg" width="30" height="30" align="absmiddle" alt=""> Team
 
 <p align="center">
   <img src="assets/ChrisPic.png" width="90" alt="Team member">
