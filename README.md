@@ -187,7 +187,7 @@ sensor firmware is not included.
 ## <img src="assets/icons/flow-arrow.svg" width="26" height="26" align="absmiddle" alt=""> How it works
 
 <p align="center">
-  <img src="assets/icucrops-system-diagram.svg" alt="How ICuCrops works, from the sensors to the website and the kiosk" width="100%">
+  <img src="assets/icucrops-how-it-works-flow.svg" alt="How ICuCrops works, from the sensors to the website and the kiosk" width="100%">
 </p>
 
 1. The sensors take the readings. Each of the 4 rows has 3 soil-moisture probes and an RS485
@@ -199,11 +199,11 @@ sensor firmware is not included.
 4. The ESP32 boards switch the relays for the water, the lime solution and the fertilizer of
    each row, the 7 exhaust fans, the grow light and the misting. The water pump supplies the
    water to the rows.
-5. When the internet is on, the Pi syncs with Supabase. The website on Vercel reads from
-   Supabase, so the farm can be checked from a phone or a computer, and the sign-in and
-   reset codes are sent by email.
-6. At the farm, the kiosk touchscreen talks to the Pi directly, so monitoring and watering
-   keep going even when the internet is down.
+5. When the internet is on, the Pi syncs with Supabase, and the online dashboard on Vercel
+   reads from it, so the farm can be checked from a phone or a computer.
+6. The Pi also keeps everything in SQLite, its offline database. The kiosk at the farm shows
+   both the offline and the online dashboard, so monitoring and watering keep going even
+   when the internet is down.
 
 ---
 
