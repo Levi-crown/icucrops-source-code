@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/icucrops-hero.svg" alt="ICuCrops: An IoT Web-Based System for Crops Cultivation and Monitoring for Sarate Agriculture Farm in San Pablo, Laguna" width="100%">
+  <img src="assets/icucrops-sensors-hero.svg" alt="ICuCrops: An IoT Web-Based System for Crops Cultivation and Monitoring for Sarate Agriculture Farm in San Pablo, Laguna" width="100%">
 </p>
 
 <p align="center">
