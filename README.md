@@ -225,35 +225,6 @@ icucrops-source-code/
 
 ---
 
-## 🚀 Getting started
-
-**1. Clone and install**
-
-```bash
-git clone https://github.com/Levi-crown/icucrops-source-code.git
-cd icucrops-source-code
-python -m venv .venv
-# Windows: .venv\Scripts\activate   ·   macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-**2. Set up Supabase**
-
-1. Create a project on [Supabase](https://supabase.com).
-2. Run the SQL files in [`supabase/migrations/`](supabase/migrations) in order
-   (`0001` → `0007`) from the Supabase SQL editor.
-3. Give the backend your own Supabase connection string and secrets through
-   environment variables on your machine. They are not part of this repository —
-   never commit them.
-
-**3. Run**
-
-```bash
-python main.py
-```
-
----
-
 ## 👥 Team
 
 <p align="center">
