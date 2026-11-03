@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/icucrops-banner-live.svg" alt="ICuCrops — An IoT Web-Based System for Crops Cultivation and Monitoring for Sarate Agriculture Farm in San Pablo, Laguna" width="100%">
+  <img src="assets/icucrops-hero.svg" alt="ICuCrops: An IoT Web-Based System for Crops Cultivation and Monitoring for Sarate Agriculture Farm in San Pablo, Laguna" width="100%">
 </p>
 
 <p align="center">
@@ -15,8 +15,8 @@
 </p>
 
 <p align="center">
-  <b>ICuCrops</b> watches every planted row in the greenhouse — soil moisture, soil pH,
-  EC, temperature, humidity, light and tank level — and waters, mists, ventilates and
+  <b>ICuCrops</b> watches every planted row in the greenhouse (soil moisture, soil pH,
+  EC, temperature, humidity and light) and waters, mists, ventilates and
   lights the crops on its own.
   <br>
   Growers and administrators follow the farm live from a web dashboard backed by
@@ -81,8 +81,8 @@ internet drops.
 
 | Language | Where it is used |
 | --- | --- |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" width="20"> **Python** | Backend — Flask server, automation rules, database layer, reports |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" width="20"> **JavaScript** | Frontend logic — dashboard, live graphs, controls, real-time sync |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" width="20"> **Python** | Backend: Flask server, automation rules, database layer, reports |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" width="20"> **JavaScript** | Frontend logic: dashboard, live graphs, controls, real-time sync |
 | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" width="20"> **HTML5** | Every page of the Administrator, User, sign-in and mobile portals |
 | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" width="20"> **CSS3** | Styling, emerald theme, dark mode, mobile and kiosk layouts |
 | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" width="20"> **SQL** | Supabase (PostgreSQL) schema migrations and SQLite queries |
@@ -99,7 +99,6 @@ internet drops.
 | 🌡️ | **Temperature** | DHT22 | Greenhouse air temperature; drives the fan and grow light |
 | 💦 | **Humidity** | DHT22 | Greenhouse air humidity; turns the fan on when it is too humid |
 | ☀️ | **Light** | HW-072 light sensor | Detects dark or bright; runs the grow light in the dark |
-| 🛢️ | **Tank Level** | JSN-SR04T ultrasonic sensor | Water and lime solution left in the tanks |
 
 ## 🎛️ What ICuCrops controls
 
@@ -132,7 +131,7 @@ internet drops.
 - Temperature and humidity (DHT22) and light sensing
 - Fan runs on high humidity
 - Grow light runs in the dark, with a daily limit
-- Lime tank control for soil pH
+- Lime solution control for soil pH
 
     </td>
   </tr>
@@ -200,7 +199,7 @@ flowchart LR
 | **Database** | **Supabase** (PostgreSQL) in the cloud + **SQLite** locally for offline use |
 | **Backend** | Python 3.11+, Flask, psycopg, Pillow |
 | **Languages** | Python, JavaScript, HTML5, CSS3, SQL |
-| **Frontend** | HTML5, CSS3, vanilla JavaScript — no framework |
+| **Frontend** | HTML5, CSS3, vanilla JavaScript, no framework |
 | **Reports** | Built-in Excel (.xlsx) and PDF writers |
 
 ---
