@@ -18,25 +18,30 @@
 
 ## <img src="assets/icons/leaf.svg" width="26" height="26" align="absmiddle" alt=""> About
 
-ICuCrops is an IoT web-based system for crops cultivation and monitoring, built for
-Sarate Agriculture Farm in San Pablo, Laguna. Sensors in the soil and in
-the air report their readings to a Flask backend, which stores them, decides when to
-irrigate, run the fan or switch on the grow light, and serves a web dashboard where
-people see every row at a glance and control the equipment by hand when they need to.
+ICuCrops was made for Sarate Agriculture Farm in San Pablo, Laguna. The farm grows
+pechay, bok choy, mustasa and green ice lettuce in soil beds, and it used to water them
+on a fixed schedule, twice a day, whether the soil needed it or not.
 
-**Supabase (PostgreSQL)** is the cloud database. It holds the accounts, sensor
-readings, cultivations, irrigation controls, notifications and history, so the dashboard
-works from anywhere, and a local SQLite copy keeps the greenhouse running when the
-internet drops.
+ICuCrops puts sensors in every cultivation row and in the greenhouse air. It reads soil
+moisture, soil pH, EC, temperature, humidity and light, and checks each reading against
+the range of the crop planted in that row. From there it:
 
-> This repository contains the basic **frontend** and **backend** source code only.
-> The sensor firmware and hardware-communication code are not included.
+- waters a row when the soil gets too dry, and stops once the row has enough water
+- runs the exhaust fan when the air gets too humid
+- turns on the grow light when it gets dark or too cold
+- alerts the farm staff when pH, EC, temperature, humidity or light goes out of range
+- counts the days from planting so the staff know when a crop is due for harvest
+
+Administrators and users follow all of this on a web dashboard, where they can also
+control the equipment by hand and download reports.
+
+This repository has the website (frontend) and the Flask server (backend) only. The
+sensor firmware is not included.
 
 > [!IMPORTANT]
-> **No sensitive information is included in this repository.**
-> There are **no API keys**, no `.env` files, no passwords, no Supabase connection
-> strings, no tokens and no database files here. Every secret is read from the
-> environment of the machine that runs ICuCrops and is never written into the code.
+> **There is no sensitive information in this repository.** No API keys, no passwords,
+> no `.env` files, no Supabase connection strings and no database files. The server reads
+> its keys from the computer it runs on, so none of them are written in the code.
 
 ---
 
@@ -47,17 +52,16 @@ internet drops.
     <td width="50%" align="center" valign="top">
       <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg" width="80" alt="Supabase logo">
       <h3>Supabase</h3>
-      <p><b>Cloud database (PostgreSQL)</b></p>
-      <p>The main online store for accounts, sensor readings, cultivations, irrigation
-      controls, notifications and history. The website reads and writes here, so the
-      farm can be followed from anywhere.</p>
+      <p><b>Online database (PostgreSQL)</b></p>
+      <p>Stores the accounts, sensor readings, cultivations, equipment controls, alerts
+      and history, so the website can be opened outside the farm.</p>
     </td>
     <td width="50%" align="center" valign="top">
       <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sqlite/sqlite-original.svg" width="80" alt="SQLite logo">
       <h3>SQLite</h3>
-      <p><b>Local database (offline copy)</b></p>
-      <p>Runs beside the greenhouse so sensors, automation and the kiosk keep working
-      when the internet is down. It syncs with Supabase once the connection is back.</p>
+      <p><b>Offline database at the farm</b></p>
+      <p>Keeps monitoring and watering running when the internet is down. The two
+      databases sync again once the connection is back.</p>
     </td>
   </tr>
 </table>
@@ -70,36 +74,36 @@ internet drops.
   <img src="https://skillicons.dev/icons?i=py,js,html,css,postgres,sqlite,supabase,flask&theme=dark" alt="Python, JavaScript, HTML, CSS, SQL, SQLite, Supabase, Flask">
 </p>
 
-| Language | Where it is used |
+| Language | Used for |
 | --- | --- |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" width="20"> **Python** | Backend: Flask server, automation rules, database layer, reports |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" width="20"> **JavaScript** | Frontend logic: dashboard, live graphs, controls, real-time sync |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" width="20"> **HTML5** | Every page of the Administrator, User, sign-in and mobile portals |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" width="20"> **CSS3** | Styling, emerald theme, dark mode, mobile and kiosk layouts |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" width="20"> **SQL** | Supabase (PostgreSQL) schema migrations and SQLite queries |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" width="20"> **Python** | The Flask server, the watering and climate rules, database code and reports |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" width="20"> **JavaScript** | The dashboard, live graphs and equipment controls |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" width="20"> **HTML5** | The administrator, user, sign-in and mobile pages |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" width="20"> **CSS3** | Layout, colors, dark mode and the touchscreen panel |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" width="20"> **SQL** | The Supabase tables and the SQLite queries |
 
 ---
 
 ## <img src="assets/icons/gauge.svg" width="26" height="26" align="absmiddle" alt=""> What ICuCrops monitors
 
-| | Reading | Sensor | What it is used for |
+| | Reading | Sensor | What ICuCrops does with it |
 | :---: | --- | --- | --- |
-| <img src="assets/icons/tile-drop.svg" width="36" height="36" alt=""> | **Soil Moisture** | Capacitive soil-moisture probes (per row) | Decides when each row needs water |
-| <img src="assets/icons/tile-flask.svg" width="36" height="36" alt=""> | **Soil pH** | RS485 soil sensor | Shows soil acidity; tells when lime solution is needed |
-| <img src="assets/icons/tile-lightning.svg" width="36" height="36" alt=""> | **EC (Electrical Conductivity)** | RS485 soil sensor | Shows the nutrient / salt level of the soil |
-| <img src="assets/icons/tile-thermometer-simple.svg" width="36" height="36" alt=""> | **Temperature** | DHT22 | Greenhouse air temperature; drives the fan and grow light |
-| <img src="assets/icons/tile-drop-half-bottom.svg" width="36" height="36" alt=""> | **Humidity** | DHT22 | Greenhouse air humidity; turns the fan on when it is too humid |
-| <img src="assets/icons/tile-sun.svg" width="36" height="36" alt=""> | **Light** | HW-072 light sensor | Detects dark or bright; runs the grow light in the dark |
+| <img src="assets/icons/tile-drop.svg" width="36" height="36" alt=""> | **Soil moisture** | Capacitive probes, averaged per row | Waters the row when it is too dry |
+| <img src="assets/icons/tile-flask.svg" width="36" height="36" alt=""> | **Soil pH** | RS485 soil sensor | Alerts the staff when the pH is outside the crop's range |
+| <img src="assets/icons/tile-lightning.svg" width="36" height="36" alt=""> | **EC** (electrical conductivity) | RS485 soil sensor | Alerts the staff when the soil is too salty or low on nutrients |
+| <img src="assets/icons/tile-thermometer-simple.svg" width="36" height="36" alt=""> | **Temperature** | DHT22 | Turns on the grow light when it is too cold, alerts when it is too hot |
+| <img src="assets/icons/tile-drop-half-bottom.svg" width="36" height="36" alt=""> | **Humidity** | DHT22 | Runs the exhaust fan when the air is too humid |
+| <img src="assets/icons/tile-sun.svg" width="36" height="36" alt=""> | **Light** | HW-072 light sensor | Turns on the grow light when it is dark |
 
 ## <img src="assets/icons/sliders-horizontal.svg" width="26" height="26" align="absmiddle" alt=""> What ICuCrops controls
 
 | | Equipment | How it runs |
 | :---: | --- | --- |
-| <img src="assets/icons/tile-shower.svg" width="36" height="36" alt=""> | **Irrigation pump** | Automatic, Manual or Scheduled, per row, with moisture safety limits |
-| <img src="assets/icons/tile-cloud-fog.svg" width="36" height="36" alt=""> | **Misting** | Follows the irrigation, or on a timer |
-| <img src="assets/icons/tile-fan.svg" width="36" height="36" alt=""> | **Fan** | Turns on when the humidity is high |
-| <img src="assets/icons/tile-lightbulb.svg" width="36" height="36" alt=""> | **Grow light** | Turns on in the dark, with a daily limit |
-| <img src="assets/icons/tile-test-tube.svg" width="36" height="36" alt=""> | **Lime solution** | Applied when the soil pH is too low |
+| <img src="assets/icons/tile-shower.svg" width="36" height="36" alt=""> | **Water valve** (one per row) | Automatic, Manual or Scheduled. Stops when the soil has enough water. |
+| <img src="assets/icons/tile-cloud-fog.svg" width="36" height="36" alt=""> | **Misting** | Turned on from the dashboard, or set to run with the irrigation |
+| <img src="assets/icons/tile-fan.svg" width="36" height="36" alt=""> | **Exhaust fan** | Runs when the humidity goes above the crop's limit |
+| <img src="assets/icons/tile-lightbulb.svg" width="36" height="36" alt=""> | **Grow light** | Runs when it is dark (up to 4 hours at a time) or when the air is too cold |
+| <img src="assets/icons/tile-test-tube.svg" width="36" height="36" alt=""> | **Lime solution** | Applied by the staff after ICuCrops flags a low soil pH |
 
 ---
 
@@ -111,11 +115,10 @@ internet drops.
 
 <img src="assets/icons/tile-drop.svg" width="44" height="44" alt="">
 
-### Smart irrigation
-- Live soil-moisture reading for every row
-- **Automatic**, **Manual** and **Scheduled** watering modes
-- Safety bands that stop watering at the right moisture level
-- Misting that follows the irrigation
+### Irrigation
+- Each row is watered on its own
+- Automatic, Manual and Scheduled modes
+- Moisture limits keep a row from being under- or over-watered
 
     </td>
     <td width="50%" valign="top">
@@ -123,10 +126,9 @@ internet drops.
 <img src="assets/icons/tile-thermometer-simple.svg" width="44" height="44" alt="">
 
 ### Greenhouse climate
-- Temperature and humidity (DHT22) and light sensing
-- Fan runs on high humidity
-- Grow light runs in the dark, with a daily limit
-- Lime solution control for soil pH
+- Exhaust fan for high humidity
+- Grow light for dark or cold hours
+- Misting for dry air
 
     </td>
   </tr>
@@ -135,22 +137,22 @@ internet drops.
 
 <img src="assets/icons/tile-chart-line-up.svg" width="44" height="44" alt="">
 
-### Monitoring & reports
-- Real-time dashboard and live graphs
-- Per-sensor detail pages and history log
-- Downloadable reports as **Excel (.xlsx)** and **PDF**
-- Alerts and notifications
+### Readings and reports
+- Live readings and graphs for each row
+- History of readings and farm events
+- Reports in Excel and PDF
+- Alerts when a reading is out of range
 
     </td>
     <td width="50%" valign="top">
 
 <img src="assets/icons/tile-plant.svg" width="44" height="44" alt="">
 
-### Cultivation tracking
-- Plant and track crops per row
-- Growth parameters and harvest records
-- Cultivation requests from growers, approved by admins
-- Harvest outcome tracking
+### Cultivation
+- Pick a crop and a row to start a cultivation
+- Set ranges for pechay, bok choy, mustasa and green ice lettuce
+- Expected harvest date counted from the planting date
+- Users request a cultivation and an administrator approves it
 
     </td>
   </tr>
@@ -159,22 +161,20 @@ internet drops.
 
 <img src="assets/icons/tile-shield-check.svg" width="44" height="44" alt="">
 
-### Accounts & security
-- Separate **Administrator** and **User** portals
-- Email OTP password reset
-- Single-session sign-in per account
-- Profile management with photos
+### Accounts
+- Administrator and User accounts
+- Password reset with a code sent by email
+- One active sign-in per account
 
     </td>
     <td width="50%" valign="top">
 
 <img src="assets/icons/tile-devices.svg" width="44" height="44" alt="">
 
-### Works everywhere
-- Desktop web dashboard
-- Mobile-friendly pages
-- Touch kiosk mode for the greenhouse panel
-- Light and dark appearance
+### Where to use it
+- On a computer or a phone
+- On the touchscreen panel at the farm, even without internet
+- Light and dark mode
 
     </td>
   </tr>
@@ -186,24 +186,23 @@ internet drops.
 
 ```mermaid
 flowchart LR
-    A["Greenhouse sensors<br/>moisture, pH, EC, DHT22, light"] --> B["Flask backend<br/>main.py"]
-    B -- relays --> C["Pump, misting, fan,<br/>grow light, lime"]
-    B <--> D[("Supabase<br/>PostgreSQL")]
-    B <--> E[("Local SQLite<br/>offline copy")]
-    B --> F["Web dashboard<br/>Administrator, User, Mobile"]
+    A["Sensors in each row<br/>and in the greenhouse"] --> B["Flask server<br/>main.py"]
+    B --> C["Water valves, misting,<br/>exhaust fan, grow light"]
+    B <--> D[("Supabase<br/>online database")]
+    B <--> E[("SQLite<br/>offline database")]
+    B --> F["Web dashboard<br/>Administrator and User"]
 ```
 
 ---
 
 ## <img src="assets/icons/stack.svg" width="26" height="26" align="absmiddle" alt=""> Tech stack
 
-| Layer | Technology |
+| Part | Built with |
 | --- | --- |
-| **Database** | **Supabase** (PostgreSQL) in the cloud + **SQLite** locally for offline use |
+| **Database** | Supabase (PostgreSQL) online, SQLite offline |
 | **Backend** | Python 3.11+, Flask, psycopg, Pillow |
-| **Languages** | Python, JavaScript, HTML5, CSS3, SQL |
-| **Frontend** | HTML5, CSS3, vanilla JavaScript, no framework |
-| **Reports** | Built-in Excel (.xlsx) and PDF writers |
+| **Frontend** | HTML5, CSS3 and plain JavaScript, no framework |
+| **Reports** | Excel (.xlsx) and PDF files made by the server itself |
 
 ---
 
@@ -211,18 +210,18 @@ flowchart LR
 
 ```text
 icucrops-source-code/
-├── administrator/        # Administrator portal: dashboard, irrigation, cultivation,
-│                         # sensors, history, user management, settings
-├── user/                 # Grower portal: the same pages without admin tools
+├── administrator/        # Administrator pages: dashboard, irrigation, cultivation,
+│                         # sensors, history, accounts, settings
+├── user/                 # User pages: the same, without account management
 ├── auth/                 # Sign-in and password-reset pages
-├── mobile_web/           # Mobile layouts for both portals
-├── assets/               # Shared styles, scripts, icons, logos and images
+├── mobile_web/           # Phone layouts for both
+├── assets/               # Shared styles, scripts, icons, logos and photos
 ├── supabase/
-│   └── migrations/       # Supabase PostgreSQL schema
-├── main.py               # Flask backend: pages, REST endpoints, automation rules
-├── icucrops_pg.py        # Supabase / PostgreSQL data layer
-├── icucrops_reports.py   # Excel and PDF report builder
-└── requirements.txt      # Python dependencies
+│   └── migrations/       # Supabase table definitions
+├── main.py               # Flask server: pages, API routes, watering and climate rules
+├── icucrops_pg.py        # Supabase (PostgreSQL) database code
+├── icucrops_reports.py   # Excel and PDF reports
+└── requirements.txt      # Python packages
 ```
 
 ---
