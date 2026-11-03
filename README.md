@@ -248,7 +248,7 @@ icucrops-source-code/
 ## <img src="assets/badges/users-three.svg" width="30" height="30" align="absmiddle" alt=""> Team
 
 <p align="center">
-  <img src="assets/icucrops-meet-the-team.svg" alt="The ICuCrops team: Shiela Mae Abejero, Leader; Chris Benedict Corona, Developer; Jhonel Azañes, Designer; Eron Cataga, IoT Builder" width="100%">
+  <img src="assets/icucrops-team-card.svg" alt="The ICuCrops team: Shiela Mae Abejero, Leader; Chris Benedict Corona, Developer; Jhonel Azañes, Designer; Eron Cataga, IoT Builder" width="100%">
 </p>
 
 ---
