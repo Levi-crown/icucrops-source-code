@@ -14,15 +14,6 @@
   <img src="https://img.shields.io/badge/No%20secrets-included-0E3D2B?style=for-the-badge&logo=letsencrypt&logoColor=white" alt="No secrets included">
 </p>
 
-<p align="center">
-  <b>ICuCrops</b> watches every planted row in the greenhouse (soil moisture, soil pH,
-  EC, temperature, humidity and light) and waters, mists, ventilates and
-  lights the crops on its own.
-  <br>
-  Growers and administrators follow the farm live from a web dashboard backed by
-  <b>Supabase</b>.
-</p>
-
 ---
 
 ## <img src="assets/icons/leaf.svg" width="26" height="26" align="absmiddle" alt=""> About
