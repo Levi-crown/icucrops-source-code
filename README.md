@@ -185,21 +185,22 @@ sensor firmware is not included.
 ## <img src="assets/icons/flow-arrow.svg" width="26" height="26" align="absmiddle" alt=""> How it works
 
 <p align="center">
-  <img src="assets/icucrops-how-it-works.svg" alt="How ICuCrops works, from the sensors in the field to the people who use the website" width="100%">
+  <img src="assets/icucrops-flow.svg" alt="How ICuCrops works, from the sensors to the website and the kiosk" width="100%">
 </p>
 
-1. **Field.** Each of the 4 rows has 3 soil-moisture probes and an RS485 sensor for pH and EC.
-   A DHT22 and an HW-072 light sensor read the greenhouse air.
-2. **Edge.** Four ESP32 boards, one per row, read the soil sensors and switch the relays for the
-   water valves, lime and fertilizer lines, exhaust fans, grow light and misting line. A fifth
-   ESP32 reads the air and light sensors.
-3. **Local server.** The ESP32 boards send their readings to the Raspberry Pi 4 over MQTT.
-   The Flask server checks them against the crop planted in each row, decides what to turn on
-   or off, saves everything in SQLite and shows it on the kiosk.
-4. **Cloud.** When the internet is on, the Pi syncs with Supabase. Vercel serves the website
-   for people outside the farm, and an email service sends the sign-in and reset codes.
-5. **People.** Administrators and users open ICuCrops on a phone, a computer or the kiosk.
-   At the farm it keeps working even when the internet is down.
+1. The sensors take the readings. Each of the 4 rows has 3 soil-moisture probes and an RS485
+   sensor for pH and EC, and a DHT22 and an HW-072 light sensor read the greenhouse air.
+2. Five ESP32 boards collect the readings, one for each row and one for the air and light
+   sensors, and send them to the Raspberry Pi 4 over MQTT.
+3. The Raspberry Pi runs ICuCrops. The Flask server checks every reading against the crop
+   planted in that row, saves it in SQLite, and sends back what to turn on or off.
+4. The ESP32 boards switch the relays for the water valves, the lime and fertilizer lines,
+   the 7 exhaust fans, the grow light and the misting line.
+5. When the internet is on, the Pi syncs with Supabase. The website on Vercel reads from
+   Supabase, so the farm can be checked from a phone or a computer, and the sign-in and
+   reset codes are sent by email.
+6. At the farm, the kiosk touchscreen talks to the Pi directly, so monitoring and watering
+   keep going even when the internet is down.
 
 ---
 
